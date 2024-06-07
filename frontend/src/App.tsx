@@ -4,11 +4,12 @@ import { Route, Routes } from 'react-router-dom'
 import {Login, Dashboard, Account, Home, Register} from './views';
 import { authInitializeAsync } from './store/actions/auth.action';
 import Navigation from './components/navigation';
+import { ConnectedProps, connect } from 'react-redux';
 
-class App extends React.Component {
+class App extends React.Component<AppProps> {
 
   componentDidMount() {
-    authInitializeAsync()
+    this.props.authInitializeAsync()
   }
 
   render() {
@@ -29,5 +30,11 @@ class App extends React.Component {
   
 }
 
+const mapDispatchToProps = {
+  authInitializeAsync
+}
 
-export default App;
+const connector = connect(()=>{return{}}, mapDispatchToProps)
+type AppProps = ConnectedProps<typeof connector>
+
+export default connector(App);

@@ -4,8 +4,22 @@ import { login } from "../store/actions/auth.action";
 import { getUserData } from "../store/actions/user.action";
 import { ConnectedProps } from "react-redux";
 import { AppState } from "../models/state.model";
+import { User } from "../models/user.model";
 
-class Login extends Component<LoginProps>{
+interface LoginState {
+  username: string,
+  password: string,
+}
+
+class Login extends Component<LoginProps, LoginState>{
+
+  constructor(props: LoginProps) {
+    super(props);
+    this.state = {
+      username: '',
+      password: '',
+    };
+  }
 
   onPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({password: event.target.value})
@@ -17,7 +31,7 @@ class Login extends Component<LoginProps>{
 
   handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    this.props.login(this.props.username, this.props.password).then(res => {
+    this.props.login(this.state.username, this.state.password).then(res => {
       window.location.assign('/dashboard')
     })
   }
@@ -34,12 +48,12 @@ class Login extends Component<LoginProps>{
               <div className="form-group">
                 <label htmlFor="exampleInputEmail1">Username</label>
                 <input
-                  type="email"
+                  type="text"
                   className="form-control"
                   id="exampleInputEmail1"
                   aria-describedby="emailHelp"
                   placeholder="Enter email"
-                  value={this.props.username}
+                  value={this.state.username}
                   onChange={this.onUsernameChange}
                 ></input>
                 <small id="emailHelp" className="form-text text-muted">
@@ -53,7 +67,7 @@ class Login extends Component<LoginProps>{
                   className="form-control"
                   id="exampleInputPassword1"
                   placeholder="Password"
-                  value={this.props.password}
+                  value={this.state.password}
                   onChange={this.onPasswordChange}
                 ></input>
               </div>
@@ -82,10 +96,6 @@ class Login extends Component<LoginProps>{
 const mapStateToProps = (state:AppState) => {
   return {
     loggedIn: state.auth.loggedIn,
-    username: "",
-    password: "",
-    loading: false,
-    user: null
   }
 }
 

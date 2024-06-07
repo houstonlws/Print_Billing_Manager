@@ -42,7 +42,6 @@ export default function authReducer(state = initialState, action: PayloadAction)
             }
         }
         case constants.auth.INITIALIZE_AUTH_SUCCESS:{
-            console.log('logging in')
             return {
                 ...state,
                 loggedIn: true

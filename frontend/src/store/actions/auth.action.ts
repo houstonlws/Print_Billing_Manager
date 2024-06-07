@@ -2,8 +2,8 @@ import { constants } from "../../config/store.config"
 import { Dispatch } from "redux"
 import AuthService from "../../services/auth.service"
 
-export const register = (username:string, email:string, password:string) => (dispatch:Dispatch) => {
-    return AuthService.register(username, email, password)
+export const register = (username:string, email:string, password:string) => async (dispatch:Dispatch) => {
+    return await AuthService.register(username, email, password)
     .then((response:any) => {
         dispatch({type: constants.auth.REGISTER_SUCCESS})        
         return Promise.resolve(response)
@@ -13,20 +13,20 @@ export const register = (username:string, email:string, password:string) => (dis
     })
 }
 
-export const login = (username:string, password:string) => (dispatch: Dispatch) => {
-    return AuthService.login(username, password)
-    .then((response: any) => {
-        console.log('login success',response)
-        dispatch({type: constants.auth.LOGIN_SUCCESS})
-        return Promise.resolve(response)
-    }, (error: any) => {
-        console.log('problem logging in',error)
-        dispatch({type: constants.auth.LOGIN_FAIL})
-        return Promise.reject(error)
-    })
+export const login = (username:string, password:string) => async (dispatch: Dispatch) => {
+    try {
+        const response = await AuthService.login(username, password)
+        console.log('login success')
+        dispatch({ type: constants.auth.LOGIN_SUCCESS })
+        return await Promise.resolve(response)
+    } catch (error) {
+        console.log('login rejected')
+        dispatch({ type: constants.auth.LOGIN_FAIL })
+    }
 }
 
 export const logout = () => (dispatch: Dispatch) => {
+    console.log('logging out')
     document.cookie = 'refreshToken=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     dispatch({type: constants.user.CLEAR_USER})
     dispatch({type: constants.auth.LOGOUT})
