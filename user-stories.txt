@@ -1,0 +1,40 @@
+User Stories for Printer Management App
+
+1. User Authentication
+Story 1.1: As a department head, I want to be able to log in to the app so that I can access my department's printer data.
+Story 1.2: As an administrator, I want to be able to log in to the app so that I can manage printer data for all departments.
+Story 1.3: As any user, I want to be able to log out of the app to ensure my account is secure.
+
+2. Printer Tracking
+Story 2.1: As an administrator, I want to add, edit, or delete printer information for each department so that the system is up-to-date with the current hardware.
+Story 2.2: As a department head, I want to view a list of all printers in my department so that I can monitor their usage.
+
+3. Page Tracking
+Story 3.1: As an administrator, I want to track the number of black and white pages printed per printer per month so that we can manage costs effectively.
+Story 3.2: As an administrator, I want to track the number of color pages printed per printer per month so that we can manage costs effectively.
+Story 3.3: As a department head, I want to view the number of black and white pages printed on each printer in my department per month so that I can monitor usage and charges.
+Story 3.4: As a department head, I want to view the number of color pages printed on each printer in my department per month so that I can monitor usage and charges.
+
+4. Billing and Charges
+Story 4.1: As a department head, I want to view my past charges for printer usage so that I can understand my department's printing expenses.
+Story 4.2: As a department head, I want to view the current charges for the current month so that I can keep track of ongoing expenses.
+Story 4.3: As an administrator, I want to view the billing details for each department so that I can manage the school's overall printing budget.
+
+5. Profile Management
+Story 5.1: As any user, I want to be able to edit my profile information so that my contact details are always up-to-date.
+
+6. Issue Reporting
+Story 6.1: As any user, I want to report issues with a printer so that the administration can address problems promptly.
+Story 6.2: As an administrator, I want to view and manage reported issues so that I can ensure all printers are functioning correctly.
+
+7. Paper Tracking
+Story 7.1: As an administrator, I want to track the amount of paper used by each department so that we can manage supply levels and costs.
+Story 7.2: As a department head, I want to view the amount of paper used in my department so that I can monitor usage and plan for restocking.
+
+8. Notifications and Alerts
+Story 8.1: As any user, I want to receive notifications about my reported issues so that I am informed about the status and resolution.
+Story 8.2: As an administrator, I want to receive alerts when printer usage exceeds a certain threshold so that I can investigate unusual activity.
+Additional Considerations
+User Roles and Permissions: Differentiate functionality and access based on user roles (e.g., department head vs. administrator).
+Data Security and Privacy: Ensure that all sensitive data is securely stored and accessible only to authorized users.
+Usability and User Experience: Design an intuitive and user-friendly interface for all functionalities.
