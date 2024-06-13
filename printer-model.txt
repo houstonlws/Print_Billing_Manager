@@ -1,0 +1,18 @@
+ID: Unique identifier for each printer.
+Serial Number: Manufacturer’s serial number.
+Model: Printer model.
+Brand: Manufacturer or brand name.
+Location: Physical location of the printer (e.g., office, department, floor).
+Installation Date: Date when the printer was installed.
+Warranty Expiry Date: Date when the warranty expires.
+IP Address: Network IP address if the printer is networked.
+MAC Address: MAC address for network identification.
+Firmware Version: Current firmware version.
+Total Pages Printed: Cumulative number of pages printed.
+Monthly Print Volume: Number of pages printed in the current month.
+Total Print Jobs: Cumulative number of print jobs.
+Monthly Print Jobs: Number of print jobs in the current month.
+Toner/Ink Levels: Current levels of toner or ink.
+Toner/Ink Usage (Monthly): Amount of toner or ink used in the current month.
+Paper Levels: Current paper levels.
+Paper Usage (Monthly): Amount of paper used in the current month.

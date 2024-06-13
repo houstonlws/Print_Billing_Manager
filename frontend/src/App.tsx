@@ -1,28 +1,36 @@
 import './App.css';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom'
-import {Login, Dashboard, Account, Home, Register} from './views';
-import { authInitializeAsync } from './store/actions/auth.action';
-import Navigation from './components/navigation';
+import { AuthModule, DashboardModule } from './modules';
+import { refreshToken } from './modules/auth/utilities/auth.action';
 import { ConnectedProps, connect } from 'react-redux';
+import { AuthState } from './modules/auth/utilities/auth.models';
+import { DashboardState } from './modules/dashboard/utilities/dashboard.models';
 
-class App extends React.Component<AppProps> {
+export interface AppState {
+  auth: AuthState,
+  dashboard: DashboardState
+}
 
-  componentDidMount() {
-    this.props.authInitializeAsync()
+class App extends React.Component<AppProps, AppState> {
+
+  constructor(props: AppProps){
+    super(props)
   }
 
+  componentDidMount() {
+    this.props.refreshToken()
+  }
+
+  
   render() {
+
+    const { loggedIn } = this.props
+
     return (
       <> 
-        <Navigation></Navigation>
         <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="login" element={<Login />}></Route>
-          <Route path="register" element={<Register />}></Route>
-          <Route path="dashboard" element={<Dashboard />}>
-            <Route path="settings" element={<Account/>}></Route>
-          </Route>
+          <Route path="/*" Component={ loggedIn ? DashboardModule : AuthModule}></Route>
         </Routes>
       </>
     )
@@ -30,11 +38,17 @@ class App extends React.Component<AppProps> {
   
 }
 
-const mapDispatchToProps = {
-  authInitializeAsync
+const mapStateToProps = (state:AppState) => {
+  return {
+    loggedIn: state.auth.loggedIn
+  }
 }
 
-const connector = connect(()=>{return{}}, mapDispatchToProps)
+const mapDispatchToProps = {
+  refreshToken
+}
+
+const connector = connect(mapStateToProps, mapDispatchToProps)
 type AppProps = ConnectedProps<typeof connector>
 
 export default connector(App);

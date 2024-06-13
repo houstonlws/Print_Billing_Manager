@@ -1,70 +1,72 @@
-# Getting Started with Create React App
+Detailed Structure
+modules/auth
+Handles user authentication.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Login.tsx: Handles user login.
+Logout.tsx: Handles user logout.
+modules/dashboard
+Displays different dashboards based on user roles.
 
-## Available Scripts
+AdminDashboard.tsx: Dashboard for administrators with access to all department data.
+DepartmentDashboard.tsx: Dashboard for department heads with access to their specific department data.
+modules/navigation
+Contains navigation components.
 
-In the project directory, you can run:
+Navbar.tsx: Navigation bar for easy access to different sections of the application.
+modules/printers
+Manages printer-related functionalities.
 
-### `npm start`
+PrinterList.tsx: Displays a list of all printers for administrators or department-specific printers for department heads.
+PrinterDetail.tsx: Shows detailed information about a specific printer.
+AddPrinter.tsx: Form to add a new printer.
+EditPrinter.tsx: Form to edit an existing printer.
+DeletePrinter.tsx: Handles the deletion of a printer.
+modules/tracking
+Tracks usage metrics.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+PageUsage.tsx: Displays the number of black and white and color pages printed per printer per month.
+PaperUsage.tsx: Displays the amount of paper used by each department.
+PaperUsageDetail.tsx: Shows detailed paper usage information for a specific department.
+modules/billing
+Manages billing and charges.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+PastCharges.tsx: Displays past charges for department heads.
+CurrentCharges.tsx: Displays current charges for the current month for department heads.
+DepartmentBilling.tsx: Displays billing details for each department for administrators.
+modules/profile
+Handles user profile management.
 
-### `npm test`
+UserProfile.tsx: Allows users to view and edit their profile information.
+modules/issues
+Manages issue reporting and tracking.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+ReportIssue.tsx: Form to report issues with printers.
+IssueList.tsx: Displays a list of reported issues for administrators.
+IssueDetail.tsx: Shows detailed information about a specific reported issue.
+modules/notifications
+Handles notifications and alerts.
 
-### `npm run build`
+Notification.tsx: Displays notifications for users about reported issues and other alerts.
+Alert.tsx: Displays alerts for administrators when printer usage exceeds a certain threshold.
+Common Components
+common
+Contains reusable components.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+LoadingSpinner.tsx: Displays a loading spinner during asynchronous operations.
+ErrorBoundary.tsx: Catches and displays errors in the application.
+Store
+store
+Manages application state.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+actions/: Contains Redux actions.
+reducers/: Contains Redux reducers.
+sagas/: Contains Redux sagas (if using Redux-Saga).
+selectors/: Contains Redux selectors.
+Utils
+utils
+Contains utility functions.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Root Files
+App.tsx: Main application component.
+index.tsx: Entry point for the React application.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

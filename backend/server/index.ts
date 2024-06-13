@@ -3,8 +3,9 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
-import authRoutes from './routes/auth.routes'
-import accountRoutes from './routes/user.routes'
+import authRoutes from './modules/auth/auth.routes'
+import printerRoutes from './modules/printers/printer.routes'
+import dataRoutes from './modules/data/data.routes'
 
 dotenv.config()
 
@@ -17,7 +18,7 @@ app.use(cors({
 }))
 app.use(cookieParser())
 app.use(authRoutes)
-app.use(accountRoutes)
-
+app.use(printerRoutes)
+app.use(dataRoutes)
 
 app.listen(5000, () => {console.log("server started on port 5000")})
