@@ -1,0 +1,14 @@
+.sidebar {
+    overflow-y: auto;
+    height: 100vh;
+    background-color: var(--bs-white);
+    width: 250px;
+}
+
+.mainContent{
+    position: fixed;
+    left: 250px;
+    height: 100vh;
+    width: calc(100% - 250px);
+    overflow-y: scroll;
+}

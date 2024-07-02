@@ -14,6 +14,11 @@ CREATE TABLE departments (
     user_id INT 
 );
 
+CREATE TABLE types (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL
+);
+
 CREATE TABLE users (
     id INT,
     firstName VARCHAR(255),
@@ -21,9 +26,10 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL,
     department_id INT,
     phone VARCHAR(255),
-    type VARCHAR(20),
+    type VARCHAR(255),
     FOREIGN KEY (department_id) REFERENCES departments(id),
-    FOREIGN KEY (id) REFERENCES auth(id)
+    FOREIGN KEY (id) REFERENCES auth(id),
+    FOREIGN KEY (type) REFERENCES types(name)
 );
 
 CREATE TABLE printers (
@@ -85,6 +91,7 @@ CREATE TABLE billing (
     billing_cycle_start DATE NOT NULL,
     billing_cycle_end DATE NOT NULL,
     total_charges DECIMAL(10, 2) NOT NULL,
+    total_paper INT NOT NULL,
     total_color_pages INT NOT NULL,
     total_bw_pages INT NOT NULL,
     color_pages_charge DECIMAL(10, 2) NOT NULL,
