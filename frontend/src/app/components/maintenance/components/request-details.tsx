@@ -45,18 +45,18 @@ class RequestDetails extends Component<DetailsProps, State> {
                 </CardHeader>
                <CardBody>
                   <div>
-                    <strong>Type:</strong> {request.maintenance_type}
+                    <strong>Type:</strong> {request?.maintenance_type}
                   </div>
                   <div>
-                    <strong>Description:</strong> {request.description}
+                    <strong>Description:</strong> {request?.description}
                   </div>
                   <div>
                     <strong>Printer:</strong> 
                     <ul>
-                        <li><strong>Serial</strong> {printer.serial_number}</li>
-                        <li><strong>Location</strong> {printer.location}</li>
-                        <li><strong>Brand</strong> {printer.brand}</li>
-                        <li><strong>Model</strong> {printer.model}</li>
+                        <li><strong>Serial</strong> {printer?.serial_number}</li>
+                        <li><strong>Location</strong> {printer?.location}</li>
+                        <li><strong>Brand</strong> {printer?.brand}</li>
+                        <li><strong>Model</strong> {printer?.model}</li>
                     </ul>
                 </div> 
               </CardBody>

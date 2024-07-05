@@ -14,7 +14,8 @@ const {
   DELETE_PRINTER_SUCCESS,
   DELETE_PRINTER_FAILURE,
   ADD_PRINTER_SUCCESS,
-  ADD_PRINTER_FAILURE
+  ADD_PRINTER_FAILURE,
+  LOGOUT
 } =
   CONSTANTS;
 
@@ -24,6 +25,7 @@ export const getDepartmentPrinters = () => async (dispatch: Dispatch) => {
     dispatch({ type: GET_DEPARTMENT_PRINTERS_SUCCESS, payload: printers });
   } catch (error) {
     dispatch({ type: GET_DEPARTMENT_PRINTERS_FAILURE });
+    dispatch({type: LOGOUT})
   }
 };
 
@@ -33,6 +35,7 @@ export const getDepartmentMetrics = (printerIds: string[]) => async (dispatch: D
     dispatch({ type: GET_DEPARTMENT_METRICS_SUCCESS, payload: metrics });
   } catch (error) {
     dispatch({ type: GET_DEPARTMENT_METRICS_FAILURE });
+    dispatch({type: LOGOUT})
   }
 };
 
@@ -42,6 +45,7 @@ export const getAllPrinters = () => async (dispatch: Dispatch) => {
     dispatch({ type: GET_DEPARTMENT_PRINTERS_SUCCESS, payload: printers });
   } catch (error) {
     dispatch({ type: GET_DEPARTMENT_PRINTERS_FAILURE });
+    dispatch({type: LOGOUT})
   }
 };
 

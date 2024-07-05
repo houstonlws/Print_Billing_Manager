@@ -33,11 +33,19 @@ export const register = (email:string, password:string) => async (dispatch:Dispa
 
 export const login = (email:string, password:string) => async (dispatch: Dispatch) => {
     try {
-        await AuthService.login(email, password)
-        dispatch({ type: LOGIN_SUCCESS})
-        window.location.assign('/')
+        const result = await AuthService.login(email, password)
+        if(result.status === 200){
+            dispatch({ type: LOGIN_SUCCESS})
+            window.location.assign('/')
+            window.location.reload()
+        }else{
+            dispatch({ type: LOGIN_FAIL })
+            window.location.assign('/login')
+            window.location.reload()
+        }
     } catch (error) {
         dispatch({ type: LOGIN_FAIL })
+        window.location.assign('/login')
     }
 }
 
@@ -46,6 +54,7 @@ export const logout = () => (dispatch: Dispatch) => {
     document.cookie = 'refreshToken=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     dispatch({type: CLEAR_PERSIST})
     dispatch({type: LOGOUT})
+    window.location.assign('/home')
 }
 
 export const refreshToken = () => async (dispatch: Dispatch) => {
@@ -59,13 +68,16 @@ export const refreshToken = () => async (dispatch: Dispatch) => {
                 else {
                     clearCookie('refreshToken')
                     dispatch({ type: REFRESH_TOKEN_FAILURE});
+                    dispatch({type: LOGOUT})
                 }
             }
             else {
                 dispatch({ type: REFRESH_TOKEN_FAILURE});
+                dispatch({type: LOGOUT})
             }
         } catch (error) {
             dispatch({ type: REFRESH_TOKEN_FAILURE});
+            dispatch({type: LOGOUT})
         }
         
     };
@@ -78,9 +90,11 @@ export const getUserData = () => async (dispatch: Dispatch) => {
             dispatch({ type: GET_USER_DATA_SUCCESS, payload: result?.data })
         }else {
             dispatch({ type: GET_USER_DATA_FAIL })
+            dispatch({type: LOGOUT})
         }
     } catch (error) {
         dispatch({ type: GET_USER_DATA_FAIL })
+        dispatch({type: LOGOUT})
     }
 }
 
@@ -88,9 +102,11 @@ export const updateUserData = (data: User) => async (dispatch: Dispatch) => {
     try {      
         const result = await AuthService.updateUserData(data)
         dispatch({ type: UPDATE_USER_DATA_SUCCESS, payload: result })
+        return true
     } catch (error) {
         console.log('didnt get data', error)
         dispatch({ type: UPDATE_USER_DATA_FAILURE })
+        return false
     }
 }
 
@@ -100,6 +116,7 @@ export const getNotifications = () => async (dispatch: Dispatch) => {
         dispatch({ type: GET_NOTIFICATIONS_SUCCESS, payload: result })
     } catch (error) {
         dispatch({ type: GET_NOTIFICATIONS_FAILURE })
+        dispatch({type: LOGOUT})
     }
 }
 

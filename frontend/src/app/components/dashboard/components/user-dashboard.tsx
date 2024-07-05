@@ -8,6 +8,7 @@ import { PrinterState } from "../../../types/printer.types";
 import InkUsage from "../../tracking/components/ink-usage";
 import { ChartData, ChartOptions } from "chart.js";
 import { Card, CardHeader } from "react-bootstrap";
+import ProfileWidget from "./profile-widget.component";
 
 type Props = {
     auth: AuthState,
@@ -19,14 +20,11 @@ class UserDashboard extends Component<UserDashboardProps> {
     render(): React.ReactNode {
         
         const { printers, metrics } = this.props.printer
+        const { user } = this.props
 
         return (
             <>
-              <Card>
-                <CardHeader>
-                  <h2>User Dashboard</h2>
-                </CardHeader>
-              </Card>
+              <ProfileWidget user={user}></ProfileWidget>
             </>
         )
 
@@ -34,7 +32,7 @@ class UserDashboard extends Component<UserDashboardProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  
+    user: state.auth.user
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({

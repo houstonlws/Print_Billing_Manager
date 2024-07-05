@@ -10,11 +10,13 @@ import { AppState } from "../../types/app.types";
 import { ConnectedProps, connect } from "react-redux";
 
 class NotificationsComponent extends Component<NotificationsProps> {
-  dismissNotification = (event: React.MouseEvent | React.KeyboardEvent) => {
+  
+  dismissNotification = (event: any) => {
     event.preventDefault();
   };
 
   render(): ReactNode {
+    
     const { notifications } = this.props;
 
     return (

@@ -4,7 +4,8 @@ import { CONSTANTS } from "../../utilities/constants"
 
 const { 
     GET_DEPARTMENTS_SUCCESS, 
-    GET_USER_DATA_FAIL
+    GET_USER_DATA_FAIL,
+    LOGOUT
 } = CONSTANTS
 
 export const getDepartments = () => async (dispatch: Dispatch) => {
@@ -13,5 +14,6 @@ export const getDepartments = () => async (dispatch: Dispatch) => {
         dispatch({ type: GET_DEPARTMENTS_SUCCESS,  payload: result })
     } catch (error) {
         dispatch({ type: GET_USER_DATA_FAIL })
+        dispatch({type: LOGOUT})
     }
 }

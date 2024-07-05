@@ -46,7 +46,7 @@ export default class authDao{
 
     static async addUserData(user: User){
         return await new Promise<User>((resolve, reject) => {
-            const query = `INSERT INTO users (id, email) VALUES (?, ?)`;
+            const query = `INSERT INTO users (id, email, type) VALUES (?, ?, 'User')`;
             connection.query(query, [user.id, user.email], (err, res) => {
                 if(err){
                     reject(err)
@@ -96,7 +96,14 @@ export default class authDao{
 
     static async getNotifications(id: string) {
         return await new Promise<User[]>((resolve, reject) => {
-            const query = `SELECT * FROM notifications WHERE user_id=?`;
+            const query = `SELECT 
+            id,
+            user_id,
+            DATE_FORMAT(notification_date, '%Y-%m-%d') as notification_date,
+            message,
+            is_read
+            FROM notifications
+             WHERE user_id=?`;
             connection.query(query, id, (err, res) => {
                 if(err){
                     reject(err)

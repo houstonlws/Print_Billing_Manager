@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from "react";
+import React, { Component, ReactNode } from 'react';
 import {
   AccordionBody,
   AccordionHeader,
@@ -7,19 +7,23 @@ import {
   ButtonGroup,
   Card,
   CardBody,
+  CardFooter,
+  CardHeader,
+  CardTitle,
   Form,
   FormControl,
   FormGroup,
   FormLabel,
+  Row,
   Stack,
-} from "react-bootstrap";
-import { Printer } from "../../../types/printer.types";
-import { connect, ConnectedProps } from "react-redux";
-import { AppState } from "../../../types/app.types";
+} from 'react-bootstrap';
+import { Printer } from '../../../types/printer.types';
+import { connect, ConnectedProps } from 'react-redux';
+import { AppState } from '../../../types/app.types';
 import {
   deletePrinter,
   updatePrinter,
-} from "../../../store/actions/printer.actions";
+} from '../../../store/actions/printer.actions';
 
 interface DetailsState {
   editing: boolean;
@@ -42,28 +46,28 @@ class PrinterDetails extends Component<PropsFromRedux, DetailsState> {
   onChange = (event: any) => {
     const { tempPrinter } = this.state;
     switch (event.target.id) {
-      case "serial":
+      case 'serial':
         tempPrinter.serial_number = event.target.value;
         break;
-      case "brand":
+      case 'brand':
         tempPrinter.brand = event.target.value;
         break;
-      case "model":
+      case 'model':
         tempPrinter.model = event.target.value;
         break;
-      case "location":
+      case 'location':
         tempPrinter.location = event.target.value;
         break;
-      case "ip":
+      case 'ip':
         tempPrinter.ip_address = event.target.value;
         break;
-      case "mac":
+      case 'mac':
         tempPrinter.mac_address = event.target.value;
         break;
-      case "install_date":
+      case 'install_date':
         tempPrinter.installation_date = event.target.value;
         break;
-      case "warranty":
+      case 'warranty':
         tempPrinter.warranty_expiry_date = event.target.value;
         break;
       default:
@@ -81,7 +85,7 @@ class PrinterDetails extends Component<PropsFromRedux, DetailsState> {
   saveEdit = () => {
     const { tempPrinter } = this.state;
     this.props.updatePrinter(tempPrinter);
-    window.alert("Printer updated");
+    window.alert('Printer updated');
     this.toggleEditing();
   };
 
@@ -92,9 +96,9 @@ class PrinterDetails extends Component<PropsFromRedux, DetailsState> {
 
   deletePrinter = (event: any) => {
     const id = event.target.id;
-    const printerId = id.split("delete").pop();
+    const printerId = id.split('delete').pop();
     this.props.deletePrinter(printerId);
-    window.alert("Printer deleted");
+    window.alert('Printer deleted');
     this.toggleEditing();
   };
 
@@ -102,10 +106,11 @@ class PrinterDetails extends Component<PropsFromRedux, DetailsState> {
     const { printer } = this.props;
     const { editing, tempPrinter } = this.state;
 
-    return (
-      <AccordionItem eventKey={printer.id} style={{ marginTop: "5px" }}>
-        {editing ? (
-          <CardBody>
+    if (editing) {
+      return (
+        <Card className='mb-2'>
+          <CardHeader className="d-flex justify-content-center">
+            <CardTitle className="me-auto">Edit Printer</CardTitle>
             <ButtonGroup>
               <Button variant="secondary" onClick={this.discardEdit}>
                 Cancel
@@ -114,8 +119,10 @@ class PrinterDetails extends Component<PropsFromRedux, DetailsState> {
                 Save
               </Button>
             </ButtonGroup>
+          </CardHeader>
+          <CardBody>
             <Form>
-              <FormGroup>
+              <FormGroup as={Row}>
                 <FormLabel>Serial</FormLabel>
                 <FormControl
                   type="text"
@@ -197,62 +204,67 @@ class PrinterDetails extends Component<PropsFromRedux, DetailsState> {
                 ></FormControl>
               </FormGroup>
             </Form>
-            {/* <Button id={`delete${tempPrinter.id}`} variant="danger" onClick={this.deletePrinter}>
-                  Delete
-                </Button> */}
           </CardBody>
-        ) : (
+          <CardFooter className='d-flex'>
+            <div className='me-auto'></div>
+            <Button variant='danger'>Delete</Button>
+          </CardFooter>
+        </Card>
+      );
+    }
+    else {
+      return (
+        <AccordionItem eventKey={printer.id} style={{ marginTop: '5px' }}>
           <AccordionHeader className="d-flex justify-content-between">
-              <Stack direction="horizontal" gap={3}>
-                <div>
-                  <strong>Serial:</strong> {printer.serial_number}
-                </div>
-                <div>
-                  <strong>Model:</strong> {printer.model}
-                </div>
-                <div>
-                  <strong>Brand:</strong> {printer.brand}
-                </div>
-                <div>
-                  <strong>Location:</strong> {printer.location}
-                </div>
-              </Stack>
+            <Stack direction="horizontal" gap={3}>
+              <div>
+                <strong>Serial:</strong> {printer.serial_number}
+              </div>
+              <div>
+                <strong>Model:</strong> {printer.model}
+              </div>
+              <div>
+                <strong>Brand:</strong> {printer.brand}
+              </div>
+              <div>
+                <strong>Location:</strong> {printer.location}
+              </div>
+            </Stack>
           </AccordionHeader>
-        )}
-        <AccordionBody
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            borderTop: "1px solid #c8c8c8",
-          }}
-        >
-          <div>
+          <AccordionBody
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              borderTop: '1px solid #c8c8c8',
+            }}
+          >
             <div>
-              <strong>IP Address:</strong> {printer?.ip_address}
+              <div>
+                <strong>IP Address:</strong> {printer?.ip_address}
+              </div>
+              <div>
+                <strong>MAC Address:</strong> {printer?.mac_address}
+              </div>
+              <div>
+                <strong>Firmware Version:</strong>
+                {printer?.firmware_version}
+              </div>
+              <div>
+                <strong>Installation Date:</strong>
+                {printer?.installation_date}
+              </div>
+              <div>
+                <strong>Warranty Expiry Date:</strong>
+                {printer?.warranty_expiry_date}
+              </div>
             </div>
             <div>
-              <strong>MAC Address:</strong> {printer?.mac_address}
+              <Button onClick={this.toggleEditing}>Edit</Button>
             </div>
-            <div>
-              <strong>Firmware Version:</strong>
-              {printer?.firmware_version}
-            </div>
-            <div>
-              <strong>Installation Date:</strong>
-              {printer?.installation_date}
-            </div>
-            <div>
-              <strong>Warranty Expiry Date:</strong>
-              {printer?.warranty_expiry_date}
-            </div>
-          </div>
-          <div>
-            <Button onClick={this.toggleEditing}>Edit</Button>
-          </div>
-
-        </AccordionBody>
-      </AccordionItem>
-    );
+          </AccordionBody>
+        </AccordionItem>
+      );
+    }
   }
 }
 

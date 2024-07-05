@@ -1,6 +1,5 @@
 import React, { Component, ReactNode } from "react";
 import { Metric } from "../../../types/printer.types";
-import { animated } from "@react-spring/web";
 import { Card, CardBody, Stack } from "react-bootstrap";
 
 interface InkUsageProps {
