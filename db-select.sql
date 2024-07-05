@@ -29,8 +29,8 @@ SELECT
     model,
     brand,
     location,
-    DATE_FORMAT(installation_date, '%Y-%c-%d') as installation_date,
-    DATE_FORMAT(warranty_expiry_date, '%Y-%c-%d') as warranty_expiry_date,
+    DATE_FORMAT(installation_date, '%Y-%m-%d') as installation_date,
+    DATE_FORMAT(warranty_expiry_date, '%Y-%m-%d') as warranty_expiry_date,
     ip_address,
     mac_address,
     firmware_version,
@@ -60,8 +60,8 @@ SELECT
     model,
     brand,
     location,
-    DATE_FORMAT(installation_date, '%Y-%c-%d'),
-    DATE_FORMAT(warranty_expiry_date, '%Y-%c-%d'),
+    DATE_FORMAT(installation_date, '%Y-%m-%d'),
+    DATE_FORMAT(warranty_expiry_date, '%Y-%m-%d'),
     ip_address,
     mac_address,
     firmware_version,
@@ -71,11 +71,11 @@ FROM
 
 SELECT id
     printer_id,
-    DATE_FORMAT(request_date, '%Y-%c-%d') as request_date,
+    DATE_FORMAT(request_date, '%Y-%m-%d') as request_date,
     maintenance_type,
     description,
     status,
-    DATE_FORMAT(resolved_date, '%Y-%c-%d') as resolved_date
+    DATE_FORMAT(resolved_date, '%Y-%m-%d') as resolved_date
 FROM maintenance_requests;
 
 INSERT INTO maintenance_requests
@@ -99,6 +99,15 @@ SELECT id,
     color_pages_charge,
     bw_pages_charge
 FROM billing;
+
+SELECT id,
+    user_id,
+    DATE_FORMAT(notification_date, '%Y-%m-%d') as notification_date,
+    message,
+    is_read
+FROM notifications;
+
+
 
 
     

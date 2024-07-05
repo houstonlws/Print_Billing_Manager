@@ -14,6 +14,7 @@ import {
   FormControl,
   Row,
 } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 interface LoginState {
   email: string;
@@ -87,6 +88,10 @@ class Login extends Component<LoginProps, LoginState> {
               </Form>
             </CardBody>
           </Card>
+          <div className="text-center">
+            <p>Don't have an account?</p>
+            <Link to='/register'>Register</Link>
+          </div>
         </Row>
       </Container>
     );

@@ -20,42 +20,13 @@ Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 class BillingComponent extends Component<BillingComponentProps> {
 
-    componentDidMount(): void {
-        this.props.getDepartmentBillingHistory()
-    }
-
-   
-
-    chartOptions: ChartOptions<'bar'> = {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
-          },
-          title: {
-            display: true,
-            text: 'Print Copies for the Last 12 Months',
-          },
-        },
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Month',
-            },
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Number of Copies',
-            },
-          },
-        },
-    }
-
     render(): ReactNode {
 
         const { billData, departments } = this.props
+
+        const dueDate: any = new Date(billData?.billing_cycle_end!).toISOString().split('T').shift() || ''
+        if(dueDate instanceof Date)
+          dueDate.setMonth(dueDate.getMonth() + 1)
 
         return (
             <Stack gap={2}>
@@ -66,30 +37,31 @@ class BillingComponent extends Component<BillingComponentProps> {
                 </Card>
                 <Card>
                   <CardBody>
-                    <CardTitle>{departments.find(d => d.id === billData?.department_id)?.name}</CardTitle>
-                    <CardText>{billData?.billing_cycle_start} - {billData?.billing_cycle_end}</CardText>
-                  </CardBody>
-                </Card>
-
-                <Card>
+                    <div className="d-flex">
+                      <CardTitle className="me-auto"><strong>From:</strong> Billing Department</CardTitle>
+                      <CardTitle><strong>Billing Period: </strong>{billData?.billing_cycle_start} - {billData?.billing_cycle_end}</CardTitle>
+                    </div>
+                    <div className="d-flex">
+                      <CardTitle className="me-auto"><strong>To:</strong> {departments.find(d => d.id === billData?.department_id)?.name}</CardTitle>
+                      <CardTitle><strong>Due Date: </strong>{dueDate}</CardTitle>
+                    </div>
+                    </CardBody>
                     <ListGroup>
                       <ListGroupItem>
-                        <div>Total Color Pages: {billData?.total_color_pages}</div>
+                        <div><strong>Total Color Pages: </strong>{billData?.total_color_pages}</div>
                       </ListGroupItem>
                       <ListGroupItem>
-                        <div>Total B&W Pages: {billData?.total_bw_pages}</div>
+                        <div><strong>Total B&W Pages: </strong>{billData?.total_bw_pages}</div>
                       </ListGroupItem>
                       <ListGroupItem>
-                        <CardText>Total Paper: {billData?.total_paper}</CardText>
+                        <CardText><strong>Total Paper: </strong>{billData?.total_paper}</CardText>
                       </ListGroupItem>
                     </ListGroup>
-                </Card>
-                <Card>
                   <CardBody>
-                    <h2>Amount Due: ${billData?.total_charges}</h2>
+                    <h4>Amount Due</h4>
+                    <div style={{fontSize: '4em', lineHeight: '1em', color: 'green'}}>${billData?.total_charges}</div>
                   </CardBody>
                 </Card>
-                
             </Stack>
         )
     }
@@ -104,7 +76,6 @@ const mapStateToProps = (state: AppState) => {
 }
 
 const mapDispatchToProps = {
-    getDepartmentBillingHistory
 }
 
 const connector = connect(mapStateToProps, mapDispatchToProps)

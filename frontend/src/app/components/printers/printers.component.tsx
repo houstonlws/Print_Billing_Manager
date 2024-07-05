@@ -1,13 +1,12 @@
 import React, { Component, ReactNode } from "react";
 import {
   Spinner,
+  Stack,
 } from "react-bootstrap";
 import { ConnectedProps, connect } from "react-redux";
 import { AppState } from "../../types/app.types";
 import {
   addPrinter,
-  getAllPrinters,
-  getDepartmentPrinters,
 } from "../../store/actions/printer.actions";
 import { Printer } from "../../types/printer.types";
 import PrinterList from "./components/printer-list";
@@ -33,6 +32,7 @@ const initialState: Printer = {
 }
 
 class PrintersComponent extends Component<PrintersComponentProps, State> {
+  
   constructor(props: PrintersComponentProps) {
     super(props);
     this.state = {
@@ -101,10 +101,10 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
       return <Spinner animation="border"></Spinner>;
     } else {
       return (
-        <div>
+        <Stack gap={3}>
           <AddPrinterComponent></AddPrinterComponent>
           <PrinterList printers={printers}></PrinterList>
-        </div>
+        </Stack>
       );
     }
   }
@@ -118,8 +118,6 @@ const mapStateToProps = (state: AppState) => {
 };
 
 const mapDispatchToProps = {
-  getDepartmentPrinters,
-  getAllPrinters,
   addPrinter,
 };
 

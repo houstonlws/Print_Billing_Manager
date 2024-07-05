@@ -15,11 +15,11 @@ class RequestList extends Component<ListProps> {
         const { requests, printers } = this.props
 
         return (
-            <>
+            <div>
                {requests?.map(request => (
                 <RequestDetails key={request.id} request={request} printer={printers.find(p => p.id === request.printer_id)!}></RequestDetails>
                ))}
-            </>
+            </div>
         )
     }
 

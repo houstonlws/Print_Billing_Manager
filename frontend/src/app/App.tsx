@@ -12,7 +12,6 @@ class App extends React.Component<AppProps, AppState> {
 
   componentDidMount() {
     this.props.refreshToken();
-    this.props.getNotifications();
   }
 
   render() {
@@ -43,7 +42,6 @@ const mapDispatchToProps = {
   refreshToken,
   getDepartments,
   logout,
-  getNotifications
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

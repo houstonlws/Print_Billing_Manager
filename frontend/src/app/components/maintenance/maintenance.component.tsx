@@ -5,6 +5,7 @@ import { MaintenanceRequest } from "../../types/maintenance.types";
 import { getMaintenanceRequests } from "../../store/actions/maintenance.actions";
 import AddRequest from "./components/add-request";
 import RequestList from "./components/request-list";
+import { Stack } from "react-bootstrap";
 
 interface State {
     requests: MaintenanceRequest[]
@@ -12,20 +13,15 @@ interface State {
 
 class MaintenanceComponent extends Component<Props, State> {
 
-    componentDidMount(): void {
-        const printers = this.props.printer.printers.map(p => p.id)
-        this.props.getMaintenanceRequests(printers)
-    }
-
     render(): ReactNode {
         
         const { requests } = this.props.maintenance
 
         return (
-            <div>
+            <Stack gap={3}>
                 <AddRequest></AddRequest>
                 <RequestList requests={requests}></RequestList>
-            </div>
+            </Stack>
         )
     }
 
@@ -37,7 +33,6 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = {
-    getMaintenanceRequests
 };
 
 type Props = ConnectedProps<typeof connector>;

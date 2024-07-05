@@ -22,6 +22,7 @@ type ProfileState = {
   department_id: string;
   email: string;
   phone: string;
+  status?: string | null
 };
 
 class ProfileComponent extends Component<ProfileProps, ProfileState> {
@@ -36,7 +37,8 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
       lastName: props.lastName || "",
       department_id: props.department_id || "",
       email: props.email || "",
-      phone: props.phone || ""
+      phone: props.phone || "",
+      status: null,
     };
   }
 
@@ -64,23 +66,28 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
 
   handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    this.props.updateUserData(this.state as User);
+    const result = await this.props.updateUserData(this.state as User);
+    console.log('res', result)
+    if(result){
+        this.setState({status: 'success'})
+      }
+    else{
+        this.setState({status: 'danger'})
+      }
   };
 
   render(): ReactNode {
 
-    const { firstName, lastName, email, phone, department_id } = this.state!;
-    const { departments, status } = this.props!
+    const { firstName, lastName, email, phone, department_id, status } = this.state!;
+    const { departments } = this.props!
 
     return (
       <>
         <h2>User Profile</h2>
-        {status === 'success' && (
-          <Alert variant="success">Profile updated successfully</Alert>
+        {status !== null && (
+          <Alert variant={status}>{status === 'danger' ? 'Error updating profile': 'Updated Profile Successfully'}</Alert>
         )}
-        {status === 'failure' && (
-          <Alert variant="danger">Error updating profile</Alert>
-        )}
+
         <Card>
           <CardBody>
             <Form onSubmit={this.handleFormSubmit}>
