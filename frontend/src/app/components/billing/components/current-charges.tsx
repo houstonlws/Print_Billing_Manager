@@ -1,15 +1,9 @@
 import React, { Component, ReactNode } from "react";
 
 class CurrentCharges extends Component {
-
-    render(): ReactNode {
-        return (
-            <>
-               
-            </>
-        )
-    }
-
+  render(): ReactNode {
+    return <></>;
+  }
 }
 
-export default CurrentCharges
+export default CurrentCharges;

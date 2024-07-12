@@ -1,13 +1,8 @@
 import React, { Component, ReactNode } from "react";
-import {
-  Spinner,
-  Stack,
-} from "react-bootstrap";
+import { Spinner, Stack } from "react-bootstrap";
 import { ConnectedProps, connect } from "react-redux";
 import { AppState } from "../../types/app.types";
-import {
-  addPrinter,
-} from "../../store/actions/printer.actions";
+import { addPrinter } from "../../store/actions/printer.actions";
 import { Printer } from "../../types/printer.types";
 import PrinterList from "./components/printer-list";
 import AddPrinterComponent from "./components/add-printer.component";
@@ -18,21 +13,20 @@ interface State {
 }
 
 const initialState: Printer = {
-    id: '',
-    serial_number: '',
-    model: '',
-    brand: '',
-    location: '',
-    installation_date: '',
-    warranty_expiry_date: '',
-    ip_address: '',
-    mac_address: '',
-    firmware_version: '',
-    department_id: '' 
-}
+  id: "",
+  serial_number: "",
+  model: "",
+  brand: "",
+  location: "",
+  installation_date: "",
+  warranty_expiry_date: "",
+  ip_address: "",
+  mac_address: "",
+  firmware_version: "",
+  department_id: "",
+};
 
 class PrintersComponent extends Component<PrintersComponentProps, State> {
-  
   constructor(props: PrintersComponentProps) {
     super(props);
     this.state = {
@@ -74,7 +68,7 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
       default:
         return;
     }
-    this.setState({ tempPrinter: tempPrinter });
+    this.setState({ tempPrinter });
   };
 
   toggleAdding = () => {
@@ -84,29 +78,27 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
   };
 
   cancelAdd = () => {
-    this.setState({tempPrinter: initialState})
-    this.toggleAdding()
-  }
+    this.setState({ tempPrinter: initialState });
+    this.toggleAdding();
+  };
 
   addPrinter = () => {
     this.props.addPrinter(this.state.tempPrinter);
-    window.alert('Added Printer')
+    window.alert("Added Printer");
   };
 
-
   render(): ReactNode {
-    const { printers, loading } = this.props!;
+    const { printers, loading, type } = this.props!;
 
     if (loading) {
       return <Spinner animation="border"></Spinner>;
-    } else {
-      return (
-        <Stack gap={3}>
-          <AddPrinterComponent></AddPrinterComponent>
-          <PrinterList printers={printers}></PrinterList>
-        </Stack>
-      );
     }
+    return (
+      <Stack gap={3}>
+        {type === "Admin" && <AddPrinterComponent></AddPrinterComponent>}
+        <PrinterList printers={printers}></PrinterList>
+      </Stack>
+    );
   }
 }
 
@@ -114,6 +106,7 @@ const mapStateToProps = (state: AppState) => {
   return {
     loading: state.printer?.loading,
     printers: state.printer?.printers,
+    type: state.auth?.user?.type,
   };
 };
 

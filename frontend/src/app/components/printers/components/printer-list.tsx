@@ -1,24 +1,24 @@
 import React, { Component, ReactNode } from "react";
-import { Printer } from "../../../types/printer.types";
-import { Accordion, Button, Card, CardHeader, Form, FormControl, FormGroup, FormLabel, Modal } from "react-bootstrap";
-import { AppState } from "../../../types/app.types";
+import { Accordion } from "react-bootstrap";
 import { ConnectedProps, connect } from "react-redux";
+import { Printer } from "../../../types/printer.types";
+import { AppState } from "../../../types/app.types";
 import { addPrinter } from "../../../store/actions/printer.actions";
 import PrinterDetails from "./printer-details";
 
 const initialState: Printer = {
-  id: '',
-  serial_number: '',
-  model: '',
-  brand: '',
-  location: '',
-  installation_date: '',
-  warranty_expiry_date: '',
-  ip_address: '',
-  mac_address: '',
-  firmware_version: '',
-  department_id: '' 
-}
+  id: "",
+  serial_number: "",
+  model: "",
+  brand: "",
+  location: "",
+  installation_date: "",
+  warranty_expiry_date: "",
+  ip_address: "",
+  mac_address: "",
+  firmware_version: "",
+  department_id: "",
+};
 
 interface PrinterListProps {
   printers: Printer[];
@@ -30,14 +30,12 @@ interface State {
 }
 
 class PrinterList extends Component<ListProps, State> {
-
   constructor(props: ListProps) {
     super(props);
     this.state = {
       adding: false,
-      tempPrinter: initialState
-    }
-  
+      tempPrinter: initialState,
+    };
   }
 
   onChange = (event: any) => {
@@ -73,7 +71,7 @@ class PrinterList extends Component<ListProps, State> {
       default:
         return;
     }
-    this.setState({ tempPrinter: tempPrinter });
+    this.setState({ tempPrinter });
   };
 
   toggleAdding = () => {
@@ -83,28 +81,26 @@ class PrinterList extends Component<ListProps, State> {
   };
 
   cancelAdd = () => {
-    this.setState({tempPrinter: initialState})
-    this.toggleAdding()
-  }
+    this.setState({ tempPrinter: initialState });
+    this.toggleAdding();
+  };
 
   addPrinter = () => {
     this.props.addPrinter(this.state.tempPrinter);
-    window.alert('Added Printer')
+    window.alert("Added Printer");
   };
-
 
   render(): ReactNode {
     const { printers } = this.props!;
 
-      return (
-        <Accordion>
-          {printers?.map((printer: Printer, index) => (
-            <PrinterDetails key={index} printer={printer}></PrinterDetails>
-          ))}
-        </Accordion>
-      );
-    }
-  
+    return (
+      <Accordion>
+        {printers?.map((printer: Printer, index) => (
+          <PrinterDetails key={index} printer={printer}></PrinterDetails>
+        ))}
+      </Accordion>
+    );
+  }
 }
 
 const mapStateToProps = (state: AppState, props: PrinterListProps) => {

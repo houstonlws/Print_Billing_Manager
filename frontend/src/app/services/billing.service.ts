@@ -1,18 +1,16 @@
-import { getAxios } from "../utilities/axios.config"
+import { getAxios } from "../utilities/axios.config";
 
-const axios = getAxios()
+const axios = getAxios();
 
 class BillingService {
-
-    static getDepartmentBillingHistory = async () => {
-        try {
-            const result = await axios.get('/getDepartmentBillingHistory')
-            if(result.status === 200) return result.data
-            else return []
-        } catch (error) {
-            return []
-        } 
-            
+  static getDepartmentBillingHistory = async () => {
+    try {
+      const result = await axios.get("/getDepartmentBillingHistory");
+      if (result.status === 200) return result.data;
+      return [];
+    } catch (error) {
+      return [];
     }
+  };
 }
-export default BillingService
+export default BillingService;

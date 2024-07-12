@@ -7,7 +7,8 @@ const router = Router()
 router.get('/printers' ,validateToken , PrinterController.getDepartmentPrinters)
 router.post('/metrics' ,validateToken , PrinterController.getDepartmentMetrics)
 router.put('/printer', validateToken, PrinterController.updatePrinter)
-router.delete('/printer/:id', validateToken, PrinterController.deletePrinter)
+// router.delete('/printer/:id', validateToken, PrinterController.deletePrinter)
 router.post('/printer', validateToken, PrinterController.addPrinter)
+router.get('/allPrinters' ,validateToken , PrinterController.getAllPrinters)
 
 export default router

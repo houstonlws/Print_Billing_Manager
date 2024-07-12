@@ -1,21 +1,23 @@
-import React from 'react';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import React from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 
-function withRouter(Component: any) {
-  function ComponentWithRouterProp(props: any) {
-    let navigate = useNavigate();
-    let location = useLocation();
-    let params = useParams();
+export const withRouter = (Component: any) => {
+  const ComponentWithRouterProp = (props: any) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const params = useParams();
 
-    return (
-      <Component
-        {...props}
-        router={{ navigate, location, params }}
-      />
-    );
-  }
+    return <Component {...props} router={{ navigate, location, params }} />;
+  };
 
   return ComponentWithRouterProp;
-}
+};
 
-export default withRouter;
+export const withDispatch = (Component: any) => {
+  const ComponentWithDispatchProp = (props: any) => {
+    const dispatch = useDispatch();
+    return <Component {...props} dispatch={dispatch} />;
+  };
+  return ComponentWithDispatchProp;
+};

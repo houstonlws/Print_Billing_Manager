@@ -1,8 +1,6 @@
-import { connect } from "react-redux";
+import { connect, ConnectedProps } from "react-redux";
 import React, { ChangeEvent, Component } from "react";
-import { ConnectedProps } from "react-redux";
-import { AppState } from "../../types/app.types";
-import { login } from "../../store/actions/auth.action";
+
 import {
   Button,
   Card,
@@ -15,6 +13,8 @@ import {
   Row,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { AppState } from "../../types/app.types";
+import { login } from "../../store/actions/auth.action";
 
 interface LoginState {
   email: string;
@@ -39,7 +39,6 @@ class Login extends Component<LoginProps, LoginState> {
         this.setState({ password: event.target.value });
         break;
       default:
-        return;
     }
   };
 
@@ -63,7 +62,7 @@ class Login extends Component<LoginProps, LoginState> {
             </CardHeader>
             <CardBody>
               <Form onSubmit={this.handleLogin}>
-                <FloatingLabel label='Email Address' className="mb-3">
+                <FloatingLabel label="Email Address" className="mb-3">
                   <FormControl
                     type="email"
                     className="form-control"
@@ -74,7 +73,7 @@ class Login extends Component<LoginProps, LoginState> {
                     onChange={this.onChange}
                   ></FormControl>
                 </FloatingLabel>
-                <FloatingLabel label='Password' className="mb-3">
+                <FloatingLabel label="Password" className="mb-3">
                   <FormControl
                     type="password"
                     className="form-control"
@@ -89,8 +88,8 @@ class Login extends Component<LoginProps, LoginState> {
             </CardBody>
           </Card>
           <div className="text-center">
-            <p>Don't have an account?</p>
-            <Link to='/register'>Register</Link>
+            <p>No account?</p>
+            <Link to="/register">Register</Link>
           </div>
         </Row>
       </Container>

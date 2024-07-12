@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from "react";
-import { Metric } from "../../../types/printer.types";
 import { CardBody } from "react-bootstrap";
+import { Metric } from "../../../types/printer.types";
 
 type PaperUsageProps = {
   metric: Metric;
@@ -8,8 +8,6 @@ type PaperUsageProps = {
 
 class PaperUsage extends Component<PaperUsageProps> {
   render(): ReactNode {
-    const { metric } = this.props;
-
     return (
       <CardBody>
         <div>

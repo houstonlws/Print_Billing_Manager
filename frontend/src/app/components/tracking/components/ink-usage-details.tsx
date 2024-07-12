@@ -1,16 +1,9 @@
 import React, { Component, ReactNode } from "react";
-import { Route, Routes } from "react-router-dom";
 
 class PageUsage extends Component {
-
-    render(): ReactNode {
-        return (
-            <>
-               
-            </>
-        )
-    }
-
+  render(): ReactNode {
+    return <></>;
+  }
 }
 
-export default PageUsage
+export default PageUsage;

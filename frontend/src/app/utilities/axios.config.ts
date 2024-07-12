@@ -1,10 +1,10 @@
-import _axios from 'axios'
+import _axios from "axios";
 
-const axios = _axios.create()
+const axios = _axios.create();
 
-axios.defaults.baseURL = 'http://localhost:5000'
-axios.defaults.withCredentials = true
+axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.withCredentials = true;
 
-export function getAxios(){
-    return axios
-}
+export const getAxios = () => {
+  return axios;
+};

@@ -5,9 +5,9 @@ import { MaintenanceState } from "./maintenance.types";
 import { PrinterState } from "./printer.types";
 
 export interface AppState {
-    auth: AuthState,
-    data: DataState,
-    billing: BillingState,
-    maintenance: MaintenanceState
-    printer: PrinterState
-  }
+  auth: AuthState;
+  data: DataState;
+  billing: BillingState;
+  maintenance: MaintenanceState;
+  printer: PrinterState;
+}
