@@ -5,7 +5,6 @@ import {
   Nav,
   Button,
   Form,
-  InputGroup,
   FormControl,
   Stack,
   NavbarBrand,
@@ -13,7 +12,7 @@ import {
 import { Link } from "react-router-dom";
 import { ConnectedProps, connect } from "react-redux";
 import { AppState } from "../../types/app.types";
-import { login, logout } from "../../store/actions/auth.action";
+import { login } from "../../store/actions/auth.action";
 
 interface State {
   email: string;
@@ -59,11 +58,8 @@ class Navigation extends Component<NavigationProps, State> {
       <Navbar bg="light">
         <Container>
           <Nav>
-            <NavbarBrand as={Link} to={'/home'}>
-              <img 
-                src="navlogodark.png"
-                height={30}
-              ></img>
+            <NavbarBrand as={Link} to={"/home"}>
+              <img alt="logo" src="navlogodark.png" height={30}></img>
             </NavbarBrand>
           </Nav>
           <Form onSubmit={this.onSubmit}>

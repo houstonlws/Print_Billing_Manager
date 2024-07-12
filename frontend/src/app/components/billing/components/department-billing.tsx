@@ -1,25 +1,18 @@
 import React, { Component, ReactNode } from "react";
-import { AppState } from "../../../types/app.types";
-import { ConnectedProps, connect } from 'react-redux'
+import { ConnectedProps, connect } from "react-redux";
 
 class DepartmentBilling extends Component<BillingProps> {
-
-    render(): ReactNode {
-        return (
-            <>
-               
-            </>
-        )
-    }
-
+  render(): ReactNode {
+    return <></>;
+  }
 }
 
-const mapStateToProps = (state: AppState) => ({})
+const mapStateToProps = () => ({});
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = {};
 
-const connector = connect(mapStateToProps,mapDispatchToProps)
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
-type BillingProps = ConnectedProps<typeof connector>
+type BillingProps = ConnectedProps<typeof connector>;
 
-export default connector(DepartmentBilling)
+export default connector(DepartmentBilling);

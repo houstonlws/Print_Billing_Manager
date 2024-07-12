@@ -2,6 +2,21 @@ import connection from "../config/database.config";
 import { Metric, Printer } from "../models/printer.model";
 
 class PrinterDao {
+
+  static async getAllPrinters() {
+    return await new Promise<any>((resolve, reject) => {
+      const query = `SELECT * FROM printers;`;
+      connection.query(query, (err, res) => {
+        if (!err) {
+          resolve(res);
+        } else {
+          console.log("get all printers error", err);
+          reject(err);
+        }
+      });
+    });
+  }
+
   static async getDepartmentPrinters(id: number) {
     return await new Promise<Printer[]>((resolve, reject) => {
       const query = `SELECT 

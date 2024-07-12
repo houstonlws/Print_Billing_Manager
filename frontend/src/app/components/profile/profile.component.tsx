@@ -1,9 +1,5 @@
 import React, { Component, FormEvent, ReactNode } from "react";
-import { AppState } from "../../types/app.types";
 import { ConnectedProps, connect } from "react-redux";
-import { updateUserData } from "../../store/actions/auth.action";
-import { User } from "../../types/auth.types";
-import { getDepartments } from "../../store/actions/data.action";
 import {
   Alert,
   Button,
@@ -15,6 +11,10 @@ import {
   FormSelect,
   Row,
 } from "react-bootstrap";
+import { AppState } from "../../types/app.types";
+import { updateUserData } from "../../store/actions/auth.action";
+import { User } from "../../types/auth.types";
+import { getDepartments } from "../../store/actions/data.action";
 
 type ProfileState = {
   firstName: string;
@@ -22,7 +22,7 @@ type ProfileState = {
   department_id: string;
   email: string;
   phone: string;
-  status?: string | null
+  status?: string | null;
 };
 
 class ProfileComponent extends Component<ProfileProps, ProfileState> {
@@ -60,32 +60,34 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
         this.setState({ phone: event.target.value });
         break;
       default:
-        return;
     }
   };
 
   handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const result = await this.props.updateUserData(this.state as User);
-    console.log('res', result)
-    if(result){
-        this.setState({status: 'success'})
-      }
-    else{
-        this.setState({status: 'danger'})
-      }
+    console.log("res", result);
+    if (result) {
+      this.setState({ status: "success" });
+    } else {
+      this.setState({ status: "danger" });
+    }
   };
 
   render(): ReactNode {
-
-    const { firstName, lastName, email, phone, department_id, status } = this.state!;
-    const { departments } = this.props!
+    const { firstName, lastName, email, phone, department_id, status } =
+      this.state!;
+    const { departments } = this.props!;
 
     return (
       <>
         <h2>User Profile</h2>
         {status !== null && (
-          <Alert variant={status}>{status === 'danger' ? 'Error updating profile': 'Updated Profile Successfully'}</Alert>
+          <Alert variant={status}>
+            {status === "danger"
+              ? "Error updating profile"
+              : "Updated Profile Successfully"}
+          </Alert>
         )}
 
         <Card>
@@ -182,7 +184,6 @@ const mapStateToProps = (state: AppState) => {
     department_id: state.auth.user?.department_id,
     phone: state.auth.user?.phone,
     departments: state.data.departments,
-    status: state.auth.updatedDataStatus
   };
 };
 

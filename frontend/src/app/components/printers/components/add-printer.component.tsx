@@ -1,5 +1,4 @@
 import React, { Component, ReactNode } from "react";
-import { AppState } from "../../../types/app.types";
 import { ConnectedProps, connect } from "react-redux";
 import {
   Button,
@@ -38,7 +37,7 @@ class AddPrinterComponent extends Component<AddProps, State> {
     super(props);
     this.state = {
       adding: false,
-      tempPrinter: {...initialState},
+      tempPrinter: { ...initialState },
     };
   }
 
@@ -76,7 +75,7 @@ class AddPrinterComponent extends Component<AddProps, State> {
       default:
         return;
     }
-    this.setState({tempPrinter: tempPrinter})
+    this.setState({ tempPrinter });
   };
 
   toggleAdding = () => {
@@ -86,7 +85,7 @@ class AddPrinterComponent extends Component<AddProps, State> {
   };
 
   cancelAdd = () => {
-    this.setState({ tempPrinter: {...initialState} });
+    this.setState({ tempPrinter: { ...initialState } });
     this.toggleAdding();
   };
 
@@ -214,7 +213,7 @@ class AddPrinterComponent extends Component<AddProps, State> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({});
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = {
   addPrinter,

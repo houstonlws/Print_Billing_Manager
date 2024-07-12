@@ -3,6 +3,15 @@ import PrinterDao from "../dao/printer.dao"
 
 class PrinterController {
 
+    static async getAllPrinters(req: Request, res: Response) {
+        try {
+            const printers = await PrinterDao.getAllPrinters()
+            res.json(printers)
+        } catch (error) {
+            res.status(400).json('error getting printers')
+        }
+    }
+
     static async getDepartmentPrinters(req: Request, res: Response) {
         try {
             const department_id = req.body.tokenData['department_id']

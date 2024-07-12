@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { ConnectedProps, connect } from "react-redux";
-import { register } from "../../store/actions/auth.action";
 import {
   Button,
   Card,
@@ -13,6 +12,7 @@ import {
   Row,
 } from "react-bootstrap";
 import InputGroupText from "react-bootstrap/esm/InputGroupText";
+import { register } from "../../store/actions/auth.action";
 
 interface RegisterState {
   email: string;
@@ -43,7 +43,6 @@ class Register extends Component<RegisterProps, RegisterState> {
         this.setState({ password2: event.target.value });
         break;
       default:
-        return;
     }
   }
 
@@ -72,7 +71,7 @@ class Register extends Component<RegisterProps, RegisterState> {
             style={{
               maxWidth: "500px",
               margin: "auto",
-              padding: '0px'
+              padding: "0px",
             }}
           >
             <CardHeader>

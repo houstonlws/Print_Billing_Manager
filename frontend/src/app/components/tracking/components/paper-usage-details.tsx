@@ -1,15 +1,9 @@
 import React, { Component, ReactNode } from "react";
 
 class PaperUsageDetails extends Component {
-
-    render(): ReactNode {
-        return (
-            <>
-               
-            </>
-        )
-    }
-
+  render(): ReactNode {
+    return <></>;
+  }
 }
 
-export default PaperUsageDetails
+export default PaperUsageDetails;
