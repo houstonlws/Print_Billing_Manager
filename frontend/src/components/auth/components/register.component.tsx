@@ -53,7 +53,8 @@ class Register extends Component<RegisterProps, RegisterState> {
     const { email, password, password2 } = this.state;
     console.log('Form submitted', { email, password, password2 });
     if (this.passwordsMatch()) {
-      this.props.register(email, password);
+      console.log('Passwords match, calling register');
+      await this.props.register(email, password);
     } else this.setState({ status: 'danger' });
   };
 

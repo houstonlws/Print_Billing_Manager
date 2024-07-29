@@ -1,11 +1,19 @@
 import React, { Component, ReactNode } from 'react';
-import { Spinner, Stack } from 'react-bootstrap';
+import {
+  Accordion,
+  AccordionBody,
+  AccordionHeader,
+  AccordionItem,
+  Stack,
+} from 'react-bootstrap';
 import { ConnectedProps, connect } from 'react-redux';
 import { AppState } from '../../types/app.types';
 import { addPrinter } from '../../store/actions/printer.actions';
 import { Printer } from '../../types/printer.types';
-import PrinterList from './components/printer-list';
 import AddPrinterComponent from './components/add-printer.component';
+import EditPrinterComponent from './components/edit-printer.component';
+import { CONSTANTS } from '../../config/constants';
+import ReportIssueComponent from './components/report-issue.component';
 
 interface State {
   adding: boolean;
@@ -88,15 +96,80 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
   };
 
   render(): ReactNode {
-    const { printers, loading, type } = this.props!;
+    const { printers, type } = this.props!;
 
-    if (loading) {
-      return <Spinner animation="border"></Spinner>;
-    }
     return (
-      <Stack gap={3}>
-        {type === 'Admin' && <AddPrinterComponent></AddPrinterComponent>}
-        <PrinterList printers={printers}></PrinterList>
+      <Stack data-testid='printers-component' gap={3}>
+        {type === CONSTANTS.ADMIN && (
+          <AddPrinterComponent></AddPrinterComponent>
+        )}
+        <Accordion>
+          {printers?.map((printer: Printer, index) => (
+            <AccordionItem
+              key={index}
+              eventKey={printer.id}
+              style={{ marginTop: '5px' }}
+            >
+              <AccordionHeader className='d-flex justify-content-between'>
+                <Stack direction='horizontal' gap={3}>
+                  <div>
+                    <strong>Serial:</strong> {printer.serial_number}
+                  </div>
+                  <div>
+                    <strong>Model:</strong> {printer.model}
+                  </div>
+                  <div>
+                    <strong>Brand:</strong> {printer.brand}
+                  </div>
+                  <div>
+                    <strong>Location:</strong> {printer.location}
+                  </div>
+                  <div>
+                    <strong>Department:</strong> {printer.department_id}
+                  </div>
+                </Stack>
+              </AccordionHeader>
+              <AccordionBody
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  borderTop: '1px solid #c8c8c8',
+                }}
+              >
+                <div>
+                  <div>
+                    <strong>IP Address:</strong> {printer?.ip_address}
+                  </div>
+                  <div>
+                    <strong>MAC Address:</strong> {printer?.mac_address}
+                  </div>
+                  <div>
+                    <strong>Firmware Version:</strong>
+                    {printer?.firmware_version}
+                  </div>
+                  <div>
+                    <strong>Installation Date:</strong>
+                    {printer?.installation_date}
+                  </div>
+                  <div>
+                    <strong>Warranty Expiry Date:</strong>
+                    {printer?.warranty_expiry_date}
+                  </div>
+                </div>
+                <div className='d-flex'>
+                  {type === CONSTANTS.ADMIN && (
+                    <EditPrinterComponent
+                      printer={printer}
+                    ></EditPrinterComponent>
+                  )}
+                  <ReportIssueComponent
+                    printer={printer}
+                  ></ReportIssueComponent>
+                </div>
+              </AccordionBody>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </Stack>
     );
   }
@@ -104,7 +177,6 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
 
 const mapStateToProps = (state: AppState) => {
   return {
-    loading: state.printer?.loading,
     printers: state.printer?.printers,
     type: state.auth?.user?.type,
   };

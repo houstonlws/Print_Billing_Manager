@@ -103,90 +103,88 @@ class TrackingModule extends Component<TrackingProps, State> {
     };
 
     return (
-      <>
-        <Stack gap={3}>
+      <Stack data-testid='tracking-component' gap={3}>
+        <Card>
+          <CardHeader>
+            <Dropdown autoClose='outside'>
+              <div className='d-flex'>
+                <h2 className='me-auto'>Track Printers</h2>
+                <DropdownToggle>Filter</DropdownToggle>
+              </div>
+              <DropdownMenu>
+                <CardBody>
+                  {printers.map((printer) => (
+                    <FormCheck
+                      key={printer.id}
+                      checked={!!selectedPrinters[printer.id]}
+                      onChange={() => this.toggleCheckBox(printer.id)}
+                    >
+                      <FormCheckInput></FormCheckInput>
+                      <FormCheckLabel>{printer.serial_number}</FormCheckLabel>
+                    </FormCheck>
+                  ))}
+                </CardBody>
+              </DropdownMenu>
+            </Dropdown>
+          </CardHeader>
+        </Card>
+        <Card style={{ minHeight: '400px' }}>
+          <CardBody>
+            <Bar options={chartOptions} data={chartData}></Bar>
+          </CardBody>
+        </Card>
+
+        <Stack
+          direction='horizontal'
+          gap={3}
+          className='text-center justify-content-between'
+        >
+          <Card>
+            <Card.Header>Total Print Jobs: </Card.Header>
+            <Card.Title>
+              <h2>{totalPrintJobs}</h2>
+              <small>Jobs</small>
+            </Card.Title>
+          </Card>
+          <Card>
+            <Card.Header>Total Print Volume: </Card.Header>
+            <Card.Title>
+              <h2>{totalPrintVolume}</h2>
+              <small>Pages</small>
+            </Card.Title>
+          </Card>
+          <Card>
+            <Card.Header>Total Color Impressions: </Card.Header>
+            <Card.Title>
+              <h2 data-testid='total-color'>{totalColor}</h2>
+              <small>Clicks</small>
+            </Card.Title>
+          </Card>
+          <Card>
+            <Card.Header>Total Black & White Impressions: </Card.Header>
+            <Card.Title>
+              <h2 data-testid='total-bw'>{totalBW}</h2>
+              <small>Clicks</small>
+            </Card.Title>
+          </Card>
+        </Stack>
+        <Stack gap={2}>
           <Card>
             <CardHeader>
-              <Dropdown autoClose="outside">
-                <div className="d-flex">
-                  <h2 className="me-auto">Track Printers</h2>
-                  <DropdownToggle>Filter</DropdownToggle>
-                </div>
-                <DropdownMenu>
-                  <CardBody>
-                    {printers.map((printer) => (
-                      <FormCheck
-                        key={printer.id}
-                        checked={!!selectedPrinters[printer.id]}
-                        onChange={() => this.toggleCheckBox(printer.id)}
-                      >
-                        <FormCheckInput></FormCheckInput>
-                        <FormCheckLabel>{printer.serial_number}</FormCheckLabel>
-                      </FormCheck>
-                    ))}
-                  </CardBody>
-                </DropdownMenu>
-              </Dropdown>
+              <h3>Printer Details</h3>
             </CardHeader>
           </Card>
-          <Card style={{ minHeight: '400px' }}>
-            <CardBody>
-              <Bar options={chartOptions} data={chartData}></Bar>
-            </CardBody>
-          </Card>
-
-          <Stack
-            direction="horizontal"
-            gap={3}
-            className="text-center justify-content-between"
-          >
-            <Card>
-              <Card.Header>Total Print Jobs: </Card.Header>
-              <Card.Title>
-                <h2>{totalPrintJobs}</h2>
-                <small>Jobs</small>
-              </Card.Title>
-            </Card>
-            <Card>
-              <Card.Header>Total Print Volume: </Card.Header>
-              <Card.Title>
-                <h2>{totalPrintVolume}</h2>
-                <small>Pages</small>
-              </Card.Title>
-            </Card>
-            <Card>
-              <Card.Header>Total Color Impressions: </Card.Header>
-              <Card.Title>
-                <h2>{totalColor}</h2>
-                <small>Clicks</small>
-              </Card.Title>
-            </Card>
-            <Card>
-              <Card.Header>Total Black & White Impressions: </Card.Header>
-              <Card.Title>
-                <h2>{totalBW}</h2>
-                <small>Clicks</small>
-              </Card.Title>
-            </Card>
-          </Stack>
-          <Stack gap={2}>
-            <Card>
-              <CardHeader>
-                <h3>Printer Details</h3>
-              </CardHeader>
-            </Card>
-            {metrics
-              .filter((metric) => selectedPrinters[metric.printer_id])
-              .map((metric) => (
-                <MetricDetailsComponent
-                  key={metric.id}
-                  metric={metric}
-                  printer={printers.find((p) => p.id === metric.id)!}
-                ></MetricDetailsComponent>
-              ))}
-          </Stack>
+          {metrics
+            .filter((metric) => selectedPrinters[metric.printer_id])
+            .map((metric) => (
+              <MetricDetailsComponent
+                key={metric.id}
+                metric={metric}
+                printer={printers.find((p) => p.id === metric.id)!}
+              ></MetricDetailsComponent>
+            ))}
         </Stack>
-      </>
+      </Stack>
     );
   }
 }

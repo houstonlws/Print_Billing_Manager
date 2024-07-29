@@ -1,9 +1,13 @@
-import { Router } from "express";
-import validateToken from "../middleware/ValidateToken";
-import BillingController from "../controllers/billing.controller";
+import { Router } from 'express';
+import validateToken from '../middleware/ValidateToken';
+import BillingController from '../controllers/billing.controller';
 
-const router = Router()
+const router = Router();
 
-router.get('/getDepartmentBillingHistory',validateToken, BillingController.getDepartmentBillingHistory)
+router.get(
+  '/getDepartmentBillingHistory/:id',
+  validateToken,
+  BillingController.getDepartmentBillingHistory
+);
 
-export default router
+export default router;

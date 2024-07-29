@@ -3,13 +3,13 @@ import { getAxios } from '../config/axios.config';
 const axios = getAxios();
 
 class BillingService {
-  static getDepartmentBillingHistory = async () => {
+  static getDepartmentBillingHistory = async (depId: string | number) => {
     try {
-      const result = await axios.get('/getDepartmentBillingHistory');
+      const result = await axios.get(`/getDepartmentBillingHistory/${depId}`);
       if (result.status === 200) return result.data;
-      return [];
+      return false;
     } catch (error) {
-      return [];
+      return false;
     }
   };
 }

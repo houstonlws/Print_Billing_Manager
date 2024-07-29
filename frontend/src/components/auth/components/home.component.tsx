@@ -11,21 +11,24 @@ class Home extends React.Component<Props> {
 
   render() {
     return (
-      <Container className="h-100 d-flex align-items-center justify-content-center">
+      <Container
+        data-testid='home-root'
+        className='h-100 d-flex align-items-center justify-content-center'
+      >
         <div>
-          <Image src="logo.png"></Image>
+          <Image src='logo.png'></Image>
           <Card>
-            <CardBody className="text-center">
+            <CardBody className='text-center'>
               <h2>Welcome!</h2>
-              <div className="d-flex justify-content-center">
+              <div className='d-flex justify-content-center'>
                 <Button
-                  className="mx-1"
+                  className='mx-1'
                   onClick={() => this.navigate('/login')}
                 >
                   Login
                 </Button>
                 <Button
-                  className="mx-1"
+                  className='mx-1'
                   onClick={() => this.navigate('/register')}
                 >
                   Register

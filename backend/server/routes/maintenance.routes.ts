@@ -1,9 +1,17 @@
-import { Router } from "express";
-import MaintenanceController from "../controllers/maintenance.controller";
-import validateToken from "../middleware/ValidateToken";
-const router = Router()
+import { Router } from 'express';
+import MaintenanceController from '../controllers/maintenance.controller';
+import validateToken from '../middleware/ValidateToken';
+const router = Router();
 
-router.post('/all-maintenance', validateToken, MaintenanceController.getMaintenanceRequests)
-router.post('/maintenance', validateToken, MaintenanceController.addMaintenanceRequest)
+router.get(
+  '/maintenance/:id',
+  validateToken,
+  MaintenanceController.getMaintenanceRequests
+);
+router.post(
+  '/maintenance',
+  validateToken,
+  MaintenanceController.addMaintenanceRequest
+);
 
-export default router
+export default router;

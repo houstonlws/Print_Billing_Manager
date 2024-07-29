@@ -107,3 +107,38 @@ CREATE TABLE bill_payments (
     payment_status ENUM('Paid', 'Pending', 'Late') NOT NULL,
     FOREIGN KEY (billing_id) REFERENCES billing(id)
 );
+
+CREATE VIEW department_metrics AS 
+	SELECT 
+    metrics.id,
+     printer_id ,
+    total_pages_printed ,
+    monthly_print_volume,
+    total_print_jobs ,
+    monthly_print_jobs ,
+    toner_levels ,
+    toner_usage_monthly,
+    paper_levels,
+    paper_usage_monthly,
+    total_color_pages_printed,
+    total_color_pages_last_billing,
+    total_bw_pages_printed,
+    total_bw_pages_last_billing ,
+    department_id
+    FROM metrics 
+    RIGHT JOIN printers 
+    ON metrics.printer_id = printers.id;
+    
+CREATE VIEW department_maintenance_requests AS 
+SELECT 
+	maintenance_requests.id,
+	printer_id,
+	DATE_FORMAT(request_date, '%Y-%c-%d') as request_date,
+	maintenance_type,
+	description,
+	status,
+	DATE_FORMAT(resolved_date, '%Y-%c-%d') as resolved_date,
+    department_id
+	FROM maintenance_requests
+    RIGHT JOIN printers
+    ON maintenance_requests.printer_id = printers.id;
