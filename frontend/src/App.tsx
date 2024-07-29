@@ -5,7 +5,6 @@ import { ConnectedProps, connect } from 'react-redux';
 import { logout, refreshToken } from './store/actions/auth.action';
 import { AppState } from './types/app.types';
 import DashboardComponent from './components/dashboard/dashboard.component';
-import { getDepartments } from './store/actions/data.action';
 import authComponent from './components/auth/auth.component';
 
 class App extends React.Component<AppProps, AppState> {
@@ -17,14 +16,14 @@ class App extends React.Component<AppProps, AppState> {
     const { loggedIn } = this.props;
 
     return (
-      <div className="h-100">
+      <div className='h-100'>
         <Routes>
           <Route
-            path="/*"
+            path='/*'
             Component={loggedIn ? DashboardComponent : authComponent}
           ></Route>
         </Routes>
-        <div id="background"></div>
+        <div id='background'></div>
       </div>
     );
   }
@@ -38,7 +37,6 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {
   refreshToken,
-  getDepartments,
   logout,
 };
 

@@ -1,87 +1,98 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { CONSTANTS } from "../constants";
+import { PayloadAction } from '@reduxjs/toolkit';
+import { CONSTANTS } from '../../config/constants';
 
-const {
-  GET_DEPARTMENT_PRINTERS,
-  GET_DEPARTMENT_PRINTERS_SUCCESS,
-  GET_DEPARTMENT_PRINTERS_FAILURE,
-  GET_ALL_PRINTERS,
-  GET_ALL_PRINTERS_SUCCESS,
-  GET_ALL_PRINTERS_FAILURE,
-  GET_DEPARTMENT_METRICS_SUCCESS,
-  GET_DEPARTMENT_METRICS_FAILURE,
-  SELECT_PRINTER,
-} = CONSTANTS;
-
-const initialState = {
-  loading: true,
+export const initialState = {
   printers: [],
   metrics: [],
-  selected: null,
+  requests: [],
 };
 
 const printerReducer = (state = initialState, action: PayloadAction) => {
   const { type, payload } = action;
 
   switch (type) {
-    case GET_DEPARTMENT_PRINTERS: {
+    case CONSTANTS.GET_DEPARTMENT_PRINTERS: {
       return {
         ...state,
-        loading: true,
       };
     }
-    case GET_DEPARTMENT_PRINTERS_SUCCESS: {
+    case CONSTANTS.GET_DEPARTMENT_PRINTERS_SUCCESS: {
       return {
         ...state,
-        loading: false,
         printers: payload,
       };
     }
-    case GET_DEPARTMENT_PRINTERS_FAILURE: {
+    case CONSTANTS.GET_DEPARTMENT_PRINTERS_FAILURE: {
       return {
         ...state,
-        loading: false,
         printers: [],
       };
     }
-    case GET_ALL_PRINTERS: {
+    case CONSTANTS.GET_ALL_PRINTERS: {
       return {
         ...state,
-        loading: true,
       };
     }
-    case GET_ALL_PRINTERS_SUCCESS: {
+    case CONSTANTS.GET_ALL_PRINTERS_SUCCESS: {
       return {
         ...state,
-        loading: false,
         printers: payload,
       };
     }
-    case GET_ALL_PRINTERS_FAILURE: {
+    case CONSTANTS.GET_ALL_PRINTERS_FAILURE: {
       return {
         ...state,
-        loading: false,
         printers: [],
       };
     }
-    case GET_DEPARTMENT_METRICS_SUCCESS: {
+    case CONSTANTS.GET_DEPARTMENT_METRICS_SUCCESS: {
       return {
         ...state,
-        loading: false,
         metrics: payload,
       };
     }
-    case GET_DEPARTMENT_METRICS_FAILURE: {
+    case CONSTANTS.GET_DEPARTMENT_METRICS_FAILURE: {
       return {
         ...state,
-        loading: false,
         metrics: [],
       };
     }
-    case SELECT_PRINTER: {
+    case CONSTANTS.SELECT_PRINTER: {
       return {
         ...state,
         selected: payload,
+      };
+    }
+    case CONSTANTS.GET_MAINTENANCE_REQUESTS_SUCCESS: {
+      return {
+        ...state,
+        requests: payload,
+      };
+    }
+    case CONSTANTS.GET_MAINTENANCE_REQUESTS_FAILURE: {
+      return {
+        ...state,
+        requests: [],
+      };
+    }
+    case CONSTANTS.ADD_MAINTENANCE_REQUEST_SUCCESS: {
+      return {
+        ...state,
+      };
+    }
+    case CONSTANTS.ADD_MAINTENANCE_REQUEST_FAILURE: {
+      return {
+        ...state,
+      };
+    }
+    case CONSTANTS.UPDATE_MAINTENANCE_REQUEST_SUCCESS: {
+      return {
+        ...state,
+      };
+    }
+    case CONSTANTS.UPDATE_MAINTENANCE_REQUEST_FAILURE: {
+      return {
+        ...state,
       };
     }
     default:

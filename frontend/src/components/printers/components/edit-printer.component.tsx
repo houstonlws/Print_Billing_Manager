@@ -58,6 +58,9 @@ class EditPrinter extends Component<EditProps, State> {
       case 'warranty':
         tempPrinter.warranty_expiry_date = event.target.value;
         break;
+      case 'firmware':
+        tempPrinter.firmware_version = event.target.value;
+        break;
       default:
         return;
     }
@@ -73,7 +76,6 @@ class EditPrinter extends Component<EditProps, State> {
   saveEdit = () => {
     const { tempPrinter } = this.state;
     this.props.updatePrinter(tempPrinter);
-    window.alert('Printer updated');
     this.toggleEditing();
   };
 
@@ -84,28 +86,32 @@ class EditPrinter extends Component<EditProps, State> {
 
   render(): ReactNode {
     const { editing, tempPrinter } = this.state;
+    const { printer } = this.props;
 
     return (
-      <>
-        <div>
-          <Button onClick={this.toggleEditing}>Edit</Button>
+      <div>
+        <div data-testid={`edit-printer-${printer.id}`}>
+          <Button data-testid={`show-editor`} onClick={this.toggleEditing}>
+            Edit
+          </Button>
         </div>
         <Modal
           show={editing}
           onHide={this.discardEdit}
-          backdrop="static"
+          backdrop='static'
           keyboard={false}
         >
-          <Modal.Header className="d-flex justify-content-center" closeButton>
-            <Modal.Title className="me-auto">Edit Printer</Modal.Title>
+          <Modal.Header className='d-flex justify-content-center' closeButton>
+            <Modal.Title className='me-auto'>Edit Printer</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
               <FormGroup as={Row}>
                 <FormLabel>Serial</FormLabel>
                 <FormControl
-                  type="text"
-                  id="serial"
+                  type='text'
+                  id='serial'
+                  placeholder='Serial'
                   onChange={this.onChange}
                   value={tempPrinter.serial_number}
                 ></FormControl>
@@ -113,8 +119,9 @@ class EditPrinter extends Component<EditProps, State> {
               <FormGroup>
                 <FormLabel>Model</FormLabel>
                 <FormControl
-                  type="text"
-                  id="model"
+                  type='text'
+                  id='model'
+                  placeholder='Model'
                   onChange={this.onChange}
                   value={tempPrinter.model}
                 ></FormControl>
@@ -122,8 +129,9 @@ class EditPrinter extends Component<EditProps, State> {
               <FormGroup>
                 <FormLabel>Brand</FormLabel>
                 <FormControl
-                  type="text"
-                  id="brand"
+                  type='text'
+                  id='brand'
+                  placeholder='Brand'
                   onChange={this.onChange}
                   value={tempPrinter.brand}
                 ></FormControl>
@@ -131,8 +139,9 @@ class EditPrinter extends Component<EditProps, State> {
               <FormGroup>
                 <FormLabel>Location</FormLabel>
                 <FormControl
-                  type="text"
-                  id="location"
+                  type='text'
+                  id='location'
+                  placeholder='Location'
                   onChange={this.onChange}
                   value={tempPrinter.location}
                 ></FormControl>
@@ -140,8 +149,9 @@ class EditPrinter extends Component<EditProps, State> {
               <FormGroup>
                 <FormLabel>IP Address</FormLabel>
                 <FormControl
-                  type="text"
-                  id="ip"
+                  type='text'
+                  id='ip'
+                  placeholder='IP Address'
                   onChange={this.onChange}
                   value={tempPrinter.ip_address}
                 ></FormControl>
@@ -149,8 +159,9 @@ class EditPrinter extends Component<EditProps, State> {
               <FormGroup>
                 <FormLabel>MAC Address</FormLabel>
                 <FormControl
-                  type="text"
-                  id="mac"
+                  type='text'
+                  id='mac'
+                  placeholder='MAC Address'
                   onChange={this.onChange}
                   value={tempPrinter.mac_address}
                 ></FormControl>
@@ -158,8 +169,9 @@ class EditPrinter extends Component<EditProps, State> {
               <FormGroup>
                 <FormLabel>Firmware Version</FormLabel>
                 <FormControl
-                  type="text"
-                  id="firmware"
+                  type='text'
+                  id='firmware'
+                  placeholder='Firmware Version'
                   onChange={this.onChange}
                   value={tempPrinter.firmware_version}
                 ></FormControl>
@@ -167,8 +179,9 @@ class EditPrinter extends Component<EditProps, State> {
               <FormGroup>
                 <FormLabel>Installation Date</FormLabel>
                 <FormControl
-                  type="text"
-                  id="install_date"
+                  type='text'
+                  id='install_date'
+                  placeholder='Installation Date'
                   onChange={this.onChange}
                   value={tempPrinter.installation_date}
                 ></FormControl>
@@ -176,8 +189,9 @@ class EditPrinter extends Component<EditProps, State> {
               <FormGroup>
                 <FormLabel>Warranty Expiration</FormLabel>
                 <FormControl
-                  type="text"
-                  id="warranty"
+                  type='text'
+                  id='warranty'
+                  placeholder='Warranty Expiration'
                   onChange={this.onChange}
                   value={tempPrinter.warranty_expiry_date}
                 ></FormControl>
@@ -186,16 +200,20 @@ class EditPrinter extends Component<EditProps, State> {
           </Modal.Body>
           <Modal.Footer>
             <ButtonGroup>
-              <Button variant="secondary" onClick={this.discardEdit}>
+              <Button variant='secondary' onClick={this.discardEdit}>
                 Cancel
               </Button>
-              <Button variant="success" onClick={this.saveEdit}>
+              <Button
+                data-testId='submit-edit'
+                variant='success'
+                onClick={this.saveEdit}
+              >
                 Save
               </Button>
             </ButtonGroup>
           </Modal.Footer>
         </Modal>
-      </>
+      </div>
     );
   }
 }

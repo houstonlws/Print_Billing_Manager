@@ -18,15 +18,12 @@ import {
   faChartLine,
   faDollarSign,
   faPrint,
+  faBell,
 } from '@fortawesome/free-solid-svg-icons';
 import AdminDashboard from './components/admin-dashboard';
 import UserDashboard from './components/user-dashboard';
 import { AppState } from '../../types/app.types';
-import {
-  getNotifications,
-  getUserData,
-  logout,
-} from '../../store/actions/auth.action';
+import { getNotifications, getUserData } from '../../store/actions/auth.action';
 import BillingComponent from '../billing/billing.component';
 import notificationsComponent from '../notifications/notifications.component';
 import PrintersComponent from '../printers/printers.component';
@@ -34,19 +31,16 @@ import ProfileComponent from '../profile/profile.component';
 import TrackingComponent from '../tracking/tracking.component';
 import {
   getAllPrinters,
+  getDepartmentMaintenanceRequests,
   getDepartmentMetrics,
   getDepartmentPrinters,
 } from '../../store/actions/printer.actions';
 import MaintenanceComponent from '../maintenance/maintenance.component';
 import { getDepartmentBillingHistory } from '../../store/actions/billing.actions';
-import { getDepartmentMaintenanceRequests } from '../../store/actions/maintenance.actions';
-import { getDepartments } from '../../store/actions/data.action';
 
-import { CONSTANTS } from '../../store/constants';
+import { CONSTANTS } from '../../config/constants';
 import withRouter from '../../hooks/withRouter.hook';
 import withDispatch from '../../hooks/dispatch.hook';
-
-const { SET_USER_TYPE } = CONSTANTS;
 
 interface State {
   isOpen: boolean;
@@ -60,37 +54,19 @@ class DashboardComponent extends Component<DashboardProps, State> {
     };
   }
 
-  componentDidMount(): void {
-    this.props
-      .getDepartments()
-      .then(() =>
-        this.props.getUserData().then(() => this.props.getNotifications()),
-      );
-    if (this.props.user?.type === 'Admin') {
-      this.initAdmin();
-    } else {
-      this.initUser();
+  async componentDidMount(): Promise<void> {
+    await this.props.getUserData();
+    const { user } = this.props.auth;
+    if (user?.type === CONSTANTS.ADMIN) {
+      await this.props.getNotifications(user.id);
+      await this.props.getAllPrinters();
+    } else if (user?.type === CONSTANTS.USER) {
+      await this.props.getNotifications(user.id);
+      await this.props.getDepartmentPrinters(user.department_id);
+      await this.props.getDepartmentMetrics(user.department_id);
+      await this.props.getDepartmentMaintenanceRequests(user.department_id);
     }
   }
-
-  initUser = () => {
-    const printerIds = this.props.printer.printers.map((v) => v.id);
-    this.props
-      .getDepartmentPrinters()
-      .then(() =>
-        this.props
-          .getDepartmentMetrics(printerIds)
-          .then(() =>
-            this.props
-              .getDepartmentMaintenanceRequests(printerIds)
-              .then(() => this.props.getDepartmentBillingHistory()),
-          ),
-      );
-  };
-
-  initAdmin = () => {
-    this.props.getAllPrinters();
-  };
 
   toggleOpen = () => {
     this.setState((prev) => ({
@@ -99,16 +75,18 @@ class DashboardComponent extends Component<DashboardProps, State> {
   };
 
   toggleUserType = () => {
-    const { dispatch, user } = this.props;
-    if (user?.type !== 'Admin') {
-      dispatch({ type: SET_USER_TYPE, payload: 'Admin' });
+    const { dispatch } = this.props;
+    const { user } = this.props.auth;
+    if (user?.type !== CONSTANTS.ADMIN) {
+      dispatch({ type: CONSTANTS.SET_USER_TYPE, payload: CONSTANTS.ADMIN });
     } else {
-      dispatch({ type: SET_USER_TYPE, payload: 'User' });
+      dispatch({ type: CONSTANTS.SET_USER_TYPE, payload: CONSTANTS.USER });
     }
   };
 
   logout = () => {
-    this.props.logout();
+    const { dispatch } = this.props;
+    dispatch({ type: CONSTANTS.LOGOUT });
   };
 
   render() {
@@ -118,30 +96,37 @@ class DashboardComponent extends Component<DashboardProps, State> {
     const { isOpen } = this.state;
 
     return (
-      <div className="d-flex flex-column">
-        <Navbar className="bg-primary">
+      <div className='d-flex flex-column'>
+        <Navbar className='bg-primary'>
           <Container fluid>
             <Nav>
               <Navbar.Brand as={Button} onClick={this.toggleOpen}>
                 <FontAwesomeIcon icon={faBars} color={'white'} />
                 <img
-                  alt="logo"
-                  src="navlogo.png"
-                  height="30"
-                  className="d-inline-block align-top"
+                  alt='logo'
+                  src='navlogo.png'
+                  height='30'
+                  className='d-inline-block align-top'
                 ></img>
               </Navbar.Brand>
               <Button onClick={this.toggleUserType}>Switch User Type</Button>
             </Nav>
 
-            <Nav>
+            <Nav className='align-items-center'>
+              <Link
+                className='btn btn-primary'
+                role='button'
+                to='/notifications'
+              >
+                <FontAwesomeIcon icon={faBell} color={'white'} />
+              </Link>
               <NavDropdown
                 align={'end'}
                 title={
                   <img
-                    alt="avatar"
-                    className="rounded-circle"
-                    src="avatar.jpg"
+                    alt='avatar'
+                    className='rounded-circle'
+                    src='avatar.jpg'
                     width={30}
                     height={30}
                   ></img>
@@ -151,12 +136,9 @@ class DashboardComponent extends Component<DashboardProps, State> {
                   <DropdownItem as={Link} to={'/profile'}>
                     Settings
                   </DropdownItem>
-                  <DropdownItem as={Link} to={'/notifications'}>
-                    Notifications
-                  </DropdownItem>
                   <Button
-                    className="w-100 text-left"
-                    variant="secondary"
+                    className='w-100 text-left'
+                    variant='secondary'
                     onClick={this.logout}
                   >
                     Logout
@@ -166,7 +148,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
             </Nav>
           </Container>
         </Navbar>
-        <div className="d-flex">
+        <div className='d-flex'>
           <div
             style={{
               height: 'calc(100vh - 50px)',
@@ -176,11 +158,11 @@ class DashboardComponent extends Component<DashboardProps, State> {
               display: isOpen ? 'block' : 'none',
             }}
           >
-            <Navbar className="h-100">
+            <Navbar className='h-100'>
               <Nav
-                className="flex-column h-100 w-100"
+                className='flex-column h-100 w-100'
                 activeKey={pathname}
-                variant="pills"
+                variant='pills'
               >
                 <Nav.Item>
                   <Nav.Link as={Link} eventKey={'/dashboard'} to={'/dashboard'}>
@@ -216,29 +198,29 @@ class DashboardComponent extends Component<DashboardProps, State> {
               flex: '1 1 auto',
             }}
           >
-            <Container fluid className="mt-3">
+            <Container fluid className='mt-3'>
               <Routes>
-                <Route path="*" element={<Navigate to="/dashboard" />}></Route>
+                <Route path='*' element={<Navigate to='/dashboard' />}></Route>
                 <Route
-                  path="dashboard"
+                  path='dashboard'
                   element={
-                    user?.type === 'Admin' ? (
+                    user?.type === CONSTANTS.ADMIN ? (
                       <AdminDashboard />
                     ) : (
                       <UserDashboard auth={auth} printer={printer} />
                     )
                   }
                 ></Route>
-                <Route path="billing" Component={BillingComponent}></Route>
-                <Route path="printers" Component={PrintersComponent}></Route>
+                <Route path='billing' Component={BillingComponent}></Route>
+                <Route path='printers' Component={PrintersComponent}></Route>
                 <Route
-                  path="maintenance"
+                  path='maintenance'
                   Component={MaintenanceComponent}
                 ></Route>
-                <Route path="tracking" Component={TrackingComponent}></Route>
-                <Route path="profile" Component={ProfileComponent}></Route>
+                <Route path='tracking' Component={TrackingComponent}></Route>
+                <Route path='profile' Component={ProfileComponent}></Route>
                 <Route
-                  path="notifications"
+                  path='notifications'
                   Component={notificationsComponent}
                 ></Route>
               </Routes>
@@ -253,13 +235,10 @@ class DashboardComponent extends Component<DashboardProps, State> {
 const mapStateToProps = (state: AppState, props: any) => {
   return {
     auth: state.auth,
-    data: state.data,
     printer: state.printer,
     billing: state.billing,
-    maintenance: state.maintenance,
     router: props.router,
     dispatch: props.dispatch,
-    user: state.auth.user,
   };
 };
 
@@ -271,8 +250,6 @@ const mapDispatchToProps = {
   getNotifications,
   getDepartmentBillingHistory,
   getDepartmentMaintenanceRequests,
-  getDepartments,
-  logout,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

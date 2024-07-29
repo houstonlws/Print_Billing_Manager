@@ -3,25 +3,27 @@ import { render } from '@testing-library/react';
 import { fireEvent, waitFor } from '@testing-library/dom';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
-import Register from './register.component';
+import Register from '../components/register.component';
 import thunk from 'redux-thunk';
+import { initialState } from '../../../store/reducers/auth.reducer';
 import * as authActions from '../../../store/actions/auth.action';
-import { Dispatch } from '@reduxjs/toolkit';
+import { Dispatch } from 'redux';
+import { CONSTANTS } from '../../../config/constants';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
-type RegisterAction = (
-  email: string,
-  password: string
-) => (dispatch: Dispatch) => Promise<any>;
-const mockRegister: RegisterAction = jest.fn(() => () => Promise.resolve({}));
-jest.spyOn(authActions, 'register').mockImplementation(mockRegister);
+const store = mockStore(initialState);
 
-let store = mockStore({});
+const mockRegisterAction = jest.fn(
+  (eml: string, pwd: string) => async (dispatch: Dispatch) => {
+    return Promise.resolve();
+  }
+);
+
+jest.spyOn(authActions, 'register').mockImplementation(mockRegisterAction);
 
 describe('Register Component', () => {
   beforeEach(() => {
-    store = mockStore({});
     store.clearActions();
   });
 
@@ -35,14 +37,14 @@ describe('Register Component', () => {
   });
 
   test('should update state on input change', () => {
-    const { getAllByPlaceholderText, getByPlaceholderText } = render(
+    const { getByPlaceholderText } = render(
       <Provider store={store}>
         <Register />
       </Provider>
     );
 
     const emailInput = getByPlaceholderText(/enter email/i);
-    const passwordInput = getAllByPlaceholderText(/Password/i)[0];
+    const passwordInput = getByPlaceholderText(/^password$/i);
     const confirmPasswordInput = getByPlaceholderText(/Confirm Password/i);
 
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
@@ -57,15 +59,13 @@ describe('Register Component', () => {
   });
 
   test('should show error if passwords do not match', async () => {
-    console.log = jest.fn();
-
     const { getAllByPlaceholderText, getByPlaceholderText, getByText } = render(
       <Provider store={store}>
         <Register />
       </Provider>
     );
 
-    const passwordInput = getAllByPlaceholderText(/password/i)[0];
+    const passwordInput = getByPlaceholderText(/^password$/i);
     const confirmPasswordInput = getByPlaceholderText(/confirm password/i);
     const submitButton = getByText(/submit/i);
 
@@ -81,7 +81,7 @@ describe('Register Component', () => {
     });
   });
 
-  test('should call register action on form submit with matching passwords', async () => {
+  test('should call register success action on form submit with matching passwords', async () => {
     const { getAllByPlaceholderText, getByPlaceholderText, getByText } = render(
       <Provider store={store}>
         <Register />
@@ -99,13 +99,12 @@ describe('Register Component', () => {
       target: { value: 'password123' },
     });
 
-    fireEvent.click(submitButton);
+    fireEvent.submit(submitButton);
+
+    const expected = [{ type: CONSTANTS.REGISTER_SUCCESS }];
 
     await waitFor(() => {
-      expect(mockRegister).toHaveBeenCalledWith(
-        'test@example.com',
-        'password123'
-      );
+      expect(store.getActions()).toEqual(expected);
     });
   });
 });

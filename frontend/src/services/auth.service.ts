@@ -71,9 +71,9 @@ class AuthService {
     }
   };
 
-  static getNotifications = async () => {
+  static getNotifications = async (id: string) => {
     try {
-      const result = await axios.get('/notifications');
+      const result = await axios.get(`/notifications/${id}`);
       if (result.status === 200) return result.data;
       return [];
     } catch (err) {

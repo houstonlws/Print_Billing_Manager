@@ -1,8 +1,7 @@
-import connection from "../config/database.config";
-import { Metric, Printer } from "../models/printer.model";
+import connection from '../config/database.config';
+import { Metric, Printer } from '../models/printer.model';
 
 class PrinterDao {
-
   static async getAllPrinters() {
     return await new Promise<any>((resolve, reject) => {
       const query = `SELECT * FROM printers;`;
@@ -10,14 +9,14 @@ class PrinterDao {
         if (!err) {
           resolve(res);
         } else {
-          console.log("get all printers error", err);
+          console.log('get all printers error', err);
           reject(err);
         }
       });
     });
   }
 
-  static async getDepartmentPrinters(id: number) {
+  static async getDepartmentPrinters(id: string) {
     return await new Promise<Printer[]>((resolve, reject) => {
       const query = `SELECT 
     id,
@@ -41,12 +40,10 @@ class PrinterDao {
     });
   }
 
-  static async getDepartmentMetrics(printerIds: number[]) {
+  static async getDepartmentMetrics(depId: string) {
     return await new Promise<Metric[]>((resolve, reject) => {
-      const query = `SELECT * FROM metrics WHERE printer_id IN (${printerIds
-        .map((id) => id)
-        .join(", ")})`;
-      connection.query(query, [...printerIds], (err, res) => {
+      const query = `SELECT * FROM department_metrics WHERE department_id =${depId}`;
+      connection.query(query, depId, (err, res) => {
         if (!err) resolve(res);
         else reject(err);
       });
@@ -95,10 +92,10 @@ class PrinterDao {
         ],
         (err, res) => {
           if (!err) {
-            console.log("success update printer", res);
+            console.log('success update printer', res);
             resolve(res);
           } else {
-            console.log("error update printer", err);
+            console.log('error update printer', err);
             reject(err);
           }
         }
@@ -113,7 +110,7 @@ class PrinterDao {
         if (!err) {
           resolve(res);
         } else {
-          console.log("delete printer error", err);
+          console.log('delete printer error', err);
           reject(err);
         }
       });
@@ -122,18 +119,18 @@ class PrinterDao {
 
   static async addPrinter(printer: Printer) {
     return await new Promise<any>((resolve, reject) => {
-        const {
-            serial_number, 
-            model,
-            brand,
-            location,
-            installation_date,
-            warranty_expiry_date,
-            ip_address,
-            mac_address,
-            firmware_version,
-            department_id    
-        } = printer
+      const {
+        serial_number,
+        model,
+        brand,
+        location,
+        installation_date,
+        warranty_expiry_date,
+        ip_address,
+        mac_address,
+        firmware_version,
+        department_id,
+      } = printer;
       const query = `INSERT INTO printers
         (serial_number,
         model,
@@ -147,24 +144,29 @@ class PrinterDao {
         department_id)
         VALUES
         (?,?,?,?,?,?,?,?,?,?);`;
-      connection.query(query, 
-        [serial_number, 
-        model,
-        brand,
-        location,
-        installation_date,
-        warranty_expiry_date,
-        ip_address,
-        mac_address,
-        firmware_version,
-        department_id ], (err, res) => {
-        if (!err) {
-          resolve(res);
-        } else {
-          console.log("add printer error", err);
-          reject(err);
+      connection.query(
+        query,
+        [
+          serial_number,
+          model,
+          brand,
+          location,
+          installation_date,
+          warranty_expiry_date,
+          ip_address,
+          mac_address,
+          firmware_version,
+          department_id,
+        ],
+        (err, res) => {
+          if (!err) {
+            resolve(res);
+          } else {
+            console.log('add printer error', err);
+            reject(err);
+          }
         }
-      });
+      );
     });
   }
 }

@@ -1,5 +1,6 @@
 export interface Printer {
   id: string;
+  department_id: string;
   serial_number: string;
   model?: string;
   brand?: string;
@@ -9,7 +10,6 @@ export interface Printer {
   ip_address?: string;
   mac_address?: string;
   firmware_version?: string;
-  department_id?: string;
 }
 
 export interface Metric {
@@ -29,9 +29,17 @@ export interface Metric {
   total_bw_pages_last_billing: string;
 }
 
+export interface MaintenanceRequest {
+  id?: string;
+  printer_id: string;
+  request_date: string;
+  maintenance_type: string;
+  description: string;
+  status: string;
+}
+
 export interface PrinterState {
-  loading: boolean;
   printers: Printer[];
   metrics: Metric[];
-  selected: Printer;
+  requests: MaintenanceRequest[];
 }

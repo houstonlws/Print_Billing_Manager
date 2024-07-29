@@ -31,14 +31,10 @@ class Navigation extends Component<NavigationProps, State> {
   onChange = (event: any) => {
     switch (event.target.id) {
       case 'nav-email':
-        {
-          this.setState({ email: event.target.value });
-        }
+        this.setState({ email: event.target.value });
         break;
       case 'nav-password':
-        {
-          this.setState({ password: event.target.value });
-        }
+        this.setState({ password: event.target.value });
         break;
       default:
         break;
@@ -55,31 +51,33 @@ class Navigation extends Component<NavigationProps, State> {
     const { email, password } = this.state;
 
     return (
-      <Navbar bg="light">
+      <Navbar bg='light' data-testid='navigation'>
         <Container>
           <Nav>
             <NavbarBrand as={Link} to={'/home'}>
-              <img alt="logo" src="navlogodark.png" height={30}></img>
+              <img alt='logo' src='navlogodark.png' height={30}></img>
             </NavbarBrand>
           </Nav>
           <Form onSubmit={this.onSubmit}>
-            <Stack direction="horizontal" gap={2}>
+            <Stack direction='horizontal' gap={2}>
               <FormControl
-                id="nav-email"
-                type="email"
-                placeholder="Email"
+                id='nav-email'
+                type='email'
+                placeholder='Email'
                 value={email}
                 onChange={this.onChange}
               ></FormControl>
               <FormControl
-                id="nav-password"
-                type="password"
-                placeholder="Password"
+                id='nav-password'
+                type='password'
+                placeholder='Password'
                 value={password}
                 onChange={this.onChange}
               ></FormControl>
-              <Button type="submit">Login</Button>
-              <Nav.Link as={Link} to="/register">
+              <Button data-testid='submit' type='submit'>
+                Login
+              </Button>
+              <Nav.Link as={Link} to='/register'>
                 Register
               </Nav.Link>
             </Stack>
@@ -90,11 +88,7 @@ class Navigation extends Component<NavigationProps, State> {
   }
 }
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    loggedIn: state.auth.loggedIn,
-  };
-};
+const mapStateToProps = (state: AppState) => ({});
 
 const mapDispatchToProps = {
   login,

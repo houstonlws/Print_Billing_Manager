@@ -98,17 +98,19 @@ class AddPrinterComponent extends Component<AddProps, State> {
     const { adding, tempPrinter } = this.state;
 
     return (
-      <>
+      <div data-testid='addprinter'>
         <Card>
-          <CardHeader className="d-flex justify-content-between">
+          <CardHeader className='d-flex justify-content-between'>
             <h2>Printers</h2>
-            <Button onClick={this.toggleAdding}>Add</Button>
+            <Button data-testid='toggle-add' onClick={this.toggleAdding}>
+              Add
+            </Button>
           </CardHeader>
         </Card>
         <Modal
           show={adding}
           onHide={this.cancelAdd}
-          backdrop="static"
+          backdrop='static'
           keyboard={false}
         >
           <Modal.Header closeButton>
@@ -119,8 +121,9 @@ class AddPrinterComponent extends Component<AddProps, State> {
               <FormGroup>
                 <FormLabel>Serial</FormLabel>
                 <FormControl
-                  type="text"
-                  id="serial"
+                  type='text'
+                  id='serial'
+                  placeholder='Serial'
                   onChange={this.onChange}
                   value={tempPrinter.serial_number}
                 ></FormControl>
@@ -128,8 +131,9 @@ class AddPrinterComponent extends Component<AddProps, State> {
               <FormGroup>
                 <FormLabel>Model</FormLabel>
                 <FormControl
-                  type="text"
-                  id="model"
+                  type='text'
+                  id='model'
+                  placeholder='Model'
                   onChange={this.onChange}
                   value={tempPrinter.model}
                 ></FormControl>
@@ -137,8 +141,9 @@ class AddPrinterComponent extends Component<AddProps, State> {
               <FormGroup>
                 <FormLabel>Brand</FormLabel>
                 <FormControl
-                  type="text"
-                  id="brand"
+                  type='text'
+                  id='brand'
+                  placeholder='Brand'
                   onChange={this.onChange}
                   value={tempPrinter.brand}
                 ></FormControl>
@@ -146,8 +151,9 @@ class AddPrinterComponent extends Component<AddProps, State> {
               <FormGroup>
                 <FormLabel>Location</FormLabel>
                 <FormControl
-                  type="text"
-                  id="location"
+                  type='text'
+                  id='location'
+                  placeholder='Location'
                   onChange={this.onChange}
                   value={tempPrinter.location}
                 ></FormControl>
@@ -155,8 +161,9 @@ class AddPrinterComponent extends Component<AddProps, State> {
               <FormGroup>
                 <FormLabel>IP Address</FormLabel>
                 <FormControl
-                  type="text"
-                  id="ip"
+                  type='text'
+                  id='ip'
+                  placeholder='IP Address'
                   onChange={this.onChange}
                   value={tempPrinter.ip_address}
                 ></FormControl>
@@ -164,8 +171,9 @@ class AddPrinterComponent extends Component<AddProps, State> {
               <FormGroup>
                 <FormLabel>MAC Address</FormLabel>
                 <FormControl
-                  type="text"
-                  id="mac"
+                  type='text'
+                  id='mac'
+                  placeholder='MAC Address'
                   onChange={this.onChange}
                   value={tempPrinter.mac_address}
                 ></FormControl>
@@ -173,8 +181,9 @@ class AddPrinterComponent extends Component<AddProps, State> {
               <FormGroup>
                 <FormLabel>Firmware Version</FormLabel>
                 <FormControl
-                  type="text"
-                  id="firmware"
+                  type='text'
+                  id='firmware'
+                  placeholder='Firmware Version'
                   onChange={this.onChange}
                   value={tempPrinter.firmware_version}
                 ></FormControl>
@@ -182,8 +191,9 @@ class AddPrinterComponent extends Component<AddProps, State> {
               <FormGroup>
                 <FormLabel>Installation Date</FormLabel>
                 <FormControl
-                  type="text"
-                  id="install_date"
+                  type='text'
+                  id='install_date'
+                  placeholder='Installation Date'
                   onChange={this.onChange}
                   value={tempPrinter.installation_date}
                 ></FormControl>
@@ -191,8 +201,9 @@ class AddPrinterComponent extends Component<AddProps, State> {
               <FormGroup>
                 <FormLabel>Warranty Expiration</FormLabel>
                 <FormControl
-                  type="text"
-                  id="warranty"
+                  type='text'
+                  id='warranty'
+                  placeholder='Warranty Expiration'
                   onChange={this.onChange}
                   value={tempPrinter.warranty_expiry_date}
                 ></FormControl>
@@ -200,15 +211,19 @@ class AddPrinterComponent extends Component<AddProps, State> {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.cancelAdd}>
+            <Button variant='secondary' onClick={this.cancelAdd}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={this.addPrinter}>
+            <Button
+              data-testid='submit-add'
+              variant='primary'
+              onClick={this.addPrinter}
+            >
               Add
             </Button>
           </Modal.Footer>
         </Modal>
-      </>
+      </div>
     );
   }
 }

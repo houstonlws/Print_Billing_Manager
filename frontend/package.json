@@ -1,13 +1,14 @@
 {
   "name": "print-billing-system",
-  "version": "1.1.1",
+  "author": "Houston Lewis",
+  "version": "1.0.0",
   "private": true,
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest --verbose",
+    "test": "jest --verbose true",
     "eject": "react-scripts eject"
   },
   "jest": {
@@ -20,7 +21,7 @@
       "<rootDir>/src/**/*.(spec|test).[jt]s?(x)"
     ],
     "transform": {
-       "^.+\\.(t|j)sx?$": "ts-jest"
+      "^.+\\.(t|j)sx?$": "ts-jest"
     },
     "transformIgnorePatterns": [
       "/node_modules/(?!(react-bootstrap|@testing-library)/)"
@@ -75,6 +76,7 @@
     "@types/redux-mock-store": "^1.0.6",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
+    "axios-mock-adapter": "^1.22.0",
     "babel-jest": "^29.7.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",

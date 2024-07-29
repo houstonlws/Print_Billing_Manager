@@ -20,6 +20,6 @@ export interface Payment {
 }
 
 export interface BillingState {
-  billData: Bill | null;
+  billData: Bill[];
   paymentHistory: Payment[];
 }

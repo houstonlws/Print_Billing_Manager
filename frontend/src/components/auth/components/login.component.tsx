@@ -49,8 +49,8 @@ class Login extends Component<LoginProps, LoginState> {
 
   render() {
     return (
-      <Container className="align-items-center h-100">
-        <Row className="h-100">
+      <Container data-testid='login-root' className='align-items-center h-100'>
+        <Row className='h-100'>
           <Card
             style={{
               maxWidth: '500px',
@@ -62,34 +62,36 @@ class Login extends Component<LoginProps, LoginState> {
             </CardHeader>
             <CardBody>
               <Form onSubmit={this.handleLogin}>
-                <FloatingLabel label="Email Address" className="mb-3">
+                <FloatingLabel label='Email Address' className='mb-3'>
                   <FormControl
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    aria-describedby="emailHelp"
-                    placeholder="Enter email"
+                    type='email'
+                    className='form-control'
+                    id='email'
+                    aria-describedby='emailHelp'
+                    placeholder='Enter email'
                     value={this.state.email}
                     onChange={this.onChange}
                   ></FormControl>
                 </FloatingLabel>
-                <FloatingLabel label="Password" className="mb-3">
+                <FloatingLabel label='Password' className='mb-3'>
                   <FormControl
-                    type="password"
-                    className="form-control"
-                    id="password"
-                    placeholder="Password"
+                    type='password'
+                    className='form-control'
+                    id='password'
+                    placeholder='Password'
                     value={this.state.password}
                     onChange={this.onChange}
                   ></FormControl>
                 </FloatingLabel>
-                <Button type="submit">Submit</Button>
+                <Button data-testid='submit' type='submit'>
+                  Submit
+                </Button>
               </Form>
             </CardBody>
           </Card>
-          <div className="text-center">
+          <div className='text-center'>
             <p>No account?</p>
-            <Link to="/register">Register</Link>
+            <Link to='/register'>Register</Link>
           </div>
         </Row>
       </Container>
