@@ -6,30 +6,15 @@ CREATE TABLE auth (
 	password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE departments (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    category VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    location VARCHAR(255) NOT NULL,
-    user_id INT 
-);
-
-CREATE TABLE types (
-	id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL
-);
-
 CREATE TABLE users (
-    id INT,
+    id INT UNIQUE,
     firstName VARCHAR(255),
     lastName VARCHAR(255),
     email VARCHAR(255) NOT NULL,
     department_id INT,
     phone VARCHAR(255),
     type VARCHAR(255),
-    FOREIGN KEY (department_id) REFERENCES departments(id),
-    FOREIGN KEY (id) REFERENCES auth(id),
-    FOREIGN KEY (type) REFERENCES types(name)
+    FOREIGN KEY (id) REFERENCES auth(id)
 );
 
 CREATE TABLE printers (
@@ -43,8 +28,7 @@ CREATE TABLE printers (
     ip_address VARCHAR(45) NOT NULL,
     mac_address VARCHAR(17) NOT NULL,
     firmware_version VARCHAR(255) NOT NULL,
-    department_id INT,
-    FOREIGN KEY (department_id) REFERENCES departments(id)
+    department_id INT
 );
 
 CREATE TABLE metrics (
@@ -95,8 +79,7 @@ CREATE TABLE billing (
     total_color_pages INT NOT NULL,
     total_bw_pages INT NOT NULL,
     color_pages_charge DECIMAL(10, 2) NOT NULL,
-    bw_pages_charge DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (department_id) REFERENCES departments(id)
+    bw_pages_charge DECIMAL(10, 2) NOT NULL
 );
 
 CREATE TABLE bill_payments (
