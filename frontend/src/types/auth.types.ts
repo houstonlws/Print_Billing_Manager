@@ -18,6 +18,7 @@ export interface Notification {
 
 export interface AuthState {
   loggedIn: boolean;
-  user: User | null | void;
-  notifications: Notification[] | null | void;
+  user: User;
+  notifications: Notification[];
+  userList: User[];
 }

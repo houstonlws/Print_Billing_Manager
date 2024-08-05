@@ -1,72 +1,99 @@
-Detailed Structure
-modules/auth
-Handles user authentication.
+# Printer Management System
 
-Login.tsx: Handles user login.
-Logout.tsx: Handles user logout.
-modules/dashboard
-Displays different dashboards based on user roles.
+## Description
 
-AdminDashboard.tsx: Dashboard for administrators with access to all department data.
-DepartmentDashboard.tsx: Dashboard for department heads with access to their specific department data.
-modules/navigation
-Contains navigation components.
+The Printer Management System is a web application designed to streamline the management of all printers within a school. This application offers a centralized platform where administrators can handle billing, track maintenance requests, and monitor the status and usage of each printer.
 
-Navbar.tsx: Navigation bar for easy access to different sections of the application.
-modules/printers
-Manages printer-related functionalities.
+Key features of the system include:
 
-PrinterList.tsx: Displays a list of all printers for administrators or department-specific printers for department heads.
-PrinterDetail.tsx: Shows detailed information about a specific printer.
-AddPrinter.tsx: Form to add a new printer.
-EditPrinter.tsx: Form to edit an existing printer.
-DeletePrinter.tsx: Handles the deletion of a printer.
-modules/tracking
-Tracks usage metrics.
+- Billing Management: Keep track of printing costs and generate detailed reports for budgeting and accounting.
+- Maintenance Requests: Submit, track, and resolve maintenance issues for all printers in the network.
+- Printer Tracking: Monitor the status of each printer, including usage statistics, toner levels, and error reports.
+- Departmental Access: Heads of each department can log in to request maintenance, view tracking information, and access billing details for printers within their respective departments.
 
-PageUsage.tsx: Displays the number of black and white and color pages printed per printer per month.
-PaperUsage.tsx: Displays the amount of paper used by each department.
-PaperUsageDetail.tsx: Shows detailed paper usage information for a specific department.
-modules/billing
-Manages billing and charges.
+This project aims to reduce downtime, improve resource management, and ensure that all printers are functioning optimally, while also providing department heads with the tools they need to manage their printing resources effectively.
 
-PastCharges.tsx: Displays past charges for department heads.
-CurrentCharges.tsx: Displays current charges for the current month for department heads.
-DepartmentBilling.tsx: Displays billing details for each department for administrators.
-modules/profile
-Handles user profile management.
+## Installation Instructions
 
-UserProfile.tsx: Allows users to view and edit their profile information.
-modules/issues
-Manages issue reporting and tracking.
+### Prerequisites
 
-ReportIssue.tsx: Form to report issues with printers.
-IssueList.tsx: Displays a list of reported issues for administrators.
-IssueDetail.tsx: Shows detailed information about a specific reported issue.
-modules/notifications
-Handles notifications and alerts.
+Before you begin, ensure you have the following installed:
 
-Notification.tsx: Displays notifications for users about reported issues and other alerts.
-Alert.tsx: Displays alerts for administrators when printer usage exceeds a certain threshold.
-Common Components
-common
-Contains reusable components.
+- **Node.js** (version 14.21.3) and npm (Node Package Manager).
+- **TypeScript** installed globally:
+  ```bash
+  npm install -g typescript
+  ```
+- MySQL and MySQL Workbench for managing the database.
 
-LoadingSpinner.tsx: Displays a loading spinner during asynchronous operations.
-ErrorBoundary.tsx: Catches and displays errors in the application.
-Store
-store
-Manages application state.
+### Cloning the Repository
 
-actions/: Contains Redux actions.
-reducers/: Contains Redux reducers.
-sagas/: Contains Redux sagas (if using Redux-Saga).
-selectors/: Contains Redux selectors.
-Utils
-utils
-Contains utility functions.
+1. Clone the repository from GitHub to your local machine:
+   ```bash
+   git clone https://github.com/houstonlws/Print_Billing_Manager.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd print-billing-system
+   ```
 
-Root Files
-App.tsx: Main application component.
-index.tsx: Entry point for the React application.
+## Setting Up the Backend
 
+### Install Backend Dependencies:
+
+1. Navigate to the backend directory
+   ```bash
+   cd backend
+   ```
+2. Install the required dependencies:
+   ```bash
+   npm install
+   ```
+
+### Configure Environment Variables:
+
+- In the backend folder, create a .env file with the following contents:
+  ```env
+  REFRESH_TOKEN_SECRET=<your-refresh-token-secret>
+  DB_PASSWORD=<your-mysql-database-password>
+  ```
+- For `REFRESH_TOKEN_SECRET` you can run the following command line and copy its value:
+  ```bash
+  openssl rand -base64 40
+  ```
+- For `DB_PASSWORD` this will be the password for your MySQL database.
+
+## Database Setup:
+
+1. Create a new MySQL database locally using MySQL Workbench.
+2. Run the SQL script located in the main directory of the project to create the necessary tables and optionally insert test data.
+
+## Start the Backend Server:
+
+    npm run start
+
+## Setting Up the Frontend
+
+## Install Frontend Dependencies:
+
+1. Navigate back to the main project directory and then to the frontend directory:
+   ```bash
+   cd ../frontend
+   ```
+2. Install the required dependencies:
+   ```bash
+   Copy code
+   npm install
+   ```
+
+### Start the Frontend Application:
+
+- Run the frontend application:
+  ```bash
+  npm run start
+  ```
+- Run Frontend Tests:
+
+  ```bash
+  npm run test
+  ```

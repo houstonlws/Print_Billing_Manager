@@ -5,6 +5,28 @@ import { User } from '../types/auth.types';
 const axios = getAxios();
 
 class AuthService {
+  static updateUserType = async (users: string[]) => {
+    try {
+      const result = await axios.put('/userType', users);
+      if (result.status === 200) {
+        return true;
+      } else return false;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  static getAllUsers = async (): Promise<User[]> => {
+    try {
+      const result = await axios.get('/getAllUsers');
+      if (result.status === 200) {
+        return result.data;
+      } else return [];
+    } catch (error) {
+      return [];
+    }
+  };
+
   static register = async (email: string, password: string) => {
     try {
       const result = await axios.post('/register', {
@@ -48,9 +70,9 @@ class AuthService {
     }
   };
 
-  static getUserData = async () => {
+  static getUserData = async (id: string) => {
     try {
-      const result = await axios.post(`/getUserData`);
+      const result = await axios.get(`/getUserData/${id}`);
       if (result.status === 200) {
         return result;
       }

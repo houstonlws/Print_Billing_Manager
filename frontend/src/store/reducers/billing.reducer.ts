@@ -23,6 +23,9 @@ const billingReducer = (state = initialState, action: PayloadAction) => {
         billData: [],
       };
     }
+    case CONSTANTS.LOGOUT: {
+      return initialState;
+    }
     default:
       return state;
   }

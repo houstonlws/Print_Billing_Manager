@@ -8,8 +8,14 @@ interface Payload {
 
 export const initialState: AuthState = {
   loggedIn: false,
-  user: null,
+  user: {
+    id: '',
+    email: '',
+    type: '',
+    department_id: '',
+  },
   notifications: [],
+  userList: [],
 };
 
 export const authReducer = (state = initialState, action: Payload) => {
@@ -32,6 +38,7 @@ export const authReducer = (state = initialState, action: Payload) => {
       return {
         ...state,
         loggedIn: true,
+        user: payload,
       };
     }
     case CONSTANTS.LOGIN_FAIL: {
@@ -93,6 +100,15 @@ export const authReducer = (state = initialState, action: Payload) => {
           type: payload,
         },
       };
+    }
+    case CONSTANTS.GET_ALL_USERS_SUCCESS: {
+      return {
+        ...state,
+        userList: payload,
+      };
+    }
+    case CONSTANTS.LOGOUT: {
+      return initialState;
     }
     default:
       return state;

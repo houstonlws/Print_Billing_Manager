@@ -1,8 +1,22 @@
 import { User } from '../models/auth.model';
 import connection from '../config/database.config';
-import { queryCallback } from 'mysql';
 
 export default class authDao {
+  static async updateUserType(users: string[]) {
+    const query = `UPDATE users SET type = (CASE 
+    WHEN type = 'ADMIN' THEN 'USER'
+    WHEN type = 'USER' THEN 'ADMIN'
+    END) WHERE id IN (${users.map((id) => id).join(',')});`;
+    return await new Promise<any>((res, rej) => {
+      connection.query(query, (err, result) => {
+        if (err) {
+          rej(err);
+        } else {
+          res(result);
+        }
+      });
+    });
+  }
   static async register(user: User) {
     const query = 'INSERT INTO auth (email, password) VALUES (?, ?)';
     return await new Promise<any>((res, rej) => {
@@ -103,6 +117,19 @@ export default class authDao {
             FROM notifications
              WHERE user_id=?`;
       connection.query(query, id, (err, res) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      });
+    });
+  }
+
+  static async getAllUsers() {
+    return await new Promise<User[]>((resolve, reject) => {
+      const query = `SELECT * FROM users`;
+      connection.query(query, (err, res) => {
         if (err) {
           reject(err);
         } else {
