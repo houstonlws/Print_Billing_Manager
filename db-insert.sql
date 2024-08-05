@@ -79,7 +79,12 @@ VALUES
     ('Interdisciplinary Studies', 'Gender Studies', 'Building N', 14),
     ('Interdisciplinary Studies', 'Ethnic Studies', 'Building N', 14),
     ('Interdisciplinary Studies', 'Global Studies', 'Building N', 14);
-    
+
+INSERT INTO auth (email, password) VALUES ('dev@dev.dev', 'pass');
+INSERT INTO users (id, email)  
+SELECT id, email FROM auth  WHERE email = 'dev@dev.dev';
+UPDATE users SET type = 'ADMIN' WHERE email = 'dev@dev.dev';
+
 INSERT INTO printers (serial_number, model, brand, location, installation_date, warranty_expiry_date, ip_address, mac_address, firmware_version, department_id)
 VALUES 
     ('SN123456', 'HP LaserJet Pro M404dw', 'HP', 'Office 1, Floor 2', '2022-01-15', '2024-01-15', '192.168.1.101', '00:1A:2B:3C:4D:5E', '2023.04.01', 1),

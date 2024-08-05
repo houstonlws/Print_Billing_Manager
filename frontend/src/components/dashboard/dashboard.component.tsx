@@ -13,34 +13,37 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBars,
-  faHome,
   faWrench,
   faChartLine,
   faDollarSign,
   faPrint,
-  faBell,
+  faGear,
 } from '@fortawesome/free-solid-svg-icons';
-import AdminDashboard from './components/admin-dashboard';
-import UserDashboard from './components/user-dashboard';
 import { AppState } from '../../types/app.types';
-import { getNotifications, getUserData } from '../../store/actions/auth.action';
-import BillingComponent from '../billing/billing.component';
-import notificationsComponent from '../notifications/notifications.component';
-import PrintersComponent from '../printers/printers.component';
-import ProfileComponent from '../profile/profile.component';
-import TrackingComponent from '../tracking/tracking.component';
+import {
+  getAllUsers,
+  getNotifications,
+  getUserData,
+} from '../../store/actions/auth.action';
+import BillingComponent from './components/billing/billing.component';
+import notificationsComponent from './components/notifications/notifications.component';
+import PrintersComponent from './components/printers/printers.component';
+import ProfileComponent from './components/profile/profile.component';
+import TrackingComponent from './components/tracking/tracking.component';
 import {
   getAllPrinters,
   getDepartmentMaintenanceRequests,
   getDepartmentMetrics,
   getDepartmentPrinters,
 } from '../../store/actions/printer.actions';
-import MaintenanceComponent from '../maintenance/maintenance.component';
+import MaintenanceComponent from './components/maintenance/maintenance.component';
 import { getDepartmentBillingHistory } from '../../store/actions/billing.actions';
 
 import { CONSTANTS } from '../../config/constants';
 import withRouter from '../../hooks/withRouter.hook';
 import withDispatch from '../../hooks/dispatch.hook';
+import NotificationsWidget from './components/notifications/components/notifications.widget';
+import adminSettingsComponent from './components/admin-settings/admin-settings.component';
 
 interface State {
   isOpen: boolean;
@@ -55,11 +58,11 @@ class DashboardComponent extends Component<DashboardProps, State> {
   }
 
   async componentDidMount(): Promise<void> {
-    await this.props.getUserData();
     const { user } = this.props.auth;
     if (user?.type === CONSTANTS.ADMIN) {
       await this.props.getNotifications(user.id);
       await this.props.getAllPrinters();
+      await this.props.getAllUsers();
     } else if (user?.type === CONSTANTS.USER) {
       await this.props.getNotifications(user.id);
       await this.props.getDepartmentPrinters(user.department_id);
@@ -74,26 +77,15 @@ class DashboardComponent extends Component<DashboardProps, State> {
     }));
   };
 
-  toggleUserType = () => {
-    const { dispatch } = this.props;
-    const { user } = this.props.auth;
-    if (user?.type !== CONSTANTS.ADMIN) {
-      dispatch({ type: CONSTANTS.SET_USER_TYPE, payload: CONSTANTS.ADMIN });
-    } else {
-      dispatch({ type: CONSTANTS.SET_USER_TYPE, payload: CONSTANTS.USER });
-    }
-  };
-
   logout = () => {
     const { dispatch } = this.props;
     dispatch({ type: CONSTANTS.LOGOUT });
   };
 
   render() {
-    const { user } = this.props.auth;
     const { pathname } = this.props.router.location;
-    const { auth, printer } = this.props;
     const { isOpen } = this.state;
+    const { user } = this.props.auth;
 
     return (
       <div className='d-flex flex-column'>
@@ -109,17 +101,10 @@ class DashboardComponent extends Component<DashboardProps, State> {
                   className='d-inline-block align-top'
                 ></img>
               </Navbar.Brand>
-              <Button onClick={this.toggleUserType}>Switch User Type</Button>
             </Nav>
 
             <Nav className='align-items-center'>
-              <Link
-                className='btn btn-primary'
-                role='button'
-                to='/notifications'
-              >
-                <FontAwesomeIcon icon={faBell} color={'white'} />
-              </Link>
+              <NotificationsWidget></NotificationsWidget>
               <NavDropdown
                 align={'end'}
                 title={
@@ -165,9 +150,11 @@ class DashboardComponent extends Component<DashboardProps, State> {
                 variant='pills'
               >
                 <Nav.Item>
-                  <Nav.Link as={Link} eventKey={'/dashboard'} to={'/dashboard'}>
-                    <FontAwesomeIcon icon={faHome}></FontAwesomeIcon> Dashboard
-                  </Nav.Link>
+                  {user?.type === CONSTANTS.ADMIN && (
+                    <Nav.Link as={Link} eventKey={'/settings'} to={'/settings'}>
+                      <FontAwesomeIcon icon={faGear}></FontAwesomeIcon> Settings
+                    </Nav.Link>
+                  )}
                   <Nav.Link as={Link} eventKey={'/printers'} to={'/printers'}>
                     <FontAwesomeIcon icon={faPrint}></FontAwesomeIcon> Printers
                   </Nav.Link>
@@ -193,24 +180,20 @@ class DashboardComponent extends Component<DashboardProps, State> {
           </div>
           <div
             style={{
-              height: '100vh',
+              height: 'calc(100vh - 75px)',
               overflowY: 'scroll',
               flex: '1 1 auto',
             }}
           >
             <Container fluid className='mt-3'>
               <Routes>
-                <Route path='*' element={<Navigate to='/dashboard' />}></Route>
-                <Route
-                  path='dashboard'
-                  element={
-                    user?.type === CONSTANTS.ADMIN ? (
-                      <AdminDashboard />
-                    ) : (
-                      <UserDashboard auth={auth} printer={printer} />
-                    )
-                  }
-                ></Route>
+                <Route path='*' element={<Navigate to='/printers' />}></Route>
+                {user?.type === CONSTANTS.ADMIN && (
+                  <Route
+                    path='settings'
+                    Component={adminSettingsComponent}
+                  ></Route>
+                )}
                 <Route path='billing' Component={BillingComponent}></Route>
                 <Route path='printers' Component={PrintersComponent}></Route>
                 <Route
@@ -235,7 +218,6 @@ class DashboardComponent extends Component<DashboardProps, State> {
 const mapStateToProps = (state: AppState, props: any) => {
   return {
     auth: state.auth,
-    printer: state.printer,
     billing: state.billing,
     router: props.router,
     dispatch: props.dispatch,
@@ -250,6 +232,7 @@ const mapDispatchToProps = {
   getNotifications,
   getDepartmentBillingHistory,
   getDepartmentMaintenanceRequests,
+  getAllUsers,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

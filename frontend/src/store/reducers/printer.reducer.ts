@@ -95,6 +95,9 @@ const printerReducer = (state = initialState, action: PayloadAction) => {
         ...state,
       };
     }
+    case CONSTANTS.LOGOUT: {
+      return initialState;
+    }
     default:
       return state;
   }

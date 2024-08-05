@@ -8,7 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import App from './App';
-import { store, persistor, resetLogoutTimer } from './store';
+import { store, persistor } from './store';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 
@@ -23,10 +23,3 @@ root.render(
     </BrowserRouter>
   </React.StrictMode>
 );
-
-const events = ['click', 'keypress', 'mousemove', 'scroll'];
-events.forEach((event: any) => {
-  window.addEventListener(event, resetLogoutTimer);
-});
-
-resetLogoutTimer();

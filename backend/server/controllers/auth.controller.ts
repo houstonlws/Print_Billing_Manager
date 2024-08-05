@@ -4,6 +4,15 @@ import { User } from '../models/auth.model';
 import authDao from '../dao/auth.dao';
 
 class AuthController {
+  static updateUserType = async (req: Request, res: Response) => {
+    try {
+      const users: string[] = req.body;
+      await authDao.updateUserType(users);
+      res.json('success');
+    } catch (err) {
+      res.status(401).json();
+    }
+  };
   static async register(req: Request, res: Response) {
     try {
       const user: User = req.body;
@@ -22,14 +31,16 @@ class AuthController {
     try {
       const validationResult = await authDao.login(user);
       if (validationResult?.length > 0) {
+        const user = (
+          await authDao.getUserData(validationResult[0].id)
+        ).shift();
         console.log(origin + 'login success');
-        const authData = await authDao.getUserData(validationResult[0].id);
         const refreshToken = jwt.sign(
-          { ...authData[0] },
+          { ...user },
           process.env.REFRESH_TOKEN_SECRET as string,
           { expiresIn: '15m' }
         );
-        res.cookie('refreshToken', refreshToken).json('login success');
+        res.cookie('refreshToken', refreshToken).json(user);
       } else {
         console.log(origin + 'login fail, wrong username or password');
         res.status(403).json('invalid login details');
@@ -72,9 +83,9 @@ class AuthController {
   }
 
   static async getUserData(req: Request, res: Response) {
-    const user = req.body.tokenData;
-    const result = await authDao.getUserData(user.id);
-    res.json(result[0]);
+    const id = req.params.id;
+    const result = (await authDao.getUserData(id)).shift();
+    res.json(result);
   }
 
   static async updateUserData(req: Request, res: Response) {
@@ -94,6 +105,16 @@ class AuthController {
       res.json(result);
     } else {
       res.status(400).json('error getting user notifications');
+    }
+  }
+
+  static async getAllUsers(req: Request, res: Response) {
+    const id = req.params.id;
+    const result = await authDao.getAllUsers();
+    if (result) {
+      res.json(result);
+    } else {
+      res.status(400).json('error getting users');
     }
   }
 }

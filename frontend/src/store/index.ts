@@ -13,15 +13,9 @@ import printerReducer from './reducers/printer.reducer';
 import { CONSTANTS } from '../config/constants';
 import { clearPersistMiddleware } from './middleware/persist.middleware';
 
-const rootPersistConfig = {
-  key: 'root',
-  storage,
-};
-
 const authPersistConfig = {
   key: 'auth',
   storage,
-  blacklist: ['updatedDataStatus'],
 };
 
 const rootReducer = combineReducers({
@@ -30,10 +24,8 @@ const rootReducer = combineReducers({
   printer: printerReducer,
 });
 
-const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
-
 const store = createStore(
-  persistedReducer,
+  rootReducer,
   composeWithDevTools(applyMiddleware(thunk, clearPersistMiddleware))
 );
 

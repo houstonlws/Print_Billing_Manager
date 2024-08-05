@@ -20,15 +20,11 @@ export const register =
 export const login =
   (email: string, password: string) => async (dispatch: Dispatch) => {
     try {
-      const result = await AuthService.login(email, password);
-      if (result.status === 200) {
-        dispatch({ type: CONSTANTS.LOGIN_SUCCESS });
-        window.location.assign('/');
-        window.location.reload();
+      const result: User = await AuthService.login(email, password);
+      if (result) {
+        dispatch({ type: CONSTANTS.LOGIN_SUCCESS, payload: result });
       } else {
         dispatch({ type: CONSTANTS.LOGIN_FAIL });
-        window.location.assign('/login');
-        window.location.reload();
       }
     } catch (error) {
       dispatch({ type: CONSTANTS.LOGIN_FAIL });
@@ -66,9 +62,9 @@ export const refreshToken = () => async (dispatch: Dispatch) => {
   }
 };
 
-export const getUserData = () => async (dispatch: Dispatch) => {
+export const getUserData = (id: string) => async (dispatch: Dispatch) => {
   try {
-    const result = await AuthService.getUserData();
+    const result = await AuthService.getUserData(id);
     if (result?.status === 200) {
       dispatch({
         type: CONSTANTS.GET_USER_DATA_SUCCESS,
@@ -100,6 +96,24 @@ export const updateUserData = (data: User) => async (dispatch: Dispatch) => {
   }
 };
 
+export const getAllUsers = () => async (dispatch: Dispatch) => {
+  try {
+    const result = await AuthService.getAllUsers();
+    if (result) {
+      dispatch({
+        type: CONSTANTS.GET_ALL_USERS_SUCCESS,
+        payload: result,
+      });
+    } else {
+      dispatch({ type: CONSTANTS.GET_ALL_USERS_FAILURE });
+      dispatch({ type: CONSTANTS.LOGOUT });
+    }
+  } catch (error) {
+    dispatch({ type: CONSTANTS.GET_ALL_USERS_FAILURE });
+    dispatch({ type: CONSTANTS.LOGOUT });
+  }
+};
+
 export const getNotifications = (id: string) => async (dispatch: Dispatch) => {
   try {
     const result = await AuthService.getNotifications(id);
@@ -123,3 +137,20 @@ const getCookie = (name: string) => {
   }
   return null;
 };
+
+export const updateUserType =
+  (users: string[]) => async (dispatch: Dispatch) => {
+    try {
+      const result = await AuthService.updateUserType(users);
+      if (result) {
+        dispatch({ type: CONSTANTS.UPDATE_USER_TYPE_SUCCESS });
+        return true;
+      } else {
+        dispatch({ type: CONSTANTS.UPDATE_USER_TYPE_FAILURE });
+        dispatch({ type: CONSTANTS.LOGOUT });
+      }
+    } catch (error) {
+      dispatch({ type: CONSTANTS.UPDATE_USER_TYPE_FAILURE });
+      dispatch({ type: CONSTANTS.LOGOUT });
+    }
+  };
