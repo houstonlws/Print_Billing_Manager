@@ -64,11 +64,11 @@ class DashboardComponent extends Component<DashboardProps, State> {
   async componentDidMount(): Promise<void> {
     const { user } = this.props.auth;
     if (user?.type === CONSTANTS.ADMIN) {
-      await this.props.getNotifications(user.id);
+      await this.props.getNotifications(user.department_id);
       await this.props.getAllPrinters();
       await this.props.getAllUsers();
     } else if (user?.type === CONSTANTS.USER) {
-      await this.props.getNotifications(user.id);
+      await this.props.getNotifications(user.department_id);
       await this.props.getDepartmentPrinters(user.department_id);
       await this.props.getDepartmentMetrics(user.department_id);
       await this.props.getDepartmentMaintenanceRequests(user.department_id);

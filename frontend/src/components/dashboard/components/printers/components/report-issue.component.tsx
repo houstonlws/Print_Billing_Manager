@@ -36,6 +36,7 @@ class ReportIssue extends Component<ReportProps, State> {
       reporting: false,
       reportData: {
         printer_id: props.printer.id,
+        department_id: this.props.printer.department_id,
         request_date: today,
         maintenance_type: '',
         description: '',
@@ -76,6 +77,7 @@ class ReportIssue extends Component<ReportProps, State> {
     this.setState({
       reportData: {
         printer_id: this.props.printer.id,
+        department_id: this.props.printer.department_id,
         request_date: today,
         maintenance_type: '',
         description: '',

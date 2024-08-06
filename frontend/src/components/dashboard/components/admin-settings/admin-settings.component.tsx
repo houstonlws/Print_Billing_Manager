@@ -10,7 +10,6 @@ import {
   Form,
   FormControl,
   FormGroup,
-  FormLabel,
   FormSelect,
   Stack,
   Table,
@@ -21,8 +20,10 @@ import {
   register,
   updateUserType,
 } from '../../../../store/actions/auth.action';
+import { User } from '../../../../types/auth.types';
 
 interface State {
+  users: User[];
   userTypes: { [key: string]: string };
   updated: boolean;
   added: boolean;
@@ -33,6 +34,7 @@ class AdminSettings extends Component<ReduxProps, State> {
   constructor(props: ReduxProps) {
     super(props);
     this.state = {
+      users: [],
       userTypes: {},
       updated: false,
       adding: false,
@@ -46,12 +48,16 @@ class AdminSettings extends Component<ReduxProps, State> {
     }));
   };
 
-  componentDidMount(): void {
+  async componentDidMount(): Promise<void> {
+    const users = await this.props.getAllUsers();
     let { userTypes } = this.state;
-    this.props.users.forEach((user) => {
-      userTypes[user.id] = user.type;
-    });
-    this.setState({ userTypes: userTypes });
+    if (users) {
+      users?.forEach((user) => {
+        userTypes[user.id] = user.type;
+      });
+      this.setState({ users: users });
+      this.setState({ userTypes: userTypes });
+    }
   }
 
   updateUserType = (event: any) => {
@@ -61,8 +67,7 @@ class AdminSettings extends Component<ReduxProps, State> {
   };
 
   submitChanges = async () => {
-    const { users } = this.props;
-    const { userTypes } = this.state;
+    const { userTypes, users } = this.state;
     let userIds: string[] = [];
     users.forEach((user) => {
       if (userTypes[user.id] !== user.type) userIds.push(user.id);
@@ -89,8 +94,7 @@ class AdminSettings extends Component<ReduxProps, State> {
   };
 
   render(): React.ReactNode {
-    const { users, currentUser } = this.props;
-    const { userTypes, updated, adding, added } = this.state;
+    const { users, userTypes, updated, adding, added } = this.state;
 
     return (
       <div data-testid='admin-settings-component'>
@@ -135,28 +139,24 @@ class AdminSettings extends Component<ReduxProps, State> {
             </tr>
           </thead>
           <tbody>
-            {users
-              ?.filter((user) => user.email !== currentUser)
-              .map((user) => {
-                let change = userTypes[user.id] !== user.type;
-                return (
-                  <tr className={change ? 'changed' : ''} key={user.id}>
-                    <td>{user.email}</td>
-                    <td>
-                      <FormSelect
-                        id={user.id}
-                        value={userTypes[user.id]}
-                        onChange={this.updateUserType}
-                      >
-                        <option value={CONSTANTS.ADMIN}>
-                          {CONSTANTS.ADMIN}
-                        </option>
-                        <option value={CONSTANTS.USER}>{CONSTANTS.USER}</option>
-                      </FormSelect>
-                    </td>
-                  </tr>
-                );
-              })}
+            {users?.map((user) => {
+              let change = userTypes[user.id] !== user.type;
+              return (
+                <tr className={change ? 'changed' : ''} key={user.id}>
+                  <td>{user.email}</td>
+                  <td>
+                    <FormSelect
+                      id={user.id}
+                      value={userTypes[user.id]}
+                      onChange={this.updateUserType}
+                    >
+                      <option value={CONSTANTS.ADMIN}>{CONSTANTS.ADMIN}</option>
+                      <option value={CONSTANTS.USER}>{CONSTANTS.USER}</option>
+                    </FormSelect>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </Table>
         <div className='d-flex justify-content-end'>
@@ -167,10 +167,7 @@ class AdminSettings extends Component<ReduxProps, State> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  users: state.auth.userList,
-  currentUser: state.auth.user?.email,
-});
+const mapStateToProps = (state: AppState) => ({});
 
 const mapDispatchToProps = {
   updateUserType,

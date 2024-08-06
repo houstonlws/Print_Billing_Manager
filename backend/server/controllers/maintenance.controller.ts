@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import MaintenanceDAO from '../dao/maintenance.dao';
+import authDao from '../dao/auth.dao';
 
 class MaintenanceController {
   static async getMaintenanceRequests(req: Request, res: Response) {
@@ -14,8 +15,14 @@ class MaintenanceController {
 
   static async addMaintenanceRequest(req: Request, res: Response) {
     try {
-      console.log('adding request', req.body);
-      const result = await MaintenanceDAO.addMaintenanceRequest(req.body);
+      const mr = req.body;
+      const result = await MaintenanceDAO.addMaintenanceRequest(mr);
+      if (result) {
+        const notified = await authDao.createMaintenanceNotification(
+          result.insertId,
+          mr
+        );
+      }
       res.json('success');
     } catch (error) {
       res.status(400).json('failure');

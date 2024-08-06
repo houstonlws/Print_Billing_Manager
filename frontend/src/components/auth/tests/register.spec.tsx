@@ -16,7 +16,7 @@ const store = mockStore(initialState);
 
 const mockRegisterAction = jest.fn(
   (eml: string, pwd: string) => async (dispatch: Dispatch) => {
-    return Promise.resolve(true);
+    return Promise.resolve(false);
   }
 );
 
@@ -101,7 +101,7 @@ describe('Register Component', () => {
 
     fireEvent.submit(submitButton);
 
-    const expected = [{ type: CONSTANTS.REGISTER_SUCCESS }];
+    const expected = [{ type: CONSTANTS.REGISTER_FAIL }];
 
     await waitFor(() => {
       expect(store.getActions()).toEqual(expected);

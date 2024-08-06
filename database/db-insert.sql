@@ -1,7 +1,7 @@
 USE print_billing_db;
 
 INSERT INTO auth (email, password) VALUES ('dev@dev.dev', 'pass');
-INSERT INTO users (id, email, type) SELECT id, email, 'ADMIN' FROM auth  WHERE email = 'dev@dev.dev';
+INSERT INTO users (id, email, type, department_id) SELECT id, email, 'ADMIN', 0 FROM auth  WHERE email = 'dev@dev.dev';
 
 INSERT INTO printers (serial_number, model, brand, location, installation_date, 
 warranty_expiry_date, ip_address, mac_address, firmware_version, department_id)
@@ -62,31 +62,31 @@ VALUES
 (14, 6300, 1300, 270, 55, '85% cyan, 70% magenta, 95% yellow, 15% black', '1400 pages', '250 sheets', 600, 1700, 230, 450, 100),
 (15, 4700, 1000, 190, 48, '75% cyan, 55% magenta, 85% yellow, 25% black', '1150 pages', '210 sheets', 480, 1400, 210, 360, 85);
     
-INSERT INTO maintenance_requests (printer_id, request_date, maintenance_type, description, status, resolved_date) VALUES
-(1, '2022-06-01', 'Routine Check', 'Routine maintenance check and toner replacement', 'Resolved', '2022-06-02'),
-(2, '2022-06-15', 'Repair', 'Printer jam and paper feed issue', 'Pending', NULL),
-(3, '2022-07-01', 'Firmware Update', 'Update printer firmware to version 1.3.0', 'Resolved', '2022-07-02'),
-(4, '2022-07-10', 'Toner Replacement', 'Replace toner cartridges', 'Resolved', '2022-07-11'),
-(5, '2022-07-20', 'Paper Jam', 'Clear paper jam in tray 2', 'Resolved', '2022-07-21'),
-(6, '2022-08-01', 'Routine Check', 'Routine maintenance check and toner replacement', 'Pending', NULL),
-(7, '2022-08-10', 'Repair', 'Fix issue with printer not connecting to network', 'Resolved', '2022-08-11'),
-(8, '2022-08-20', 'Firmware Update', 'Update printer firmware to version 1.4.0', 'Resolved', '2022-08-21'),
-(9, '2022-09-01', 'Toner Replacement', 'Replace toner cartridges', 'Pending', NULL),
-(10, '2022-09-10', 'Paper Jam', 'Clear paper jam in tray 1', 'Resolved', '2022-09-11'),
-(11, '2022-09-20', 'Routine Check', 'Routine maintenance check and toner replacement', 'Pending', NULL),
-(12, '2022-10-01', 'Repair', 'Fix issue with printer not printing color', 'Resolved', '2022-10-02'),
-(13, '2022-10-10', 'Firmware Update', 'Update printer firmware to version 1.5.0', 'Resolved', '2022-10-11'),
-(14, '2022-10-20', 'Toner Replacement', 'Replace toner cartridges', 'Pending', NULL),
-(15, '2022-11-01', 'Paper Jam', 'Clear paper jam in tray 3', 'Resolved', '2022-11-02');
+INSERT INTO maintenance_requests (printer_id, department_id, request_date, maintenance_type, description, status, resolved_date) VALUES
+(1, 1, '2022-06-01', 'Routine Check', 'Routine maintenance check and toner replacement', 'Resolved', '2022-06-02'),
+(2, 1, '2022-06-15', 'Repair', 'Printer jam and paper feed issue', 'Pending', NULL),
+(3, 2, '2022-07-01', 'Firmware Update', 'Update printer firmware to version 1.3.0', 'Resolved', '2022-07-02'),
+(4, 2, '2022-07-10', 'Toner Replacement', 'Replace toner cartridges', 'Resolved', '2022-07-11'),
+(5, 3, '2022-07-20', 'Paper Jam', 'Clear paper jam in tray 2', 'Resolved', '2022-07-21'),
+(6, 3, '2022-08-01', 'Routine Check', 'Routine maintenance check and toner replacement', 'Pending', NULL),
+(7, 4, '2022-08-10', 'Repair', 'Fix issue with printer not connecting to network', 'Resolved', '2022-08-11'),
+(8, 4, '2022-08-20', 'Firmware Update', 'Update printer firmware to version 1.4.0', 'Resolved', '2022-08-21'),
+(9, 5, '2022-09-01', 'Toner Replacement', 'Replace toner cartridges', 'Pending', NULL),
+(10, 5, '2022-09-10', 'Paper Jam', 'Clear paper jam in tray 1', 'Resolved', '2022-09-11'),
+(11, 6, '2022-09-20', 'Routine Check', 'Routine maintenance check and toner replacement', 'Pending', NULL),
+(12, 6, '2022-10-01', 'Repair', 'Fix issue with printer not printing color', 'Resolved', '2022-10-02'),
+(13, 1, '2022-10-10', 'Firmware Update', 'Update printer firmware to version 1.5.0', 'Resolved', '2022-10-11'),
+(14, 1, '2022-10-20', 'Toner Replacement', 'Replace toner cartridges', 'Pending', NULL),
+(15, 2, '2022-11-01', 'Paper Jam', 'Clear paper jam in tray 3', 'Resolved', '2022-11-02');
 
-INSERT INTO notifications (user_id, notification_date, message, is_read) VALUES
-(1, '2022-06-01 10:00:00', 'Routine maintenance scheduled for Printer SN12345.', FALSE),
-(1, '2022-06-15 14:00:00', 'Repair request submitted for Printer SN67890.', FALSE),
-(1, '2022-07-01 09:00:00', 'Firmware update available for Printer SN54321.', TRUE),
-(1, '2022-07-10 11:00:00', 'Toner replacement scheduled for Printer SN23456.', FALSE),
-(1, '2022-07-20 13:00:00', 'Paper jam reported for Printer SN78901.', TRUE),
-(1, '2022-08-01 10:00:00', 'Routine maintenance scheduled for Printer SN65432.', FALSE),
-(1, '2022-11-01 13:00:00', 'Paper jam reported for Printer SN67854.', TRUE);
+INSERT INTO notifications (notification_date, department_id, maintenance_id, message, is_read) VALUES
+('2022-06-01 10:00:00', 1, 1,'Routine maintenance scheduled for Printer SN12345.', FALSE),
+('2022-06-15 14:00:00', 2, 2, 'Repair request submitted for Printer SN67890.', FALSE),
+('2022-07-01 09:00:00', 3, 3, 'Firmware update available for Printer SN54321.', TRUE),
+('2022-07-10 11:00:00', 4, 4, 'Toner replacement scheduled for Printer SN23456.', FALSE),
+('2022-07-20 13:00:00', 5, 5, 'Paper jam reported for Printer SN78901.', TRUE),
+('2022-08-01 10:00:00', 6, 6, 'Routine maintenance scheduled for Printer SN65432.', FALSE),
+('2022-11-01 13:00:00', 7, 7, 'Paper jam reported for Printer SN67854.', TRUE);
 
 INSERT INTO billing (department_id, billing_cycle_start, billing_cycle_end, total_charges, total_paper, total_color_pages, total_bw_pages, color_pages_charge, bw_pages_charge) VALUES
 (1, '2022-05-01', '2022-05-31', 500.00, 500, 300, 200, 0.10, 0.05),

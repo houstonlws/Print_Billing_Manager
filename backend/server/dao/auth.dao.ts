@@ -1,5 +1,6 @@
 import { User } from '../models/auth.model';
 import connection from '../config/database.config';
+import { MaintenanceRequest } from '../models/maintenance.model';
 
 export default class authDao {
   static async updateUserType(users: string[]) {
@@ -85,7 +86,6 @@ export default class authDao {
   static async updateUserData(id: string, user: User) {
     return await new Promise<boolean>((resolve, reject) => {
       try {
-        console.log('[authDAO] updating user data', user);
         const email = user.email;
         const firstName = user.firstName || null;
         const lastName = user.lastName || null;
@@ -97,7 +97,6 @@ export default class authDao {
         const data = department_id
           ? [firstName, lastName, department_id, email, phone, id]
           : [firstName, lastName, email, phone, id];
-        console.log(query, data);
         connection.query(query, data);
         resolve(true);
       } catch (error) {
@@ -110,12 +109,15 @@ export default class authDao {
     return await new Promise<User[]>((resolve, reject) => {
       const query = `SELECT 
             id,
-            user_id,
+            department_id,
+            maintenance_id,
             DATE_FORMAT(notification_date, '%Y-%m-%d') as notification_date,
             message,
             is_read
             FROM notifications
-             WHERE user_id=?`;
+            WHERE ${
+              id === '0' ? 'maintenance_id IS NOT NULL' : 'department_id=?'
+            }`;
       connection.query(query, id, (err, res) => {
         if (err) {
           reject(err);
@@ -126,16 +128,43 @@ export default class authDao {
     });
   }
 
-  static async getAllUsers() {
+  static async getAllUsers(id: string) {
     return await new Promise<User[]>((resolve, reject) => {
-      const query = `SELECT * FROM users`;
-      connection.query(query, (err, res) => {
+      const query = `SELECT * FROM users WHERE NOT id=?  `;
+      connection.query(query, id, (err, res) => {
         if (err) {
           reject(err);
         } else {
           resolve(res);
         }
       });
+    });
+  }
+
+  static async createMaintenanceNotification(
+    id: string,
+    mr: MaintenanceRequest
+  ) {
+    return await new Promise<User[]>((resolve, reject) => {
+      const query = `INSERT INTO notifications 
+      (department_id,
+      maintenance_id,
+      message)
+      VALUES
+      (?,?,?)`;
+      connection.query(
+        query,
+        [mr.department_id, id, mr.description],
+        (err, res) => {
+          if (err) {
+            console.log('error creating notification', err.message);
+            reject(err);
+          } else {
+            console.log('success creating notification');
+            resolve(res);
+          }
+        }
+      );
     });
   }
 }
