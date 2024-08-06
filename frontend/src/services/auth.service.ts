@@ -82,20 +82,20 @@ class AuthService {
     }
   };
 
-  static updateUserData = async (data: User) => {
+  static updateUserData = async (data: User): Promise<User | boolean> => {
     try {
       console.log('[authService] sending data to update user', data);
       const result = await axios.put('/updateUserData', data);
-      if (result.status === 200) return true;
+      if (result.status === 200) return result.data as User;
       return false;
     } catch (err) {
       return false;
     }
   };
 
-  static getNotifications = async (id: string) => {
+  static getNotifications = async (departmentId: string) => {
     try {
-      const result = await axios.get(`/notifications/${id}`);
+      const result = await axios.get(`/notifications/${departmentId}`);
       if (result.status === 200) return result.data;
       return [];
     } catch (err) {

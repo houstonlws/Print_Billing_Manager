@@ -87,10 +87,7 @@ export const updateUserData = (data: User) => async (dispatch: Dispatch) => {
     if (result) {
       dispatch({ type: CONSTANTS.UPDATE_USER_DATA_SUCCESS, payload: result });
       return true;
-    } else {
-      dispatch({ type: CONSTANTS.UPDATE_USER_DATA_FAILURE });
-      return false;
-    }
+    } else return false;
   } catch (error) {
     dispatch({ type: CONSTANTS.UPDATE_USER_DATA_FAILURE });
     return false;
@@ -103,27 +100,30 @@ export const getAllUsers = () => async (dispatch: Dispatch) => {
     if (result) {
       dispatch({
         type: CONSTANTS.GET_ALL_USERS_SUCCESS,
-        payload: result,
       });
+      return result;
     } else {
       dispatch({ type: CONSTANTS.GET_ALL_USERS_FAILURE });
       dispatch({ type: CONSTANTS.LOGOUT });
+      return false;
     }
   } catch (error) {
     dispatch({ type: CONSTANTS.GET_ALL_USERS_FAILURE });
     dispatch({ type: CONSTANTS.LOGOUT });
+    return false;
   }
 };
 
-export const getNotifications = (id: string) => async (dispatch: Dispatch) => {
-  try {
-    const result = await AuthService.getNotifications(id);
-    dispatch({ type: CONSTANTS.GET_NOTIFICATIONS_SUCCESS, payload: result });
-  } catch (error) {
-    dispatch({ type: CONSTANTS.GET_NOTIFICATIONS_FAILURE });
-    dispatch({ type: CONSTANTS.LOGOUT });
-  }
-};
+export const getNotifications =
+  (departmentId: string) => async (dispatch: Dispatch) => {
+    try {
+      const result = await AuthService.getNotifications(departmentId);
+      dispatch({ type: CONSTANTS.GET_NOTIFICATIONS_SUCCESS, payload: result });
+    } catch (error) {
+      dispatch({ type: CONSTANTS.GET_NOTIFICATIONS_FAILURE });
+      dispatch({ type: CONSTANTS.LOGOUT });
+    }
+  };
 
 const clearCookie = (name: string) => {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;

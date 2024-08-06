@@ -15,7 +15,6 @@ export const initialState: AuthState = {
     department_id: '',
   },
   notifications: [],
-  userList: [],
 };
 
 export const authReducer = (state = initialState, action: Payload) => {
@@ -58,11 +57,7 @@ export const authReducer = (state = initialState, action: Payload) => {
       };
     }
     case CONSTANTS.LOGOUT: {
-      return {
-        ...state,
-        loggedIn: false,
-        user: null,
-      };
+      return initialState;
     }
     case CONSTANTS.GET_USER_DATA_SUCCESS: {
       return {
@@ -102,11 +97,13 @@ export const authReducer = (state = initialState, action: Payload) => {
     case CONSTANTS.GET_ALL_USERS_SUCCESS: {
       return {
         ...state,
-        userList: payload,
       };
     }
-    case CONSTANTS.LOGOUT: {
-      return initialState;
+    case CONSTANTS.UPDATE_USER_DATA_SUCCESS: {
+      return {
+        ...state,
+        user: payload,
+      };
     }
     default:
       return state;

@@ -92,7 +92,13 @@ class AuthController {
     const id = req.body.tokenData.id;
     const result = await authDao.updateUserData(id, req.body);
     if (result) {
-      res.json('updated user data');
+      const user = (await authDao.getUserData(id)).shift();
+      const refreshToken = jwt.sign(
+        { ...user },
+        process.env.REFRESH_TOKEN_SECRET as string,
+        { expiresIn: '15m' }
+      );
+      res.cookie('refreshToken', refreshToken).json(user);
     } else {
       res.status(400).json('error updating user data');
     }
@@ -110,7 +116,7 @@ class AuthController {
 
   static async getAllUsers(req: Request, res: Response) {
     const id = req.params.id;
-    const result = await authDao.getAllUsers();
+    const result = await authDao.getAllUsers(req.body.tokenData.id);
     if (result) {
       res.json(result);
     } else {

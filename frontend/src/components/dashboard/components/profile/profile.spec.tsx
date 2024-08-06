@@ -95,7 +95,7 @@ describe('Profile Component', () => {
     const button = getByTestId('update-user-submit');
     fireEvent.submit(button);
 
-    const expected = [{ type: CONSTANTS.UPDATE_USER_DATA_FAILURE }];
+    const expected: any[] = [];
 
     await waitFor(() => {
       expect(store.getActions()).toEqual(expected);

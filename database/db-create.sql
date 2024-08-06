@@ -52,6 +52,7 @@ CREATE TABLE metrics (
 CREATE TABLE maintenance_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     printer_id INT NOT NULL,
+    department_id INT NOT NULL,
     request_date DATE NOT NULL,
     maintenance_type VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
@@ -62,11 +63,12 @@ CREATE TABLE maintenance_requests (
 
 CREATE TABLE notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    department_id INT NOT NULL,
+    maintenance_id INT,
     notification_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     message TEXT NOT NULL,
     is_read BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (maintenance_id) REFERENCES maintenance_requests(id)
 );
 
 CREATE TABLE billing (
@@ -94,7 +96,7 @@ CREATE TABLE bill_payments (
 CREATE VIEW department_metrics AS 
 	SELECT 
     metrics.id,
-     printer_id ,
+	printer_id ,
     total_pages_printed ,
     monthly_print_volume,
     total_print_jobs ,
@@ -112,16 +114,15 @@ CREATE VIEW department_metrics AS
     RIGHT JOIN printers 
     ON metrics.printer_id = printers.id;
     
-CREATE VIEW department_maintenance_requests AS 
-SELECT 
-	maintenance_requests.id,
-	printer_id,
-	DATE_FORMAT(request_date, '%Y-%c-%d') as request_date,
-	maintenance_type,
-	description,
-	status,
-	DATE_FORMAT(resolved_date, '%Y-%c-%d') as resolved_date,
-    department_id
-	FROM maintenance_requests
-    RIGHT JOIN printers
-    ON maintenance_requests.printer_id = printers.id;
+-- CREATE VIEW admin_notifications AS
+-- SELECT 
+-- 	notifications.id,
+--     printer_id,
+--     department_id,
+--     maintenance_id,
+--     maintenance_type,
+--     notification_date,
+--     is_read
+--     FROM notifications
+-- LEFT JOIN maintenance_requests
+-- ON maintenance_requests.id = notifications.maintenance_id;

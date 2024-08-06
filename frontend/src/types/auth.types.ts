@@ -20,5 +20,4 @@ export interface AuthState {
   loggedIn: boolean;
   user: User;
   notifications: Notification[];
-  userList: User[];
 }
