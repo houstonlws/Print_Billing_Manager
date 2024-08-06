@@ -18,12 +18,14 @@ import {
 import { CONSTANTS } from '../../../../config/constants';
 import {
   getAllUsers,
+  register,
   updateUserType,
 } from '../../../../store/actions/auth.action';
 
 interface State {
   userTypes: { [key: string]: string };
   updated: boolean;
+  added: boolean;
   adding: boolean;
 }
 
@@ -34,6 +36,7 @@ class AdminSettings extends Component<ReduxProps, State> {
       userTypes: {},
       updated: false,
       adding: false,
+      added: false,
     };
   }
 
@@ -73,9 +76,21 @@ class AdminSettings extends Component<ReduxProps, State> {
     }
   };
 
+  createUser = async (event: any) => {
+    event.preventDefault();
+    const email = event.target[0].value;
+    const pass = event.target[1].value;
+    const result = await this.props.register(email, pass);
+    if (result) {
+      this.setState({ added: true });
+      event.target[0].value = '';
+      event.target[1].value = '';
+    }
+  };
+
   render(): React.ReactNode {
     const { users, currentUser } = this.props;
-    const { userTypes, updated, adding } = this.state;
+    const { userTypes, updated, adding, added } = this.state;
 
     return (
       <div data-testid='admin-settings-component'>
@@ -85,6 +100,7 @@ class AdminSettings extends Component<ReduxProps, State> {
                 }`}
         </style>
         {updated && <Alert>Users Updated</Alert>}
+        {added && <Alert>User Created</Alert>}
         <Card>
           <CardHeader className='d-flex'>
             <h2 className='me-auto'>Admin Settings</h2>
@@ -94,14 +110,14 @@ class AdminSettings extends Component<ReduxProps, State> {
         {adding && (
           <Card>
             <CardBody>
-              <Form>
+              <Form onSubmit={this.createUser}>
                 <FormGroup as={Stack} gap={1} direction={'horizontal'}>
                   <FormControl type='email' placeholder='Email'></FormControl>
                   <FormControl
                     type='text'
                     placeholder='Temp Password'
                   ></FormControl>
-                  <Button>Submit</Button>
+                  <Button type='submit'>Submit</Button>
                 </FormGroup>
               </Form>
             </CardBody>
@@ -159,6 +175,7 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = {
   updateUserType,
   getAllUsers,
+  register,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
