@@ -5,9 +5,14 @@ import {
   Alert,
   Button,
   Card,
-  CardFooter,
+  CardBody,
   CardHeader,
+  Form,
+  FormControl,
+  FormGroup,
+  FormLabel,
   FormSelect,
+  Stack,
   Table,
 } from 'react-bootstrap';
 import { CONSTANTS } from '../../../../config/constants';
@@ -19,6 +24,7 @@ import {
 interface State {
   userTypes: { [key: string]: string };
   updated: boolean;
+  adding: boolean;
 }
 
 class AdminSettings extends Component<ReduxProps, State> {
@@ -27,8 +33,15 @@ class AdminSettings extends Component<ReduxProps, State> {
     this.state = {
       userTypes: {},
       updated: false,
+      adding: false,
     };
   }
+
+  toggleAdding = () => {
+    this.setState((prev) => ({
+      adding: !prev.adding,
+    }));
+  };
 
   componentDidMount(): void {
     let { userTypes } = this.state;
@@ -62,19 +75,40 @@ class AdminSettings extends Component<ReduxProps, State> {
 
   render(): React.ReactNode {
     const { users, currentUser } = this.props;
-    const { userTypes, updated } = this.state;
+    const { userTypes, updated, adding } = this.state;
 
     return (
-      <>
+      <div data-testid='admin-settings-component'>
         <style>
           {`.changed td {
                     background-color: lightyellow!important;
                 }`}
         </style>
         {updated && <Alert>Users Updated</Alert>}
-        <h2>Admin Settings</h2>
-        <div className='d-flex justify-content-between'>
-          <h3>Users</h3>
+        <Card>
+          <CardHeader className='d-flex'>
+            <h2 className='me-auto'>Admin Settings</h2>
+            <Button onClick={this.toggleAdding}>Add New User</Button>
+          </CardHeader>
+        </Card>
+        {adding && (
+          <Card>
+            <CardBody>
+              <Form>
+                <FormGroup as={Stack} gap={1} direction={'horizontal'}>
+                  <FormControl type='email' placeholder='Email'></FormControl>
+                  <FormControl
+                    type='text'
+                    placeholder='Temp Password'
+                  ></FormControl>
+                  <Button>Submit</Button>
+                </FormGroup>
+              </Form>
+            </CardBody>
+          </Card>
+        )}
+        <div className='d-flex justify-content-between mt-3'>
+          <div className='me-auto'></div>
           <Button onClick={this.submitChanges}>Update</Button>
         </div>
         <Table className='mt-3'>
@@ -112,7 +146,7 @@ class AdminSettings extends Component<ReduxProps, State> {
         <div className='d-flex justify-content-end'>
           <Button onClick={this.submitChanges}>Update</Button>
         </div>
-      </>
+      </div>
     );
   }
 }

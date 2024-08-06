@@ -69,11 +69,14 @@ export const addPrinter = (printer: Printer) => async (dispatch: Dispatch) => {
     const result = await PrinterService.addPrinter(printer);
     if (result) {
       dispatch({ type: CONSTANTS.ADD_PRINTER_SUCCESS });
+      return true;
     } else {
       dispatch({ type: CONSTANTS.ADD_PRINTER_FAILURE });
+      return false;
     }
   } catch (error) {
     dispatch({ type: CONSTANTS.ADD_PRINTER_FAILURE });
+    return false;
   }
 };
 

@@ -6,6 +6,7 @@ import {
   CardHeader,
   Container,
   DropdownItem,
+  FormSelect,
   Nav,
   NavDropdown,
   Navbar,
@@ -24,6 +25,7 @@ import {
   getAllUsers,
   getNotifications,
   getUserData,
+  logout,
 } from '../../store/actions/auth.action';
 import BillingComponent from './components/billing/billing.component';
 import notificationsComponent from './components/notifications/notifications.component';
@@ -41,12 +43,13 @@ import { getDepartmentBillingHistory } from '../../store/actions/billing.actions
 
 import { CONSTANTS } from '../../config/constants';
 import withRouter from '../../hooks/withRouter.hook';
-import withDispatch from '../../hooks/dispatch.hook';
 import NotificationsWidget from './components/notifications/components/notifications.widget';
 import adminSettingsComponent from './components/admin-settings/admin-settings.component';
+import { departments } from '../../config/app-data';
 
 interface State {
   isOpen: boolean;
+  department: string;
 }
 
 class DashboardComponent extends Component<DashboardProps, State> {
@@ -54,6 +57,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
     super(props);
     this.state = {
       isOpen: true,
+      department: '',
     };
   }
 
@@ -77,14 +81,21 @@ class DashboardComponent extends Component<DashboardProps, State> {
     }));
   };
 
-  logout = () => {
-    const { dispatch } = this.props;
-    dispatch({ type: CONSTANTS.LOGOUT });
+  onChange = async (event: any) => {
+    switch (event.target.id) {
+      case 'department':
+        this.setState({ department: event.target.value });
+        await this.props.getDepartmentPrinters(event.target.value);
+        await this.props.getDepartmentMetrics(event.target.value);
+        await this.props.getDepartmentBillingHistory(event.target.value);
+        await this.props.getDepartmentMaintenanceRequests(event.target.value);
+        break;
+    }
   };
 
   render() {
     const { pathname } = this.props.router.location;
-    const { isOpen } = this.state;
+    const { isOpen, department } = this.state;
     const { user } = this.props.auth;
 
     return (
@@ -102,6 +113,25 @@ class DashboardComponent extends Component<DashboardProps, State> {
                 ></img>
               </Navbar.Brand>
             </Nav>
+
+            {user.type === CONSTANTS.ADMIN && (
+              <Nav>
+                <FormSelect
+                  id={'department'}
+                  data-testid={'select-department'}
+                  onChange={this.onChange}
+                  value={department}
+                >
+                  <option value={''}>--Select A Department</option>
+                  {departments.map((d) => (
+                    <option key={d.id} value={d.id}>
+                      {d.name}
+                    </option>
+                  ))}
+                </FormSelect>
+                <Button style={{ whiteSpace: 'nowrap' }}>View All</Button>
+              </Nav>
+            )}
 
             <Nav className='align-items-center'>
               <NotificationsWidget></NotificationsWidget>
@@ -124,7 +154,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
                   <Button
                     className='w-100 text-left'
                     variant='secondary'
-                    onClick={this.logout}
+                    onClick={this.props.logout}
                   >
                     Logout
                   </Button>
@@ -187,12 +217,21 @@ class DashboardComponent extends Component<DashboardProps, State> {
           >
             <Container fluid className='mt-3'>
               <Routes>
-                <Route path='*' element={<Navigate to='/printers' />}></Route>
-                {user?.type === CONSTANTS.ADMIN && (
-                  <Route
-                    path='settings'
-                    Component={adminSettingsComponent}
-                  ></Route>
+                {user?.type === CONSTANTS.ADMIN ? (
+                  [
+                    <Route
+                      key={'any'}
+                      path='*'
+                      element={<Navigate to='/settings' />}
+                    ></Route>,
+                    <Route
+                      key={'settings'}
+                      path='settings'
+                      Component={adminSettingsComponent}
+                    ></Route>,
+                  ]
+                ) : (
+                  <Route path='*' element={<Navigate to='/printers' />}></Route>
                 )}
                 <Route path='billing' Component={BillingComponent}></Route>
                 <Route path='printers' Component={PrintersComponent}></Route>
@@ -215,27 +254,25 @@ class DashboardComponent extends Component<DashboardProps, State> {
   }
 }
 
-const mapStateToProps = (state: AppState, props: any) => {
-  return {
+const connector = connect(
+  (state: AppState, props: any) => ({
     auth: state.auth,
     billing: state.billing,
     router: props.router,
     dispatch: props.dispatch,
-  };
-};
-
-const mapDispatchToProps = {
-  getUserData,
-  getDepartmentPrinters,
-  getAllPrinters,
-  getDepartmentMetrics,
-  getNotifications,
-  getDepartmentBillingHistory,
-  getDepartmentMaintenanceRequests,
-  getAllUsers,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+  }),
+  {
+    getUserData,
+    getDepartmentPrinters,
+    getAllPrinters,
+    getDepartmentMetrics,
+    getNotifications,
+    getDepartmentBillingHistory,
+    getDepartmentMaintenanceRequests,
+    getAllUsers,
+    logout,
+  }
+);
 type DashboardProps = ConnectedProps<typeof connector>;
 
-export default withDispatch(withRouter(connector(DashboardComponent)));
+export default withRouter(connector(DashboardComponent));

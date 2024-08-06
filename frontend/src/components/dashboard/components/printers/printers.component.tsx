@@ -92,7 +92,6 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
 
   addPrinter = () => {
     this.props.addPrinter(this.state.tempPrinter);
-    window.alert('Added Printer');
   };
 
   render(): ReactNode {
@@ -175,18 +174,16 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
   }
 }
 
-const mapStateToProps = (state: AppState) => {
-  return {
+const connector = connect(
+  (state: AppState) => ({
     printers: state.printer?.printers,
     type: state.auth?.user?.type,
-  };
-};
-
-const mapDispatchToProps = {
-  addPrinter,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-export default connector(PrintersComponent);
+  }),
+  {
+    addPrinter,
+  }
+);
 
 type PrintersComponentProps = ConnectedProps<typeof connector>;
+
+export default connector(PrintersComponent);

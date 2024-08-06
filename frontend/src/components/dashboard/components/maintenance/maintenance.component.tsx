@@ -20,7 +20,6 @@ import {
 
 interface State {
   requests: MaintenanceRequest[];
-  department?: string;
   editing: boolean;
 }
 
@@ -29,17 +28,12 @@ class MaintenanceComponent extends Component<Props, State> {
     super(props);
     this.state = {
       requests: [],
-      department: '',
       editing: false,
     };
   }
 
   onChange = async (event: any) => {
     switch (event.target.id) {
-      case 'department':
-        this.setState({ department: event.target.value });
-        await this.props.getDepartmentMaintenanceRequests(event.target.value);
-        break;
       case 'status':
     }
   };
@@ -59,30 +53,15 @@ class MaintenanceComponent extends Component<Props, State> {
   render(): ReactNode {
     const { requests, printers } = this.props.printer;
     const { type } = this.props.user;
-    const { department, editing } = this.state;
+    const { editing } = this.state;
 
     return (
       <Stack data-testid='maintenance-component' gap={1}>
-        {type === CONSTANTS.ADMIN && (
-          <Card>
-            <CardHeader>
-              <h2>Select Department</h2>
-              <FormSelect
-                id={'department'}
-                data-testid={'select-department'}
-                onChange={this.onChange}
-                value={department}
-              >
-                <option value={''}>--Select A Department</option>
-                {departments.map((d) => (
-                  <option key={d.id} value={d.id}>
-                    {d.name}
-                  </option>
-                ))}
-              </FormSelect>
-            </CardHeader>
-          </Card>
-        )}
+        <Card>
+          <CardHeader>
+            <h2>Maintenance Requests</h2>
+          </CardHeader>
+        </Card>
         {requests?.map((request, index) => {
           const printer = printers.find((p) => p.id === request.printer_id)!;
           return (

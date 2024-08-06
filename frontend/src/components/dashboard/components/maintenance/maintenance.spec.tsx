@@ -55,21 +55,6 @@ describe('Maintenance tests', () => {
     );
   });
 
-  it('should allow admin users to select any department to view requests', () => {
-    store = mockStore({
-      auth: { user: { type: CONSTANTS.ADMIN } },
-      printer: { printers: printers, requests: requests },
-    });
-
-    const { getByTestId } = render(
-      <Provider store={store}>
-        <MaintenanceComponent></MaintenanceComponent>
-      </Provider>
-    );
-
-    expect(getByTestId(`select-department`)).toBeInTheDocument();
-  });
-
   it('should call get department maintenance requests action on selecting a department', async () => {
     store = mockStore({
       auth: { user: { type: CONSTANTS.ADMIN } },
