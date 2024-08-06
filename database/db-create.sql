@@ -10,7 +10,7 @@ CREATE TABLE users (
     id INT UNIQUE,
     firstName VARCHAR(255),
     lastName VARCHAR(255),
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
     department_id INT,
     phone VARCHAR(255),
     type VARCHAR(255),

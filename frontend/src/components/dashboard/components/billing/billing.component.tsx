@@ -82,24 +82,6 @@ class BillingComponent extends Component<BillingComponentProps, State> {
           <CardHeader>
             <h2>Current Bill</h2>
           </CardHeader>
-          {user?.type === CONSTANTS.ADMIN && (
-            <Form>
-              <FormSelect
-                data-testid='department-select'
-                className='form-control'
-                id='department'
-                onChange={this.onChange}
-                value={selectedDepartment}
-              >
-                <option value=''>--Select a Department</option>
-                {departments?.map((department) => (
-                  <option value={department.name} key={department.id}>
-                    {department.name}
-                  </option>
-                ))}
-              </FormSelect>
-            </Form>
-          )}
         </Card>
         <Card>
           <CardBody className='d-flex'>

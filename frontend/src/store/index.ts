@@ -12,6 +12,7 @@ import billingReducer from './reducers/billing.reducer';
 import printerReducer from './reducers/printer.reducer';
 import { CONSTANTS } from '../config/constants';
 import { clearPersistMiddleware } from './middleware/persist.middleware';
+import AuthService from '../services/auth.service';
 
 const authPersistConfig = {
   key: 'auth',
@@ -34,7 +35,20 @@ const persistor: Persistor = persistStore(store);
 const { dispatch } = store;
 
 export const resetLogoutTimer = () => {
+  const now = new Date();
+  const lastReset: Date = (window as any).lastReset;
+
+  if (lastReset) {
+    const diff = lastReset.getTime() - now.getTime();
+    if (diff > 1000 * 60 * 5) {
+      AuthService.refreshToken();
+    }
+  }
+
+  (window as any).lastReset = new Date();
+
   clearTimeout((window as any).clearPersistTimeout);
+
   (window as any).clearPersistTimeout = setTimeout(() => {
     dispatch({
       type: CONSTANTS.LOGOUT,

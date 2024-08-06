@@ -1,14 +1,8 @@
 import React from 'react';
-import { Button, Card, CardBody, Container, Image } from 'react-bootstrap';
-import { ConnectedProps, connect } from 'react-redux';
-import withRouter from '../../../hooks/withRouter.hook';
+import { Card, CardBody, Container, Image } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
-class Home extends React.Component<Props> {
-  navigate = (path: string) => {
-    const { navigate } = this.props.router;
-    navigate(path);
-  };
-
+class Home extends React.Component {
   render() {
     return (
       <Container
@@ -21,18 +15,12 @@ class Home extends React.Component<Props> {
             <CardBody className='text-center'>
               <h2>Welcome!</h2>
               <div className='d-flex justify-content-center'>
-                <Button
-                  className='mx-1'
-                  onClick={() => this.navigate('/login')}
-                >
+                <Link className='btn btn-primary' to='/login'>
                   Login
-                </Button>
-                <Button
-                  className='mx-1'
-                  onClick={() => this.navigate('/register')}
-                >
+                </Link>
+                <Link className='btn btn-primary mx-1' to='/register'>
                   Register
-                </Button>
+                </Link>
               </div>
             </CardBody>
           </Card>
@@ -42,14 +30,4 @@ class Home extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: any, props: any) => ({
-  router: props.router,
-});
-
-const mapDispatchToProps = {};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type Props = ConnectedProps<typeof connector>;
-
-export default withRouter(connector(Home));
+export default Home;

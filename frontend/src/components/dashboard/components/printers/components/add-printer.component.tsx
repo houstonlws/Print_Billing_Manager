@@ -115,14 +115,6 @@ class AddPrinterComponent extends Component<AddProps, State> {
               Add
             </Button>
           </CardHeader>
-          <FormSelect id={'department'} onChange={this.setDepartment}>
-            <option value={''}>--Select a Department</option>
-            {departments.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name}
-              </option>
-            ))}
-          </FormSelect>
         </Card>
         <Modal
           show={adding}

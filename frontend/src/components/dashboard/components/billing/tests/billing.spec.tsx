@@ -42,31 +42,6 @@ describe('Billing Component Tests', () => {
     expect(getByTestId('billing-component')).toBeInTheDocument();
   });
 
-  it('should call get billdata action on change department', async () => {
-    store = mockStore({
-      billing: { billData: testBillHistory },
-      auth: { user: { type: CONSTANTS.ADMIN } },
-    });
-    const { getByTestId } = render(
-      <Provider store={store}>
-        <BillingComponent></BillingComponent>
-      </Provider>
-    );
-
-    const select = getByTestId('department-select');
-    fireEvent.change(select, { target: { value: 'Art and Design' } });
-
-    const expectedActions = [
-      { type: CONSTANTS.GET_DEPARTMENT_BILLING_HISTORY_FAILURE },
-    ];
-
-    await waitFor(() => {
-      expect(store.getActions()).toEqual(
-        expect.arrayContaining(expectedActions)
-      );
-    });
-  });
-
   it('should show charges for previous months', () => {
     const { getByTestId } = render(
       <Provider store={store}>
@@ -98,19 +73,5 @@ describe('Billing Component Tests', () => {
 
     expect(getByTestId(`current-start`).innerHTML).toEqual(expectedStart);
     expect(getByTestId(`current-end`).innerHTML).toEqual(expectedEnd);
-  });
-
-  it('should allow admin users to view billing history for all departments', () => {
-    store = mockStore({
-      billing: { billData: testBillHistory },
-      auth: { user: { type: CONSTANTS.ADMIN } },
-    });
-    const { getByTestId } = render(
-      <Provider store={store}>
-        <BillingComponent></BillingComponent>
-      </Provider>
-    );
-
-    expect(getByTestId('department-select')).toBeInTheDocument();
   });
 });
