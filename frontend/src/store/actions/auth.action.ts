@@ -5,16 +5,19 @@ import { User } from '../../types/auth.types';
 
 export const register =
   (email: string, password: string) => async (dispatch: Dispatch) => {
-    return await AuthService.register(email, password).then(
-      (response: any) => {
+    try {
+      const result = await AuthService.register(email, password);
+      if (result) {
         dispatch({ type: CONSTANTS.REGISTER_SUCCESS });
-        return Promise.resolve(response);
-      },
-      (error: any) => {
+        return true;
+      } else {
         dispatch({ type: CONSTANTS.REGISTER_FAIL });
-        return Promise.reject(error);
+        return false;
       }
-    );
+    } catch (error) {
+      dispatch({ type: CONSTANTS.REGISTER_FAIL });
+      return false;
+    }
   };
 
 export const login =

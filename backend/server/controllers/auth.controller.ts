@@ -19,7 +19,7 @@ class AuthController {
       const result = await authDao.register(user);
       user.id = result.insertId;
       await authDao.addUserData(user);
-      res.json();
+      res.json('user added successfully');
     } catch (err) {
       res.status(401).json();
     }

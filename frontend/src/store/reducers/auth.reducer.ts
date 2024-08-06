@@ -50,13 +50,11 @@ export const authReducer = (state = initialState, action: Payload) => {
     case CONSTANTS.REGISTER_SUCCESS: {
       return {
         ...state,
-        loggedIn: false,
       };
     }
     case CONSTANTS.REGISTER_FAIL: {
       return {
         ...state,
-        loggedIn: false,
       };
     }
     case CONSTANTS.LOGOUT: {

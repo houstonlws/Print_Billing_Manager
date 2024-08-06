@@ -16,7 +16,7 @@ const store = mockStore(initialState);
 
 const mockRegisterAction = jest.fn(
   (eml: string, pwd: string) => async (dispatch: Dispatch) => {
-    return Promise.resolve();
+    return Promise.resolve(true);
   }
 );
 
