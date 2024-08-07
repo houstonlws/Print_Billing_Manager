@@ -63,16 +63,18 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
   handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { firstName, lastName, department_id, phone, email } = this.state;
-    const { type } = this.props.user;
+    const { type, id } = this.props.user;
 
-    const user = {
+    const user: User = {
+      id: id,
       firstName: firstName,
       lastName: lastName,
       department_id: type === CONSTANTS.USER ? department_id : '0',
       phone: phone,
       email: email,
+      type: type,
     };
-    const result = await this.props.updateUserData(this.state as User);
+    const result = await this.props.updateUserData(user);
     if (result) {
       this.setState({ status: 'success' });
     } else {
