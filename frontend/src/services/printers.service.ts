@@ -5,7 +5,7 @@ const axios = getAxios();
 
 class PrintersService {
   static async getDepartmentPrinters(depId: string): Promise<Printer[]> {
-    const result = await axios.get(`/printers/${depId}`);
+    const result = await axios.get(`/printer/${depId}`);
     if (result.status === 200) {
       return result.data;
     }
@@ -13,7 +13,7 @@ class PrintersService {
   }
 
   static async getDepartmentMetrics(depId: string): Promise<Metric[]> {
-    const result = await axios.get(`/metrics/${depId}`);
+    const result = await axios.get(`/printer/metrics/${depId}`);
     if (result.status === 200) {
       return result.data;
     }
@@ -21,19 +21,11 @@ class PrintersService {
   }
 
   static async getAllMetrics(): Promise<Metric[]> {
-    const result = await axios.get(`/metrics`);
+    const result = await axios.get(`/printer/metrics`);
     if (result.status === 200) {
       return result.data;
     }
     return [];
-  }
-
-  static async deletePrinter(id: string) {
-    const result = await axios.delete(`/printer/${id}`);
-    if (result.status === 200) {
-      return true;
-    }
-    return false;
   }
 
   static async updatePrinter(printer: Printer) {
@@ -45,7 +37,7 @@ class PrintersService {
   }
 
   static async getAllPrinters(): Promise<Printer[]> {
-    const result = await axios.get('/allPrinters');
+    const result = await axios.get('/printer');
     if (result.status === 200) return result.data;
     return [];
   }

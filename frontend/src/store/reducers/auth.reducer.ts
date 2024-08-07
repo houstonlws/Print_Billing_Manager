@@ -25,6 +25,7 @@ export const authReducer = (state = initialState, action: Payload) => {
       return {
         ...state,
         loggedIn: true,
+        user: payload,
       };
     }
     case CONSTANTS.REFRESH_TOKEN_FAILURE: {

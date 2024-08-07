@@ -67,15 +67,6 @@ export const updatePrinter =
     }
   };
 
-export const deletePrinter = (id: string) => async (dispatch: Dispatch) => {
-  const result = await PrinterService.deletePrinter(id);
-  if (result) {
-    dispatch({ type: CONSTANTS.DELETE_PRINTER_SUCCESS });
-  } else {
-    dispatch({ type: CONSTANTS.DELETE_PRINTER_FAILURE });
-  }
-};
-
 export const addPrinter = (printer: Printer) => async (dispatch: Dispatch) => {
   try {
     const result = await PrinterService.addPrinter(printer);

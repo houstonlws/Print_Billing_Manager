@@ -4,20 +4,11 @@ import validateToken from '../middleware/ValidateToken';
 
 const router = Router();
 
-router.get(
-  '/printers/:id',
-  validateToken,
-  PrinterController.getDepartmentPrinters
-);
-router.get(
-  '/metrics/:id',
-  validateToken,
-  PrinterController.getDepartmentMetrics
-);
-router.get('/metrics', validateToken, PrinterController.getAllMetrics);
-router.put('/printer', validateToken, PrinterController.updatePrinter);
-// router.delete('/printer/:id', validateToken, PrinterController.deletePrinter)
-router.post('/printer', validateToken, PrinterController.addPrinter);
-router.get('/allPrinters', validateToken, PrinterController.getAllPrinters);
+router.get('/', PrinterController.getAllPrinters);
+router.put('/', PrinterController.updatePrinter);
+router.post('/', PrinterController.addPrinter);
+router.get('/metrics', PrinterController.getAllMetrics);
+router.get('/:id', PrinterController.getDepartmentPrinters);
+router.get('/metrics/:id', PrinterController.getDepartmentMetrics);
 
 export default router;

@@ -62,7 +62,7 @@ class AuthService {
     try {
       const result = await axios.get('/refreshToken');
       if (result.status === 200) {
-        return true;
+        return result.data;
       }
       return false;
     } catch (error) {
