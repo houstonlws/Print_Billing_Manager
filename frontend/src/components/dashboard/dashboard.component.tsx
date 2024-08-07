@@ -112,7 +112,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
   renderProps = () => {
     const { pathname } = this.props.router.location;
     const { isOpen, department } = this.state;
-    const { user } = this.props.auth;
+    const { user, loggedIn } = this.props.auth;
     let completedProfile =
       user.firstName && user.lastName && user.department_id !== '';
     return {
@@ -121,14 +121,15 @@ class DashboardComponent extends Component<DashboardProps, State> {
       department,
       user,
       completedProfile,
+      loggedIn,
     };
   };
 
   render() {
-    const { pathname, isOpen, department, user, completedProfile } =
+    const { pathname, isOpen, department, user, completedProfile, loggedIn } =
       this.renderProps();
 
-    if (!completedProfile) {
+    if (!completedProfile && loggedIn) {
       return <IncompleteProfileComponent></IncompleteProfileComponent>;
     } else
       return (

@@ -45,9 +45,9 @@ export const refreshToken = () => async (dispatch: Dispatch) => {
   try {
     const token = getCookie('refreshToken');
     if (token) {
-      const tokenValid = await AuthService.refreshToken();
-      if (tokenValid) {
-        dispatch({ type: CONSTANTS.REFRESH_TOKEN_SUCCESS });
+      const result = await AuthService.refreshToken();
+      if (result) {
+        dispatch({ type: CONSTANTS.REFRESH_TOKEN_SUCCESS, payload: result });
       } else {
         clearCookie('refreshToken');
         dispatch({ type: CONSTANTS.REFRESH_TOKEN_FAILURE });

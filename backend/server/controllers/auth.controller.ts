@@ -54,12 +54,21 @@ class AuthController {
   static refreshToken(req: Request, res: Response) {
     const oldToken: string = req.cookies['refreshToken'];
     try {
-      const user = jwt.verify(
+      const tokenData = jwt.verify(
         oldToken,
         process.env.REFRESH_TOKEN_SECRET as string
       );
-      const { id, email, department_id, firstName, lastName, phone, iat, exp } =
-        user as jwt.JwtPayload;
+      const {
+        id,
+        email,
+        department_id,
+        firstName,
+        lastName,
+        phone,
+        type,
+        iat,
+        exp,
+      } = tokenData as jwt.JwtPayload;
       if (iat && exp && iat < exp) {
         const newToken = jwt.sign(
           {
@@ -69,11 +78,20 @@ class AuthController {
             firstName: firstName,
             lastName: lastName,
             phone: phone,
+            type: type,
           },
           process.env.REFRESH_TOKEN_SECRET as string,
           { expiresIn: '15m' }
         );
-        res.cookie('refreshToken', newToken).json('token valid');
+        res.cookie('refreshToken', newToken).json({
+          id: id,
+          email: email,
+          department_id: department_id,
+          firstName: firstName,
+          lastName: lastName,
+          phone: phone,
+          type: type,
+        });
       } else {
         res.status(401).json('invalid token');
       }
