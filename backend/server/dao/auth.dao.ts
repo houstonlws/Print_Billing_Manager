@@ -157,10 +157,8 @@ export default class authDao {
         [mr.department_id, id, mr.description],
         (err, res) => {
           if (err) {
-            console.log('error creating notification', err.message);
             reject(err);
           } else {
-            console.log('success creating notification');
             resolve(res);
           }
         }

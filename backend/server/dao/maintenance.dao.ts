@@ -4,7 +4,20 @@ import { MaintenanceRequest } from '../models/maintenance.model';
 class MaintenanceDAO {
   static getMaintenanceRequests(id: string) {
     return new Promise<MaintenanceRequest[]>((resolve, reject) => {
-      const query = `SELECT * FROM maintenance_requests WHERE department_id=${id}`;
+      const query = `SELECT * FROM maintenance_requests WHERE department_id=?`;
+      connection.query(query, id, (err, res) => {
+        if (!err) {
+          resolve(res);
+        } else {
+          reject(err);
+        }
+      });
+    });
+  }
+
+  static getAllMaintenanceRequests() {
+    return new Promise<MaintenanceRequest[]>((resolve, reject) => {
+      const query = `SELECT * FROM maintenance_requests`;
       connection.query(query, (err, res) => {
         if (!err) {
           resolve(res);

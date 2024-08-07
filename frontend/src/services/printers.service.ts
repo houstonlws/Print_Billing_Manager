@@ -20,6 +20,14 @@ class PrintersService {
     return [];
   }
 
+  static async getAllMetrics(): Promise<Metric[]> {
+    const result = await axios.get(`/metrics`);
+    if (result.status === 200) {
+      return result.data;
+    }
+    return [];
+  }
+
   static async deletePrinter(id: string) {
     const result = await axios.delete(`/printer/${id}`);
     if (result.status === 200) {
@@ -52,6 +60,12 @@ class PrintersService {
     depId: string
   ): Promise<MaintenanceRequest[]> {
     const result = await axios.get(`/maintenance/${depId}`);
+    if (result.status === 200) return result.data;
+    return [];
+  }
+
+  static async getAllMaintenanceRequests(): Promise<MaintenanceRequest[]> {
+    const result = await axios.get(`/maintenance`);
     if (result.status === 200) return result.data;
     return [];
   }

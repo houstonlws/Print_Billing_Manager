@@ -13,6 +13,15 @@ class MaintenanceController {
     }
   }
 
+  static async getAllMaintenanceRequests(req: Request, res: Response) {
+    try {
+      const requests = await MaintenanceDAO.getAllMaintenanceRequests();
+      res.json(requests);
+    } catch (error) {
+      res.status(400).json('failure');
+    }
+  }
+
   static async addMaintenanceRequest(req: Request, res: Response) {
     try {
       const mr = req.body;

@@ -31,6 +31,15 @@ class PrinterController {
     }
   }
 
+  static async getAllMetrics(req: Request, res: Response) {
+    try {
+      const metrics = await PrinterDao.getAllMetrics();
+      res.json(metrics);
+    } catch (error) {
+      res.status(400).json('no department selected');
+    }
+  }
+
   static async updatePrinter(req: Request, res: Response) {
     try {
       console.log('[Printer Controller] updating printer');

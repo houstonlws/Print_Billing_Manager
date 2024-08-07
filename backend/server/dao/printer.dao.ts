@@ -42,8 +42,18 @@ class PrinterDao {
 
   static async getDepartmentMetrics(depId: string) {
     return await new Promise<Metric[]>((resolve, reject) => {
-      const query = `SELECT * FROM department_metrics WHERE department_id =${depId}`;
+      const query = `SELECT * FROM department_metrics WHERE department_id =?`;
       connection.query(query, depId, (err, res) => {
+        if (!err) resolve(res);
+        else reject(err);
+      });
+    });
+  }
+
+  static async getAllMetrics() {
+    return await new Promise<Metric[]>((resolve, reject) => {
+      const query = `SELECT * FROM department_metrics`;
+      connection.query(query, (err, res) => {
         if (!err) resolve(res);
         else reject(err);
       });
