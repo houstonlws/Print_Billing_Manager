@@ -67,11 +67,7 @@ export const authReducer = (state = initialState, action: Payload) => {
       };
     }
     case CONSTANTS.GET_USER_DATA_FAIL: {
-      return {
-        ...state,
-        loggedIn: false,
-        user: null,
-      };
+      return initialState;
     }
     case CONSTANTS.GET_NOTIFICATIONS_SUCCESS: {
       return {

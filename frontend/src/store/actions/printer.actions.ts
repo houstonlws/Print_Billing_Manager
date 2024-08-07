@@ -27,6 +27,18 @@ export const getDepartmentMetrics =
     }
   };
 
+export const getAllMetrics = () => async (dispatch: Dispatch) => {
+  try {
+    const metrics = await PrinterService.getAllMetrics();
+    dispatch({
+      type: CONSTANTS.GET_DEPARTMENT_METRICS_SUCCESS,
+      payload: metrics,
+    });
+  } catch (error) {
+    dispatch({ type: CONSTANTS.GET_DEPARTMENT_PRINTERS_FAILURE });
+  }
+};
+
 export const getAllPrinters = () => async (dispatch: Dispatch) => {
   try {
     const printers = await PrinterService.getAllPrinters();
@@ -97,6 +109,23 @@ export const getDepartmentMaintenanceRequests =
       dispatch({ type: CONSTANTS.LOGOUT });
     }
   };
+
+export const getAllMaintenanceRequests = () => async (dispatch: Dispatch) => {
+  try {
+    const requests = await PrinterService.getAllMaintenanceRequests();
+    if (requests.length > 0) {
+      dispatch({
+        type: CONSTANTS.GET_MAINTENANCE_REQUESTS_SUCCESS,
+        payload: requests,
+      });
+    } else {
+      dispatch({ type: CONSTANTS.GET_MAINTENANCE_REQUESTS_FAILURE });
+    }
+  } catch (error) {
+    dispatch({ type: CONSTANTS.GET_MAINTENANCE_REQUESTS_FAILURE });
+    dispatch({ type: CONSTANTS.LOGOUT });
+  }
+};
 
 export const addMaintenanceRequest =
   (request: MaintenanceRequest) => async (dispatch: Dispatch) => {

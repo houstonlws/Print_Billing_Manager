@@ -15,6 +15,7 @@ import { AppState } from '../../../../types/app.types';
 import { updateUserData } from '../../../../store/actions/auth.action';
 import { User } from '../../../../types/auth.types';
 import { departments } from '../../../../config/app-data';
+import { CONSTANTS } from '../../../../config/constants';
 
 type ProfileState = {
   firstName: string;
@@ -29,11 +30,11 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
   constructor(props: ProfileProps) {
     super(props);
     this.state = {
-      firstName: props.firstName || '',
-      lastName: props.lastName || '',
-      department_id: props.department_id || '',
-      email: props.email || '',
-      phone: props.phone || '',
+      firstName: props.user?.firstName || '',
+      lastName: props.user?.lastName || '',
+      department_id: props.user?.department_id || '',
+      email: props.user?.email || '',
+      phone: props.user?.phone || '',
       status: null,
     };
   }
@@ -61,6 +62,16 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
 
   handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const { firstName, lastName, department_id, phone, email } = this.state;
+    const { type } = this.props.user;
+
+    const user = {
+      firstName: firstName,
+      lastName: lastName,
+      department_id: type === CONSTANTS.USER ? department_id : '0',
+      phone: phone,
+      email: email,
+    };
     const result = await this.props.updateUserData(this.state as User);
     if (result) {
       this.setState({ status: 'success' });
@@ -71,8 +82,9 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
 
   render(): ReactNode {
     const { firstName, lastName, email, phone, department_id, status } =
-      this.state!;
+      this.state;
 
+    const { type } = this.props.user;
     return (
       <div data-testid='profile-component'>
         <h2>User Profile</h2>
@@ -96,7 +108,7 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
                     type='text'
                     id='firstName'
                     placeholder={'First Name'}
-                    value={firstName || undefined}
+                    value={firstName}
                     onChange={this.onChange}
                   ></Form.Control>
                 </Col>
@@ -109,7 +121,7 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
                     id='lastName'
                     placeholder='Last Name'
                     onChange={this.onChange}
-                    value={lastName || undefined}
+                    value={lastName}
                   ></Form.Control>
                 </Col>
               </Form.Group>
@@ -123,7 +135,7 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
                     id='email'
                     placeholder='Email Address'
                     onChange={this.onChange}
-                    value={email || undefined}
+                    value={email}
                   ></Form.Control>
                 </Col>
               </FormGroup>
@@ -137,29 +149,32 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
                     id='phone'
                     placeholder='Phone'
                     onChange={this.onChange}
-                    value={phone || undefined}
+                    value={phone}
                   ></Form.Control>
                 </Col>
               </FormGroup>
               <Form.Group as={Row}>
-                <Form.Label column sm={2}>
-                  Department:
-                </Form.Label>
                 <Col sm={10}>
-                  <FormSelect
-                    className='form-control'
-                    id='department'
-                    data-testid='department'
-                    onChange={this.onChange}
-                    value={department_id || undefined}
-                  >
-                    <option value=''>--Select a Department</option>
-                    {departments?.map((department) => (
-                      <option value={department.id} key={department.id}>
-                        {department.name}
-                      </option>
-                    ))}
-                  </FormSelect>
+                  {type === CONSTANTS.USER && [
+                    <Form.Label key={1} column sm={2}>
+                      Department:
+                    </Form.Label>,
+                    <FormSelect
+                      key={2}
+                      className='form-control'
+                      id='department'
+                      data-testid='department'
+                      onChange={this.onChange}
+                      value={department_id}
+                    >
+                      <option value=''>--Select a Department</option>
+                      {departments?.map((department) => (
+                        <option value={department.id} key={department.id}>
+                          {department.name}
+                        </option>
+                      ))}
+                    </FormSelect>,
+                  ]}
                 </Col>
               </Form.Group>
               <Button data-testid='update-user-submit' type='submit'>
@@ -175,11 +190,7 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
 
 const mapStateToProps = (state: AppState) => {
   return {
-    email: state.auth.user?.email,
-    firstName: state.auth.user?.firstName,
-    lastName: state.auth.user?.lastName,
-    department_id: state.auth.user?.department_id,
-    phone: state.auth.user?.phone,
+    user: state.auth.user,
   };
 };
 

@@ -8,6 +8,13 @@ router.get(
   validateToken,
   MaintenanceController.getMaintenanceRequests
 );
+
+router.get(
+  '/maintenance',
+  validateToken,
+  MaintenanceController.getAllMaintenanceRequests
+);
+
 router.post(
   '/maintenance',
   validateToken,

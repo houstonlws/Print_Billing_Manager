@@ -14,6 +14,7 @@ router.get(
   validateToken,
   PrinterController.getDepartmentMetrics
 );
+router.get('/metrics', validateToken, PrinterController.getAllMetrics);
 router.put('/printer', validateToken, PrinterController.updatePrinter);
 // router.delete('/printer/:id', validateToken, PrinterController.deletePrinter)
 router.post('/printer', validateToken, PrinterController.addPrinter);
