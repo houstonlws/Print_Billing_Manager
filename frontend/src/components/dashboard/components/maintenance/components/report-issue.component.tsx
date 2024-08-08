@@ -11,22 +11,18 @@ import {
   Modal,
   Row,
 } from 'react-bootstrap';
-import {
-  MaintenanceRequest,
-  Printer,
-} from '../../../../../types/printer.types';
+import { MaintenanceRequest } from '../../../../../types/printer.types';
 import { CONSTANTS } from '../../../../../config/constants';
 import { maintenanceTypes } from '../../../../../config/app-data';
 import { addMaintenanceRequest } from '../../../../../store/actions/printer.actions';
+import { AppState } from '../../../../../types/app.types';
 
 interface State {
   reportData: MaintenanceRequest;
   reporting: boolean;
 }
 
-interface Props {
-  printer: Printer;
-}
+interface Props {}
 
 class ReportIssue extends Component<ReportProps, State> {
   constructor(props: ReportProps) {
@@ -35,8 +31,9 @@ class ReportIssue extends Component<ReportProps, State> {
     this.state = {
       reporting: false,
       reportData: {
-        printer_id: props.printer.id,
-        department_id: this.props.printer.department_id,
+        id: '',
+        printer_id: '',
+        department_id: props.depId,
         request_date: today,
         maintenance_type: '',
         description: '',
@@ -46,13 +43,16 @@ class ReportIssue extends Component<ReportProps, State> {
   }
 
   onChange = (event: any) => {
-    const { reportData } = this.state;
+    let { reportData } = this.state;
     switch (event.target.id) {
       case 'maintenance_type':
         reportData.maintenance_type = event.target.value;
         break;
       case 'description':
         reportData.description = event.target.value;
+        break;
+      case 'printer_id':
+        reportData.printer_id = event.target.value;
         break;
       default:
         return;
@@ -76,8 +76,9 @@ class ReportIssue extends Component<ReportProps, State> {
     const today = new Date().toISOString().split('T')[0];
     this.setState({
       reportData: {
-        printer_id: this.props.printer.id,
-        department_id: this.props.printer.department_id,
+        id: '',
+        printer_id: '',
+        department_id: this.props.depId,
         request_date: today,
         maintenance_type: '',
         description: '',
@@ -89,13 +90,13 @@ class ReportIssue extends Component<ReportProps, State> {
 
   render(): ReactNode {
     const { reporting, reportData } = this.state;
-    const { printer } = this.props;
+    const { printers } = this.props;
 
     return (
-      <div>
-        <div data-testid={`report-issue-${printer.id}`}>
+      <div data-testid={'report-issue-root'}>
+        <div>
           <Button data-testid={`report-toggler`} onClick={this.toggleReporting}>
-            Maintenance
+            Add Request
           </Button>
         </div>
         <Modal
@@ -110,6 +111,20 @@ class ReportIssue extends Component<ReportProps, State> {
           <Modal.Body>
             <Form>
               <FormGroup as={Row}>
+                <FormLabel>Select A Printer</FormLabel>
+                <FormSelect
+                  id='printer_id'
+                  data-testid='printer_id'
+                  onChange={this.onChange}
+                  value={reportData.printer_id}
+                >
+                  <option value=''>--Select A Printer</option>
+                  {printers?.map((printer, index) => (
+                    <option value={printer.id} key={index}>
+                      {`${printer.location} - ${printer.brand} - ${printer.model}`}
+                    </option>
+                  ))}
+                </FormSelect>
                 <FormLabel>Maintenance Type</FormLabel>
                 <FormSelect
                   className='form-control'
@@ -144,7 +159,7 @@ class ReportIssue extends Component<ReportProps, State> {
                 Cancel
               </Button>
               <Button
-                data-testId='submit-report'
+                data-testid='submit-report'
                 variant='success'
                 onClick={this.submitReport}
               >
@@ -158,7 +173,10 @@ class ReportIssue extends Component<ReportProps, State> {
   }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state: AppState) => ({
+  printers: state.printer.printers,
+  depId: state.auth.user.department_id,
+});
 
 const mapDispatchToProps = {
   addMaintenanceRequest,

@@ -27,12 +27,19 @@ class MaintenanceController {
       const mr = req.body;
       const result = await MaintenanceDAO.addMaintenanceRequest(mr);
       if (result) {
-        const notified = await authDao.createMaintenanceNotification(
-          result.insertId,
-          mr
-        );
+        await authDao.createMaintenanceNotification(result.insertId, mr);
       }
       res.json('success');
+    } catch (error) {
+      res.status(400).json('failure');
+    }
+  }
+
+  static async updateStatus(req: Request, res: Response) {
+    try {
+      const id = req.params.id;
+      const requests = await MaintenanceDAO.updateStatus(id, req.body.status);
+      res.json(requests);
     } catch (error) {
       res.status(400).json('failure');
     }

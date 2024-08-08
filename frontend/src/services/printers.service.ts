@@ -71,11 +71,16 @@ class PrintersService {
   }
 
   static async updateMaintenanceRequest(
-    request: MaintenanceRequest
+    id: string,
+    status: string
   ): Promise<any> {
-    const result = await axios.put(`/maintenance/${request.id}`, request);
-    if (result.status === 200) return result.data;
-    return [];
+    const result = await axios.put(
+      `/maintenance/${id}`,
+      { status: status },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+    if (result.status === 200) return true;
+    return false;
   }
 }
 

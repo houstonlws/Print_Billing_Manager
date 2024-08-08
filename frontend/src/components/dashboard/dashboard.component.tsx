@@ -47,7 +47,7 @@ import { CONSTANTS } from '../../config/constants';
 import withRouter from '../../hooks/withRouter.hook';
 import NotificationsWidget from './components/notifications/components/notifications.widget';
 import adminSettingsComponent from './components/admin-settings/admin-settings.component';
-import { departments } from '../../config/app-data';
+import { departmentsList } from '../../config/app-data';
 import IncompleteProfileComponent from './ui/incomplete-profile.component';
 
 interface State {
@@ -67,8 +67,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
   async componentDidMount(): Promise<void> {
     const { user } = this.props.auth;
     if (user?.type === CONSTANTS.ADMIN) {
-      await this.props.getNotifications(user.department_id);
-      await this.props.getAllPrinters();
+      this.gerAllData();
     } else if (user?.type === CONSTANTS.USER) {
       await this.props.getNotifications(user.department_id);
       await this.props.getDepartmentPrinters(user.department_id);
@@ -151,7 +150,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
                     value={department}
                   >
                     <option value={''}>--Select A Department</option>
-                    {departments.map((d) => (
+                    {departmentsList.map((d) => (
                       <option key={d.id} value={d.id}>
                         {d.name}
                       </option>

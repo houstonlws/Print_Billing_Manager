@@ -13,7 +13,7 @@ import { Printer } from '../../../../types/printer.types';
 import AddPrinterComponent from './components/add-printer.component';
 import EditPrinterComponent from './components/edit-printer.component';
 import { CONSTANTS } from '../../../../config/constants';
-import ReportIssueComponent from './components/report-issue.component';
+import ReportIssueComponent from '../maintenance/components/report-issue.component';
 
 interface State {
   adding: boolean;
@@ -161,9 +161,7 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
                       printer={printer}
                     ></EditPrinterComponent>
                   )}
-                  <ReportIssueComponent
-                    printer={printer}
-                  ></ReportIssueComponent>
+                  <ReportIssueComponent></ReportIssueComponent>
                 </div>
               </AccordionBody>
             </AccordionItem>

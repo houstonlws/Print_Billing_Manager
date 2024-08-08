@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormSelect,
 } from 'react-bootstrap';
-import { departments } from '../../../config/app-data';
+import { departmentsList } from '../../../config/app-data';
 import { updateUserData } from '../../../store/actions/auth.action';
 import { CONSTANTS } from '../../../config/constants';
 
@@ -130,7 +130,7 @@ class IncompleteProfile extends Component<ReduxProps, State> {
                     value={department}
                   >
                     <option value={''}>--Select A Department</option>
-                    {departments.map((d) => (
+                    {departmentsList.map((d) => (
                       <option key={d.id} value={d.id}>
                         {d.name}
                       </option>

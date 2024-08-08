@@ -28,7 +28,7 @@ import {
 import { AppState } from '../../../../types/app.types';
 import { CONSTANTS } from '../../../../config/constants';
 import { getDepartmentBillingHistory } from '../../../../store/actions/billing.actions';
-import { departments } from '../../../../config/app-data';
+import { departmentsList } from '../../../../config/app-data';
 import { Bill } from '../../../../types/billing.types';
 
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -45,7 +45,7 @@ class BillingComponent extends Component<BillingComponentProps, State> {
     if (depId) {
       this.props.getDepartmentBillingHistory(depId);
       initialDepartment =
-        departments.find((d) => d.id === Number(depId))?.name || '';
+        departmentsList.find((d) => d.id === Number(depId))?.name || '';
     }
     this.state = {
       selectedDepartment: initialDepartment,
@@ -54,7 +54,9 @@ class BillingComponent extends Component<BillingComponentProps, State> {
 
   onChange = (event: any) => {
     this.setState({ selectedDepartment: event.target.value });
-    const depId = departments.find((d) => d.name === event.target.value)?.id!;
+    const depId = departmentsList.find(
+      (d) => d.name === event.target.value
+    )?.id!;
     this.props.getDepartmentBillingHistory(depId);
   };
 

@@ -65,16 +65,4 @@ describe('Printer tests', () => {
       expect(getByTestId(`edit-printer-${p.id}`)).toBeInTheDocument();
     });
   });
-
-  it('should allow anyone to report issue with printer', () => {
-    const { getByTestId } = render(
-      <Provider store={store}>
-        <PrintersComponent></PrintersComponent>
-      </Provider>
-    );
-
-    printers.forEach((p) => {
-      expect(getByTestId(`report-issue-${p.id}`)).toBeInTheDocument();
-    });
-  });
 });

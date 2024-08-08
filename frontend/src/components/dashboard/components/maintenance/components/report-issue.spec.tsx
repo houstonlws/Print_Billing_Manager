@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { printers } from '../../tracking/tests/test.data';
-import EditPrinterComponent from '../components/edit-printer.component';
 import {
   MaintenanceRequest,
   Printer,
@@ -12,11 +11,13 @@ import {
 import { Dispatch } from 'redux';
 import * as printerActions from '../../../../../store/actions/printer.actions';
 import { CONSTANTS } from '../../../../../config/constants';
-import { initialState } from '../../../../../store/reducers/printer.reducer';
-import ReportIssueComponent from '../components/report-issue.component';
+import ReportIssueComponent from './report-issue.component';
 
 const mockStore = configureStore([thunk]);
-let store = mockStore({ printer: initialState });
+let store = mockStore({
+  auth: { user: {} },
+  printer: { printers: [] },
+});
 const printer = printers[0] as unknown as Printer;
 const mockAddMaintenanceRequest = jest.fn(
   (request: MaintenanceRequest) => async (dispatch: Dispatch) => {
@@ -35,16 +36,16 @@ describe('Report Issue tests', () => {
   it('should render the component', () => {
     const { getByTestId } = render(
       <Provider store={store}>
-        <ReportIssueComponent printer={printer}></ReportIssueComponent>
+        <ReportIssueComponent></ReportIssueComponent>
       </Provider>
     );
-    expect(getByTestId(`report-issue-${printer.id}`)).toBeInTheDocument();
+    expect(getByTestId(`report-issue-root`)).toBeInTheDocument();
   });
 
   it(' should update fields on text input', () => {
     const { getByPlaceholderText, getByTestId } = render(
       <Provider store={store}>
-        <ReportIssueComponent printer={printer}></ReportIssueComponent>
+        <ReportIssueComponent></ReportIssueComponent>
       </Provider>
     );
 
@@ -69,7 +70,7 @@ describe('Report Issue tests', () => {
   it('should call the add maintenance request action on form submit', async () => {
     const { getByTestId, getByPlaceholderText } = render(
       <Provider store={store}>
-        <ReportIssueComponent printer={printer}></ReportIssueComponent>
+        <ReportIssueComponent></ReportIssueComponent>
       </Provider>
     );
 

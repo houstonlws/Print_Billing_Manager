@@ -7,3 +7,5 @@ export interface AppState {
   billing: BillingState;
   printer: PrinterState;
 }
+
+export type Map<T> = { [key: string]: T };
