@@ -14,7 +14,7 @@ import {
 import { AppState } from '../../../../types/app.types';
 import { updateUserData } from '../../../../store/actions/auth.action';
 import { User } from '../../../../types/auth.types';
-import { departments } from '../../../../config/app-data';
+import { departmentsList } from '../../../../config/app-data';
 import { CONSTANTS } from '../../../../config/constants';
 
 type ProfileState = {
@@ -170,7 +170,7 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
                       value={department_id}
                     >
                       <option value=''>--Select a Department</option>
-                      {departments?.map((department) => (
+                      {departmentsList?.map((department) => (
                         <option value={department.id} key={department.id}>
                           {department.name}
                         </option>

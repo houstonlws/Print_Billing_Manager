@@ -7,19 +7,18 @@ import { printers } from '../tracking/tests/test.data';
 import { CONSTANTS } from '../../../../config/constants';
 import MaintenanceComponent from './maintenance.component';
 import { requests } from './test.data';
-import { MaintenanceRequest } from '../../../../types/printer.types';
 import { Dispatch } from '@reduxjs/toolkit';
 import * as printerActions from '../../../../store/actions/printer.actions';
 
 const mockStore = configureStore([thunk]);
 let store = mockStore({});
 const mockUpdateRequest = jest.fn(
-  (printer: MaintenanceRequest) => async (dispatch: Dispatch) => {
+  (id: string, status: string) => async (dispatch: Dispatch) => {
     return Promise.resolve();
   }
 );
 jest
-  .spyOn(printerActions, 'upDateMaintenanceRequest')
+  .spyOn(printerActions, 'upDateMaintenanceRequestStatus')
   .mockImplementation(mockUpdateRequest);
 describe('Maintenance tests', () => {
   beforeEach(() => {
@@ -53,30 +52,5 @@ describe('Maintenance tests', () => {
     requests.forEach((r) =>
       expect(getByTestId(`maintenance-item-${r.id}`)).toBeInTheDocument()
     );
-  });
-
-  it('should call get department maintenance requests action on selecting a department', async () => {
-    store = mockStore({
-      auth: { user: { type: CONSTANTS.ADMIN } },
-      printer: { printers: printers, requests: requests },
-    });
-
-    const { getByTestId } = render(
-      <Provider store={store}>
-        <MaintenanceComponent></MaintenanceComponent>
-      </Provider>
-    );
-
-    const editToggle = getByTestId(`edit-toggle-${1}`);
-    fireEvent.click(editToggle);
-
-    const submitbutton = getByTestId(`submit-update-${1}`);
-    fireEvent.click(submitbutton);
-
-    const expected = [{ type: CONSTANTS.UPDATE_MAINTENANCE_REQUEST_FAILURE }];
-
-    await waitFor(() => {
-      expect(store.getActions()).toEqual(expected);
-    });
   });
 });

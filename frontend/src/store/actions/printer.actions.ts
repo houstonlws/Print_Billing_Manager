@@ -129,10 +129,10 @@ export const addMaintenanceRequest =
     }
   };
 
-export const upDateMaintenanceRequest =
-  (request: MaintenanceRequest) => async (dispatch: Dispatch) => {
+export const upDateMaintenanceRequestStatus =
+  (id: string, status: string) => async (dispatch: Dispatch) => {
     try {
-      const result = await PrinterService.updateMaintenanceRequest(request);
+      const result = await PrinterService.updateMaintenanceRequest(id, status);
       if (result)
         dispatch({ type: CONSTANTS.UPDATE_MAINTENANCE_REQUEST_SUCCESS });
       else dispatch({ type: CONSTANTS.UPDATE_MAINTENANCE_REQUEST_FAILURE });

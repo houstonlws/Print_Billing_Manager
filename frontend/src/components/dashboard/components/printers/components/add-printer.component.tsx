@@ -16,7 +16,7 @@ import {
   addPrinter,
   getDepartmentPrinters,
 } from '../../../../../store/actions/printer.actions';
-import { departments } from '../../../../../config/app-data';
+import { departmentsList } from '../../../../../config/app-data';
 
 interface State {
   tempPrinter: Printer;
