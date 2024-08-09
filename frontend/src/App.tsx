@@ -6,7 +6,6 @@ import { logout, refreshToken } from './store/actions/auth.action';
 import { AppState } from './types/app.types';
 import DashboardComponent from './components/dashboard/dashboard.component';
 import authComponent from './components/auth/auth.component';
-import { resetLogoutTimer } from './store';
 
 class App extends React.Component<AppProps, AppState> {
   componentDidMount() {
@@ -46,10 +45,3 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type AppProps = ConnectedProps<typeof connector>;
 
 export default connector(App);
-
-const events = ['click', 'keypress', 'mousemove', 'scroll'];
-events.forEach((event: any) => {
-  window.addEventListener(event, resetLogoutTimer);
-});
-
-resetLogoutTimer();

@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import PrintersComponent from '../printers.component';
-import { printers } from '../../tracking/tests/test.data';
+import { printers } from '../../../shared/test.data';
 import { CONSTANTS } from '../../../../../config/constants';
 
 const mockStore = configureStore([thunk]);

@@ -108,15 +108,12 @@ const printerReducer = (state = initialState, action: PayloadAction) => {
         ...state,
       };
     }
-    case CONSTANTS.LOGOUT: {
-      return initialState;
-    }
     default:
       return state;
   }
 };
 
-const populateMap = (arr: Printer[]): Map<Printer> => {
+export const populateMap = (arr: Printer[]): Map<Printer> => {
   let map: Map<Printer> = {};
   for (const o of arr) {
     map[o.id] = o;

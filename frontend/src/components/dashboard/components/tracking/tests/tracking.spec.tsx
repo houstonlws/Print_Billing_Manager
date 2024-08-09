@@ -5,7 +5,7 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { initialState } from '../../../../../store/reducers/printer.reducer';
 import TrackingComponent from '../tracking.component';
-import { metrics, printers } from './test.data';
+import { metrics, printers } from '../../../shared/test.data';
 
 const mockStore = configureStore([thunk]);
 let store = mockStore({ printer: initialState });

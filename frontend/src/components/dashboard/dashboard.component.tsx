@@ -8,24 +8,13 @@ import {
   DropdownItem,
   FormSelect,
   Nav,
-  NavDropdown,
   Navbar,
+  NavDropdown,
 } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faBars,
-  faWrench,
-  faChartLine,
-  faDollarSign,
-  faPrint,
-  faGear,
-} from '@fortawesome/free-solid-svg-icons';
 import { AppState } from '../../types/app.types';
 import {
   getAllData,
   getAllDataUser,
-  getAllUsers,
-  getNotifications,
   getUserData,
   logout,
 } from '../../store/actions/auth.action';
@@ -34,23 +23,16 @@ import notificationsComponent from './components/notifications/notifications.com
 import PrintersComponent from './components/printers/printers.component';
 import ProfileComponent from './components/profile/profile.component';
 import TrackingComponent from './components/tracking/tracking.component';
-import {
-  getAllMaintenanceRequests,
-  getAllMetrics,
-  getAllPrinters,
-  getDepartmentMaintenanceRequests,
-  getDepartmentMetrics,
-  getDepartmentPrinters,
-} from '../../store/actions/printer.actions';
 import MaintenanceComponent from './components/maintenance/maintenance.component';
-import { getDepartmentBillingHistory } from '../../store/actions/billing.actions';
-
 import { CONSTANTS } from '../../config/constants';
-import withRouter from '../../hooks/withRouter.hook';
-import NotificationsWidget from './components/notifications/components/notifications.widget';
 import adminSettingsComponent from './components/admin-settings/admin-settings.component';
-import { departmentsList } from '../../config/app-data';
 import IncompleteProfileComponent from './ui/incomplete-profile.component';
+import AuthService from '../../services/auth.service';
+import MenuSideComponent from './ui/menu-side.component';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { departmentsList } from '../../config/app-data';
+import NotificationsWidget from './components/notifications/components/notifications.widget';
 
 interface State {
   isOpen: boolean;
@@ -69,7 +51,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
   async componentDidMount(): Promise<void> {
     const { user } = this.props.auth;
     if (user?.type === CONSTANTS.ADMIN) {
-      await this.gerAllData();
+      await this.props.getAllData();
     } else if (user?.type === CONSTANTS.USER) {
       await this.props.getAllDataUser(user.department_id);
     }
@@ -90,31 +72,11 @@ class DashboardComponent extends Component<DashboardProps, State> {
     }
   };
 
-  gerAllData = async () => {
-    await this.props.getAllData();
-    this.setState({ department: '' });
-  };
-
-  renderProps = () => {
-    const { pathname } = this.props.router.location;
+  render() {
     const { isOpen, department } = this.state;
     const { user, loggedIn } = this.props.auth;
     let completedProfile =
       user.firstName && user.lastName && user.department_id !== '';
-    return {
-      pathname,
-      isOpen,
-      department,
-      user,
-      completedProfile,
-      loggedIn,
-    };
-  };
-
-  render() {
-    const { pathname, isOpen, department, user, completedProfile, loggedIn } =
-      this.renderProps();
-
     if (!completedProfile && loggedIn) {
       return <IncompleteProfileComponent></IncompleteProfileComponent>;
     } else
@@ -151,7 +113,10 @@ class DashboardComponent extends Component<DashboardProps, State> {
                   </FormSelect>
                   <Button
                     style={{ whiteSpace: 'nowrap' }}
-                    onClick={this.gerAllData}
+                    onClick={() => {
+                      this.props.getAllData();
+                      this.setState({ department: '' });
+                    }}
                   >
                     View All
                   </Button>
@@ -189,56 +154,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
             </Container>
           </Navbar>
           <div className='d-flex'>
-            <div
-              style={{
-                height: 'calc(100vh - 50px)',
-                width: '250px',
-                padding: '0px .5em',
-                background: 'white',
-                display: isOpen ? 'block' : 'none',
-              }}
-            >
-              <Navbar className='h-100'>
-                <Nav
-                  className='flex-column h-100 w-100'
-                  activeKey={pathname}
-                  variant='pills'
-                >
-                  <Nav.Item>
-                    {user?.type === CONSTANTS.ADMIN && (
-                      <Nav.Link
-                        as={Link}
-                        eventKey={'/settings'}
-                        to={'/settings'}
-                      >
-                        <FontAwesomeIcon icon={faGear}></FontAwesomeIcon>{' '}
-                        Settings
-                      </Nav.Link>
-                    )}
-                    <Nav.Link as={Link} eventKey={'/printers'} to={'/printers'}>
-                      <FontAwesomeIcon icon={faPrint}></FontAwesomeIcon>{' '}
-                      Printers
-                    </Nav.Link>
-                    <Nav.Link
-                      as={Link}
-                      eventKey={'/maintenance'}
-                      to={'/maintenance'}
-                    >
-                      <FontAwesomeIcon icon={faWrench}></FontAwesomeIcon>{' '}
-                      Maintenance
-                    </Nav.Link>
-                    <Nav.Link as={Link} eventKey={'/tracking'} to={'/tracking'}>
-                      <FontAwesomeIcon icon={faChartLine}></FontAwesomeIcon>{' '}
-                      Tracking
-                    </Nav.Link>
-                    <Nav.Link as={Link} eventKey={'/billing'} to={'/billing'}>
-                      <FontAwesomeIcon icon={faDollarSign}></FontAwesomeIcon>{' '}
-                      Billing
-                    </Nav.Link>
-                  </Nav.Item>
-                </Nav>
-              </Navbar>
-            </div>
+            <MenuSideComponent isOpen={isOpen}></MenuSideComponent>
             <div
               style={{
                 height: 'calc(100vh - 75px)',
@@ -292,25 +208,33 @@ const connector = connect(
   (state: AppState, props: any) => ({
     auth: state.auth,
     billing: state.billing,
-    router: props.router,
-    dispatch: props.dispatch,
   }),
   {
     getUserData,
-    getDepartmentPrinters,
-    getAllPrinters,
-    getDepartmentMetrics,
-    getNotifications,
-    getDepartmentBillingHistory,
-    getDepartmentMaintenanceRequests,
-    getAllUsers,
-    getAllMaintenanceRequests,
-    getAllMetrics,
     getAllData,
     getAllDataUser,
     logout,
   }
 );
+
 type DashboardProps = ConnectedProps<typeof connector>;
 
-export default withRouter(connector(DashboardComponent));
+const resetLogoutTimer = () => {
+  const lastReset: number = (window as any).lastReset;
+  if (lastReset && Date.now() - lastReset > 1000 * 60 * 5) {
+    AuthService.refreshToken();
+  }
+  (window as any).lastReset = Date.now();
+  clearTimeout((window as any).clearPersistTimeout);
+  (window as any).clearPersistTimeout = setTimeout(() => {
+    logout();
+  }, CONSTANTS.FIFTEEN_MINUTES);
+};
+
+['click', 'keypress', 'mousemove', 'scroll'].forEach((event: any) => {
+  window.addEventListener(event, resetLogoutTimer);
+});
+
+resetLogoutTimer();
+
+export default connector(DashboardComponent);

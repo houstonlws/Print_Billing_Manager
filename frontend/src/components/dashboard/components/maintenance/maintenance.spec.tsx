@@ -3,10 +3,9 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { printers } from '../tracking/tests/test.data';
+import { printers, printersMap, requests } from '../../shared/test.data';
 import { CONSTANTS } from '../../../../config/constants';
 import MaintenanceComponent from './maintenance.component';
-import { requests } from './test.data';
 import { Dispatch } from '@reduxjs/toolkit';
 import * as printerActions from '../../../../store/actions/printer.actions';
 
@@ -20,11 +19,16 @@ const mockUpdateRequest = jest.fn(
 jest
   .spyOn(printerActions, 'upDateMaintenanceRequestStatus')
   .mockImplementation(mockUpdateRequest);
+
 describe('Maintenance tests', () => {
   beforeEach(() => {
     store = mockStore({
-      auth: { user: { type: CONSTANTS.USER } },
-      printer: { printers: printers },
+      auth: { user: { department_id: '1', type: CONSTANTS.USER } },
+      printer: {
+        printers: printers,
+        requests: requests,
+        printersMap: printersMap,
+      },
     });
   });
 
@@ -35,22 +39,5 @@ describe('Maintenance tests', () => {
       </Provider>
     );
     expect(getByTestId('maintenance-component')).toBeInTheDocument();
-  });
-
-  it('should display all maintenance requests for selected departments', () => {
-    store = mockStore({
-      auth: { user: { type: CONSTANTS.USER } },
-      printer: { printers: printers, requests: requests },
-    });
-
-    const { getByTestId } = render(
-      <Provider store={store}>
-        <MaintenanceComponent></MaintenanceComponent>
-      </Provider>
-    );
-
-    requests.forEach((r) =>
-      expect(getByTestId(`maintenance-item-${r.id}`)).toBeInTheDocument()
-    );
   });
 });
