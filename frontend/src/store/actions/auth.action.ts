@@ -81,6 +81,62 @@ export const getUserData = (id: string) => async (dispatch: Dispatch) => {
   }
 };
 
+export const getAllData = () => async (dispatch: Dispatch) => {
+  try {
+    const result = await AuthService.getAllData();
+    if (result) {
+      dispatch({
+        type: CONSTANTS.GET_NOTIFICATIONS_SUCCESS,
+        payload: result.notifications,
+      });
+      dispatch({
+        type: CONSTANTS.GET_ALL_PRINTERS_SUCCESS,
+        payload: result.printers,
+      });
+      dispatch({
+        type: CONSTANTS.GET_MAINTENANCE_REQUESTS_SUCCESS,
+        payload: result.maintenance_requests,
+      });
+      dispatch({
+        type: CONSTANTS.GET_DEPARTMENT_METRICS_SUCCESS,
+        payload: result.department_metrics,
+      });
+      return true;
+    } else return false;
+  } catch (error) {
+    dispatch({ type: CONSTANTS.UPDATE_USER_DATA_FAILURE });
+    return false;
+  }
+};
+
+export const getAllDataUser = (depId: string) => async (dispatch: Dispatch) => {
+  try {
+    const result = await AuthService.getAllDataUser(depId);
+    if (result) {
+      dispatch({
+        type: CONSTANTS.GET_NOTIFICATIONS_SUCCESS,
+        payload: result.notifications,
+      });
+      dispatch({
+        type: CONSTANTS.GET_ALL_PRINTERS_SUCCESS,
+        payload: result.printers,
+      });
+      dispatch({
+        type: CONSTANTS.GET_MAINTENANCE_REQUESTS_SUCCESS,
+        payload: result.maintenance_requests,
+      });
+      dispatch({
+        type: CONSTANTS.GET_DEPARTMENT_METRICS_SUCCESS,
+        payload: result.department_metrics,
+      });
+      return true;
+    } else return false;
+  } catch (error) {
+    dispatch({ type: CONSTANTS.UPDATE_USER_DATA_FAILURE });
+    return false;
+  }
+};
+
 export const updateUserData = (data: User) => async (dispatch: Dispatch) => {
   try {
     const result = await AuthService.updateUserData(data);

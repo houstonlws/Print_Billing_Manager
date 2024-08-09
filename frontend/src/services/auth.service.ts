@@ -5,6 +5,28 @@ import { User } from '../types/auth.types';
 const axios = getAxios();
 
 class AuthService {
+  static getAllData = async () => {
+    try {
+      const result = await axios.get('/getAllData');
+      if (result.status === 200) {
+        return result.data;
+      } else return false;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  static getAllDataUser = async (depId: string) => {
+    try {
+      const result = await axios.get(`/getAllData/${depId}`);
+      if (result.status === 200) {
+        return result.data;
+      } else return false;
+    } catch (error) {
+      return false;
+    }
+  };
+
   static updateUserType = async (users: string[]) => {
     try {
       const result = await axios.put('/userType', users);

@@ -1,3 +1,5 @@
+import { Map } from './app.types';
+
 export interface Printer {
   id: string;
   department_id: string;
@@ -43,4 +45,5 @@ export interface PrinterState {
   printers: Printer[];
   metrics: Metric[];
   requests: MaintenanceRequest[];
+  printersMap: Map<Printer>;
 }

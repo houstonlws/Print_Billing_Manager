@@ -23,7 +23,6 @@ import ReportIssueComponent from './components/report-issue.component';
 
 interface State {
   requestsMap: Map<{ editing: boolean; status: string; original: string }>;
-  printersMap: Map<Printer>;
 }
 
 class MaintenanceComponent extends Component<Props, State> {
@@ -31,31 +30,21 @@ class MaintenanceComponent extends Component<Props, State> {
     super(props);
     this.state = {
       requestsMap: {},
-      printersMap: {},
     };
   }
 
   async componentDidMount(): Promise<void> {
-    const { type, department_id } = this.props.user;
-    if (type == CONSTANTS.ADMIN) {
-      await this.props.getAllPrinters();
-    }
-    if (type === CONSTANTS.USER) {
-      await this.props.getDepartmentPrinters(department_id);
-    }
-    let { printersMap, requestsMap } = this.state;
-    const { printers, requests } = this.props.printer;
-    printers?.forEach((printer: Printer) => {
-      printersMap[printer.id] = printer;
-    });
-    requests?.forEach((request: MaintenanceRequest) => {
+    let { requestsMap } = this.state;
+    const { requests } = this.props.printer;
+
+    for (const request of requests) {
       requestsMap[request.id] = {
         editing: false,
         status: request.status,
         original: request.status,
       };
-    });
-    this.setState({ printersMap: printersMap, requestsMap: requestsMap });
+    }
+    this.setState({ requestsMap: requestsMap });
   }
 
   onChange = async (event: any) => {
@@ -68,9 +57,8 @@ class MaintenanceComponent extends Component<Props, State> {
     const id = event.target.id;
     let { requestsMap } = this.state;
     requestsMap[id] = {
+      ...requestsMap[id],
       editing: !requestsMap[id]?.editing,
-      status: requestsMap[id]?.status,
-      original: requestsMap[id]?.original,
     };
     this.setState({
       requestsMap: requestsMap,
@@ -87,9 +75,8 @@ class MaintenanceComponent extends Component<Props, State> {
   };
 
   render(): ReactNode {
-    const { requests } = this.props.printer;
+    const { requests, printersMap } = this.props.printer;
     const { type } = this.props.user;
-    const { printersMap } = this.state;
 
     return (
       <Stack data-testid='maintenance-component' gap={1}>
@@ -101,13 +88,9 @@ class MaintenanceComponent extends Component<Props, State> {
             )}
           </CardHeader>
         </Card>
-        {requests?.map((request, index) => {
+        {requests?.map((request) => {
           const { requestsMap } = this.state;
-          const location = printersMap[request.printer_id]?.location;
-          const brand = printersMap[request.printer_id]?.brand;
-          const model = printersMap[request.printer_id]?.model;
           const editing = requestsMap[request.id]?.editing;
-
           return (
             <Card
               data-testid={`maintenance-item-${request.id}`}
@@ -176,7 +159,7 @@ class MaintenanceComponent extends Component<Props, State> {
                 </div>
                 <div>
                   <strong>Printer:</strong>{' '}
-                  {`${location} - ${brand} - ${model} `}
+                  {`${printersMap[request.printer_id]?.location} - ${printersMap[request.printer_id]?.brand} - ${printersMap[request.printer_id]?.model} `}
                 </div>
                 <div>
                   <strong>Description:</strong> {request?.description}

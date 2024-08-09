@@ -22,6 +22,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { AppState } from '../../types/app.types';
 import {
+  getAllData,
+  getAllDataUser,
   getAllUsers,
   getNotifications,
   getUserData,
@@ -67,12 +69,9 @@ class DashboardComponent extends Component<DashboardProps, State> {
   async componentDidMount(): Promise<void> {
     const { user } = this.props.auth;
     if (user?.type === CONSTANTS.ADMIN) {
-      this.gerAllData();
+      await this.gerAllData();
     } else if (user?.type === CONSTANTS.USER) {
-      await this.props.getNotifications(user.department_id);
-      await this.props.getDepartmentPrinters(user.department_id);
-      await this.props.getDepartmentMetrics(user.department_id);
-      await this.props.getDepartmentMaintenanceRequests(user.department_id);
+      await this.props.getAllDataUser(user.department_id);
     }
   }
 
@@ -86,19 +85,13 @@ class DashboardComponent extends Component<DashboardProps, State> {
     switch (event.target.id) {
       case 'department':
         this.setState({ department: event.target.value });
-        await this.props.getDepartmentPrinters(event.target.value);
-        await this.props.getDepartmentMetrics(event.target.value);
-        await this.props.getDepartmentBillingHistory(event.target.value);
-        await this.props.getDepartmentMaintenanceRequests(event.target.value);
+        await this.props.getAllDataUser(event.target.value);
         break;
     }
   };
 
   gerAllData = async () => {
-    await this.props.getNotifications(this.props.auth.user.department_id);
-    await this.props.getAllPrinters();
-    await this.props.getAllMaintenanceRequests();
-    await this.props.getAllMetrics();
+    await this.props.getAllData();
     this.setState({ department: '' });
   };
 
@@ -313,6 +306,8 @@ const connector = connect(
     getAllUsers,
     getAllMaintenanceRequests,
     getAllMetrics,
+    getAllData,
+    getAllDataUser,
     logout,
   }
 );

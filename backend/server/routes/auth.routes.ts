@@ -16,5 +16,7 @@ router.get(
 );
 router.get('/getAllUsers', validateToken, AuthController.getAllUsers);
 router.put('/userType', validateToken, AuthController.updateUserType);
+router.get('/getAllData', validateToken, AuthController.getAllData);
+router.get('/getAllData/:id', validateToken, AuthController.getAllData);
 
 export default router;
