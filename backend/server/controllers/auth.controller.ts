@@ -13,6 +13,34 @@ class AuthController {
       res.status(401).json();
     }
   };
+
+  static getAllData = async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+      const result: [{ source: string; data: string }] =
+        await authDao.getAllData(id);
+
+      let payload: { [key: string]: any[] } = {
+        notifications: [],
+        printers: [],
+        maintenance_requests: [],
+        department_metrics: [],
+      };
+
+      for (const obj of result) {
+        const arr: any[] = JSON.parse(obj.data);
+        while (arr.length > 0) {
+          payload[obj.source].push(arr.pop());
+        }
+      }
+
+      res.json(payload);
+    } catch (err: any) {
+      console.log(err.message);
+      res.status(401).json();
+    }
+  };
+
   static async register(req: Request, res: Response) {
     try {
       const user: User = req.body;

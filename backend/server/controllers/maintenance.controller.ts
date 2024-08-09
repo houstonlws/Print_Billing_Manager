@@ -8,7 +8,8 @@ class MaintenanceController {
       const id = req.params.id;
       const requests = await MaintenanceDAO.getMaintenanceRequests(id);
       res.json(requests);
-    } catch (error) {
+    } catch (error: any) {
+      console.log(error.message);
       res.status(400).json('failure');
     }
   }
