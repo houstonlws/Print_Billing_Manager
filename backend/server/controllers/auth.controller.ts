@@ -20,16 +20,12 @@ class AuthController {
       const result: [{ source: string; data: string }] =
         await authDao.getAllData(id);
 
-      let payload: { [key: string]: any[] } = {
-        notifications: [],
-        printers: [],
-        maintenance_requests: [],
-        department_metrics: [],
-      };
+      let payload: { [key: string]: any[] } = {};
 
       for (const obj of result) {
         const arr: any[] = JSON.parse(obj.data);
         while (arr.length > 0) {
+          if (!payload[obj.source]) payload[obj.source] = [];
           payload[obj.source].push(arr.pop());
         }
       }

@@ -58,6 +58,10 @@ class MenuSide extends Component<ReduxProps, State> {
                 }
                 .side-icon {
                     width: 50px
+                }
+                .side-link {
+                  display: flex;
+                  align-items: center;
                 }`}
             </style>
 
@@ -67,13 +71,15 @@ class MenuSide extends Component<ReduxProps, State> {
                   as={Link}
                   eventKey={'/settings'}
                   to={'/settings'}
-                  className='d-flex  align-items-center'
+                  className='side-link'
                 >
-                  <FontAwesomeIcon
-                    className='side-icon'
-                    icon={faGear}
-                    size={'xl'}
-                  ></FontAwesomeIcon>{' '}
+                  <span>
+                    <FontAwesomeIcon
+                      className='side-icon'
+                      icon={faGear}
+                      size={'xl'}
+                    ></FontAwesomeIcon>
+                  </span>
                   <span className='side-text'>Settings</span>
                 </Nav.Link>
               )}
@@ -81,51 +87,59 @@ class MenuSide extends Component<ReduxProps, State> {
                 as={Link}
                 eventKey={'/printers'}
                 to={'/printers'}
-                className='d-flex align-items-center'
+                className='side-link'
               >
-                <FontAwesomeIcon
-                  className='side-icon'
-                  icon={faPrint}
-                ></FontAwesomeIcon>{' '}
+                <span>
+                  <FontAwesomeIcon
+                    className='side-icon'
+                    icon={faPrint}
+                  ></FontAwesomeIcon>
+                </span>
                 <span className='side-text'>Printers</span>
               </Nav.Link>
               <Nav.Link
                 as={Link}
                 eventKey={'/maintenance'}
                 to={'/maintenance'}
-                className='d-flex  align-items-center'
+                className='side-link'
               >
-                <FontAwesomeIcon
-                  className='side-icon'
-                  icon={faWrench}
-                  size='xl'
-                ></FontAwesomeIcon>{' '}
+                <span>
+                  <FontAwesomeIcon
+                    className='side-icon'
+                    icon={faWrench}
+                    size='xl'
+                  ></FontAwesomeIcon>
+                </span>
                 <span className='side-text'>Maintenance</span>
               </Nav.Link>
               <Nav.Link
                 as={Link}
                 eventKey={'/tracking'}
                 to={'/tracking'}
-                className='d-flex align-items-center'
+                className='side-link'
               >
-                <FontAwesomeIcon
-                  className='side-icon'
-                  icon={faChartLine}
-                  size='xl'
-                ></FontAwesomeIcon>{' '}
+                <span>
+                  <FontAwesomeIcon
+                    className='side-icon'
+                    icon={faChartLine}
+                    size='xl'
+                  ></FontAwesomeIcon>
+                </span>
                 <span className='side-text'>Tracking</span>
               </Nav.Link>
               <Nav.Link
                 as={Link}
                 eventKey={'/billing'}
                 to={'/billing'}
-                className='d-flex align-items-center'
+                className='side-link'
               >
-                <FontAwesomeIcon
-                  className='side-icon'
-                  icon={faDollarSign}
-                  size='xl'
-                ></FontAwesomeIcon>{' '}
+                <span>
+                  <FontAwesomeIcon
+                    className='side-icon'
+                    icon={faDollarSign}
+                    size='xl'
+                  ></FontAwesomeIcon>
+                </span>
                 <span className='side-text'>Billing</span>
               </Nav.Link>
             </Nav.Item>

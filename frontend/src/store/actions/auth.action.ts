@@ -101,6 +101,10 @@ export const getAllData = () => async (dispatch: Dispatch) => {
         type: CONSTANTS.GET_DEPARTMENT_METRICS_SUCCESS,
         payload: result.department_metrics,
       });
+      dispatch({
+        type: CONSTANTS.GET_USERS_SUCCESS,
+        payload: result.users,
+      });
       return true;
     } else return false;
   } catch (error) {

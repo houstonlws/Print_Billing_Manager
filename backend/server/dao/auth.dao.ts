@@ -123,8 +123,8 @@ export default class authDao {
       ) AS data
       FROM maintenance_requests
       ${id ? 'WHERE department_id=?' : ''}
-      UNION ALL
-      SELECT 'department_metrics' AS source,
+      UNION ALL SELECT 
+      'department_metrics' AS source,
       JSON_OBJECT(
         'id', id,
         'department_id', department_id,
@@ -144,6 +144,19 @@ export default class authDao {
       ) AS data
       FROM department_metrics
       ${id ? 'WHERE department_id=?' : ''}
+      ${
+        id
+          ? ''
+          : `UNION ALL SELECT
+      'users' as source,
+      JSON_OBJECT(
+        'id', id,
+        'email', email,
+        'department_id', department_id,
+        'type',type
+      ) as data
+      FROM users`
+      }
       ) as all_data 
       GROUP BY source;`;
       connection.query(query, [id, id, id, id], (err, res) => {
@@ -159,8 +172,8 @@ export default class authDao {
 
   static async updateUserType(users: string[]) {
     const query = `UPDATE users SET type = (CASE 
-    WHEN type = 'ADMIN' THEN 'USER'
-    WHEN type = 'USER' THEN 'ADMIN'
+      WHEN type = 'ADMIN' THEN 'USER'
+      WHEN type = 'USER' THEN 'ADMIN'
     END) WHERE id IN (${users.map((id) => id).join(',')});`;
     return await new Promise<any>((res, rej) => {
       connection.query(query, (err, result) => {

@@ -21,3 +21,7 @@ export interface AuthState {
   user: User;
   notifications: Notification[];
 }
+
+export interface AdminState {
+  users: User[];
+}

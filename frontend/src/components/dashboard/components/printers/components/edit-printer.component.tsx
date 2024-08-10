@@ -204,7 +204,7 @@ class EditPrinter extends Component<EditProps, State> {
                 Cancel
               </Button>
               <Button
-                data-testId='submit-edit'
+                data-testid='submit-edit'
                 variant='success'
                 onClick={this.saveEdit}
               >

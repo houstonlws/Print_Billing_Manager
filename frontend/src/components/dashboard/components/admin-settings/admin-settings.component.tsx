@@ -23,8 +23,7 @@ import {
 import { User } from '../../../../types/auth.types';
 
 interface State {
-  users: User[];
-  userTypes: { [key: string]: string };
+  switchedType: { [key: string]: boolean };
   updated: boolean;
   added: boolean;
   adding: boolean;
@@ -34,8 +33,7 @@ class AdminSettings extends Component<ReduxProps, State> {
   constructor(props: ReduxProps) {
     super(props);
     this.state = {
-      users: [],
-      userTypes: {},
+      switchedType: {},
       updated: false,
       adding: false,
       added: false,
@@ -48,29 +46,21 @@ class AdminSettings extends Component<ReduxProps, State> {
     }));
   };
 
-  async componentDidMount(): Promise<void> {
-    const users = await this.props.getAllUsers();
-    let { userTypes } = this.state;
-    if (users) {
-      users?.forEach((user) => {
-        userTypes[user.id] = user.type;
-      });
-      this.setState({ users: users });
-      this.setState({ userTypes: userTypes });
-    }
-  }
-
   updateUserType = (event: any) => {
-    const { userTypes } = this.state;
-    userTypes[event.target.id] = event.target.value;
-    this.setState({ userTypes: userTypes });
+    const { switchedType } = this.state;
+    if (switchedType[event.target.id]) {
+      delete switchedType[event.target.id];
+    } else {
+      switchedType[event.target.id] = true;
+    }
+    this.setState({ switchedType: switchedType });
   };
 
   submitChanges = async () => {
-    const { userTypes, users } = this.state;
+    const { switchedType } = this.state;
     let userIds: string[] = [];
-    users.forEach((user) => {
-      if (userTypes[user.id] !== user.type) userIds.push(user.id);
+    Object.entries(switchedType).forEach((item) => {
+      userIds.push(item[0]);
     });
     if (userIds.length > 0) {
       const result = await this.props.updateUserType(userIds);
@@ -94,8 +84,8 @@ class AdminSettings extends Component<ReduxProps, State> {
   };
 
   render(): React.ReactNode {
-    const { users, userTypes, updated, adding, added } = this.state;
-
+    const { switchedType, updated, adding, added } = this.state;
+    const { users } = this.props;
     return (
       <div data-testid='admin-settings-component'>
         <style>
@@ -140,14 +130,21 @@ class AdminSettings extends Component<ReduxProps, State> {
           </thead>
           <tbody>
             {users?.map((user) => {
-              let change = userTypes[user.id] !== user.type;
+              let change = switchedType[user.id];
+              let val = user.type;
+              if (change) {
+                val =
+                  user.type === CONSTANTS.ADMIN
+                    ? CONSTANTS.USER
+                    : CONSTANTS.ADMIN;
+              }
               return (
                 <tr className={change ? 'changed' : ''} key={user.id}>
                   <td>{user.email}</td>
                   <td>
                     <FormSelect
                       id={user.id}
-                      value={userTypes[user.id]}
+                      value={val}
                       onChange={this.updateUserType}
                     >
                       <option value={CONSTANTS.ADMIN}>{CONSTANTS.ADMIN}</option>
@@ -167,7 +164,9 @@ class AdminSettings extends Component<ReduxProps, State> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({});
+const mapStateToProps = (state: AppState) => ({
+  users: state.admin.users,
+});
 
 const mapDispatchToProps = {
   updateUserType,

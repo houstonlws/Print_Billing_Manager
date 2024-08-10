@@ -8,7 +8,8 @@ import { CONSTANTS } from '../../../../config/constants';
 
 const mockStore = configureStore([thunk]);
 let store = mockStore({
-  auth: { user: { type: CONSTANTS.ADMIN }, userList: [] },
+  auth: { user: { type: CONSTANTS.ADMIN } },
+  admin: { users: [] },
 });
 
 const mockUpdateUser = jest.fn();

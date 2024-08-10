@@ -14,6 +14,7 @@ import AddPrinterComponent from './components/add-printer.component';
 import EditPrinterComponent from './components/edit-printer.component';
 import { CONSTANTS } from '../../../../config/constants';
 import ReportIssueComponent from '../maintenance/components/report-issue.component';
+import { departmentsMap } from '../../../../config/app-data';
 
 interface State {
   adding: boolean;
@@ -109,24 +110,20 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
               eventKey={printer.id}
               style={{ marginTop: '5px' }}
             >
-              <AccordionHeader className='d-flex justify-content-between'>
-                <Stack direction='horizontal' gap={3}>
+              <AccordionHeader className='d-flex  justify-content-center'>
+                <div style={{ width: '350px' }}>
                   <div>
-                    <strong>Serial:</strong> {printer.serial_number}
+                    <strong>Department:</strong>{' '}
+                    {`${departmentsMap[printer.department_id]?.name}`}
                   </div>
-                  <div>
-                    <strong>Model:</strong> {printer.model}
-                  </div>
+                  <strong>Location:</strong> {printer.location}
+                </div>
+                <div style={{ width: '350px' }}>
                   <div>
                     <strong>Brand:</strong> {printer.brand}
                   </div>
-                  <div>
-                    <strong>Location:</strong> {printer.location}
-                  </div>
-                  <div>
-                    <strong>Department:</strong> {printer.department_id}
-                  </div>
-                </Stack>
+                  <strong>Model:</strong> {printer.model}
+                </div>
               </AccordionHeader>
               <AccordionBody
                 style={{
@@ -137,6 +134,7 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
               >
                 <div>
                   <div>
+                    <strong>Serial:</strong> {printer.serial_number}
                     <strong>IP Address:</strong> {printer?.ip_address}
                   </div>
                   <div>

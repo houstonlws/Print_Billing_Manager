@@ -9,7 +9,7 @@ import {
   FormSelect,
   Stack,
 } from 'react-bootstrap';
-import { AppState, Map } from '../../../../types/app.types';
+import { AppState, IMap } from '../../../../types/app.types';
 import { MaintenanceRequest, Printer } from '../../../../types/printer.types';
 import { CONSTANTS } from '../../../../config/constants';
 import { departmentsMap, STATUS } from '../../../../config/app-data';
@@ -22,7 +22,7 @@ import {
 import ReportIssueComponent from './components/report-issue.component';
 
 interface State {
-  requestsMap: Map<{ editing: boolean; status: string; original: string }>;
+  requestsMap: IMap<{ editing: boolean; status: string; original: string }>;
 }
 
 class MaintenanceComponent extends Component<Props, State> {

@@ -11,6 +11,7 @@ import { authReducer } from './reducers/auth.reducer';
 import billingReducer from './reducers/billing.reducer';
 import printerReducer from './reducers/printer.reducer';
 import { clearPersistMiddleware } from './middleware/persist.middleware';
+import adminReducer from './reducers/admin.reducer';
 
 const authPersistConfig = {
   key: 'auth',
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   billing: billingReducer,
   printer: printerReducer,
+  admin: adminReducer,
 });
 
 const store = createStore(

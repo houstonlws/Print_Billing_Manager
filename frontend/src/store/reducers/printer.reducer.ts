@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { CONSTANTS } from '../../config/constants';
 import { Printer, PrinterState } from '../../types/printer.types';
-import { Map } from '../../types/app.types';
+import { IMap, Map } from '../../types/app.types';
 
 export const initialState: PrinterState = {
   printers: [],
@@ -22,7 +22,7 @@ const printerReducer = (state = initialState, action: PayloadAction) => {
     case CONSTANTS.GET_DEPARTMENT_PRINTERS_SUCCESS: {
       let map = {};
       if (payload !== null && typeof payload === 'object') {
-        map = populateMap(payload);
+        map = Map.of(payload);
       }
       return {
         ...state,
@@ -44,7 +44,7 @@ const printerReducer = (state = initialState, action: PayloadAction) => {
     case CONSTANTS.GET_ALL_PRINTERS_SUCCESS: {
       let map = {};
       if (payload !== null && typeof payload === 'object') {
-        map = populateMap(payload);
+        map = Map.of(payload);
       }
       return {
         ...state,
@@ -111,14 +111,6 @@ const printerReducer = (state = initialState, action: PayloadAction) => {
     default:
       return state;
   }
-};
-
-export const populateMap = (arr: Printer[]): Map<Printer> => {
-  let map: Map<Printer> = {};
-  for (const o of arr) {
-    map[o.id] = o;
-  }
-  return map;
 };
 
 export default printerReducer;
