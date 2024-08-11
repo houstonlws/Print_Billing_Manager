@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { CONSTANTS } from '../../config/constants';
-import { Printer, PrinterState } from '../../types/printer.types';
-import { IMap, Map } from '../../types/app.types';
+import { PrinterState } from '../../types/printer.types';
+import { Map } from '../../types/app.types';
 
 export const initialState: PrinterState = {
   printers: [],

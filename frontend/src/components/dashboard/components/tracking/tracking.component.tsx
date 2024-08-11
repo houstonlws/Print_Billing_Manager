@@ -1,44 +1,27 @@
 import React, { Component, ReactNode } from 'react';
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Dropdown,
-  DropdownMenu,
-  DropdownToggle,
-  FormCheck,
-  Stack,
-} from 'react-bootstrap';
+import { Stack, Table } from 'react-bootstrap';
 import { ConnectedProps, connect } from 'react-redux';
-import { Bar } from 'react-chartjs-2';
-import { ChartData, ChartOptions } from 'chart.js';
-import FormCheckInput from 'react-bootstrap/esm/FormCheckInput';
-import FormCheckLabel from 'react-bootstrap/esm/FormCheckLabel';
 import {
   getDepartmentMetrics,
   getDepartmentPrinters,
 } from '../../../../store/actions/printer.actions';
 import { AppState } from '../../../../types/app.types';
-import MetricDetailsComponent from './components/metric-details.component';
+import { departmentsMap } from '../../../../config/app-data';
+import TotalsBlockComponent from './components/totals-block.component';
 
-interface State {
-  selectedPrinters: { [key: string]: boolean };
+interface State {}
+interface Props {
+  selectedDepartment?: string;
 }
 
 class TrackingModule extends Component<TrackingProps, State> {
   constructor(props: TrackingProps) {
     super(props);
-    const selectedPrinters: { [key: string]: boolean } = {};
-    props.printer.printers.forEach((printer) => {
-      selectedPrinters[printer.id] = true;
-    });
-    this.state = {
-      selectedPrinters,
-    };
+    this.state = {};
+    this.getTotals();
   }
 
   getTotals = () => {
-    const { selectedPrinters } = this.state;
     const { metrics } = this.props.printer;
 
     let totalPrintJobs = 0;
@@ -46,13 +29,11 @@ class TrackingModule extends Component<TrackingProps, State> {
     let totalColor = 0;
     let totalBW = 0;
 
-    metrics.forEach((metric) => {
-      if (selectedPrinters[metric.id]) {
-        totalPrintJobs += Number(metric.monthly_print_jobs);
-        totalPrintVolume += Number(metric.monthly_print_volume);
-        totalColor += Number(metric.total_color_pages_last_billing);
-        totalBW += Number(metric.total_bw_pages_last_billing);
-      }
+    metrics?.forEach((metric) => {
+      totalPrintJobs += Number(metric.monthly_print_jobs);
+      totalPrintVolume += Number(metric.monthly_print_volume);
+      totalColor += Number(metric.total_color_pages_last_billing);
+      totalBW += Number(metric.total_bw_pages_last_billing);
     });
 
     return {
@@ -63,127 +44,84 @@ class TrackingModule extends Component<TrackingProps, State> {
     };
   };
 
-  toggleCheckBox = (id: string) => {
-    const { selectedPrinters } = this.state;
-    selectedPrinters[id] = !selectedPrinters[id];
-    this.setState({ selectedPrinters });
-  };
-
   render(): ReactNode {
-    const { metrics, printers } = this.props.printer;
-    const { selectedPrinters } = this.state;
+    const {
+      user,
+      printer: { metrics, printersMap },
+      selectedDepartment,
+    } = this.props;
 
     const { totalPrintJobs, totalPrintVolume, totalColor, totalBW } =
       this.getTotals();
 
-    const chartData: ChartData<'bar'> = {
-      labels: ['Total Pages'],
-      datasets: [
-        {
-          label: 'Total Color Copies',
-          data: [totalColor],
-          backgroundColor: 'orange',
-        },
-        {
-          label: 'Total B&W Copies',
-          data: [totalBW],
-          backgroundColor: 'gray',
-        },
-      ],
-    };
-
-    const chartOptions: ChartOptions<'bar'> = {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    };
-
     return (
       <Stack data-testid='tracking-component' gap={3}>
-        <Card>
-          <CardHeader>
-            <Dropdown autoClose='outside'>
-              <div className='d-flex'>
-                <h2 className='me-auto'>Track Printers</h2>
-                <DropdownToggle>Filter</DropdownToggle>
-              </div>
-              <DropdownMenu>
-                <CardBody>
-                  {printers.map((printer) => (
-                    <FormCheck
-                      key={printer.id}
-                      checked={!!selectedPrinters[printer.id]}
-                      onChange={() => this.toggleCheckBox(printer.id)}
-                    >
-                      <FormCheckInput></FormCheckInput>
-                      <FormCheckLabel>{printer.serial_number}</FormCheckLabel>
-                    </FormCheck>
-                  ))}
-                </CardBody>
-              </DropdownMenu>
-            </Dropdown>
-          </CardHeader>
-        </Card>
-        <Card style={{ minHeight: '400px' }}>
-          <CardBody>
-            <Bar options={chartOptions} data={chartData}></Bar>
-          </CardBody>
-        </Card>
+        <style>
+          {`.totals-block {
+              width: 100%;
+          }`}
+        </style>
 
-        <Stack
-          direction='horizontal'
-          gap={3}
-          className='text-center justify-content-between'
-        >
-          <Card>
-            <Card.Header>Total Print Jobs: </Card.Header>
-            <Card.Title>
-              <h2>{totalPrintJobs}</h2>
-              <small>Jobs</small>
-            </Card.Title>
-          </Card>
-          <Card>
-            <Card.Header>Total Print Volume: </Card.Header>
-            <Card.Title>
-              <h2>{totalPrintVolume}</h2>
-              <small>Pages</small>
-            </Card.Title>
-          </Card>
-          <Card>
-            <Card.Header>Total Color Impressions: </Card.Header>
-            <Card.Title>
-              <h2 data-testid='total-color'>{totalColor}</h2>
-              <small>Clicks</small>
-            </Card.Title>
-          </Card>
-          <Card>
-            <Card.Header>Total Black & White Impressions: </Card.Header>
-            <Card.Title>
-              <h2 data-testid='total-bw'>{totalBW}</h2>
-              <small>Clicks</small>
-            </Card.Title>
-          </Card>
+        <h3>{`${selectedDepartment ? departmentsMap[selectedDepartment].name : departmentsMap[user.department_id]?.name || 'All Departments'}`}</h3>
+        <Stack direction='horizontal' gap={3}>
+          <TotalsBlockComponent
+            data-test-id={`total-color-${totalColor}`}
+            value={`${totalColor}`}
+            title='Color'
+            unit='Clicks'
+          ></TotalsBlockComponent>
+          <TotalsBlockComponent
+            data-test-id={`total-color-${totalBW}`}
+            value={`${totalBW}`}
+            title='Black & White'
+            unit='Clicks'
+          ></TotalsBlockComponent>
         </Stack>
-        <Stack gap={2}>
-          <Card>
-            <CardHeader>
-              <h3>Printer Details</h3>
-            </CardHeader>
-          </Card>
-          {metrics
-            .filter((metric) => selectedPrinters[metric.printer_id])
-            .map((metric) => (
-              <MetricDetailsComponent
-                key={metric.id}
-                metric={metric}
-                printer={printers.find((p) => p.id === metric.id)!}
-              ></MetricDetailsComponent>
+        <Stack direction='horizontal' gap={3}>
+          <TotalsBlockComponent
+            value={`${totalPrintJobs}`}
+            title='Print Jobs'
+            unit='Jobs'
+          ></TotalsBlockComponent>
+          <TotalsBlockComponent
+            value={`${totalPrintVolume}`}
+            title='Print Volume'
+            unit='Pages'
+          ></TotalsBlockComponent>
+        </Stack>
+        <Table className='mt-3'>
+          <thead>
+            <tr>
+              <th>Printer</th>
+              <th>Location</th>
+              <th>Pages</th>
+              <th>B&W</th>
+              <th>Color</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {metrics?.map((metric) => (
+              <tr
+                key={metric?.id}
+                style={{ whiteSpace: 'nowrap' }}
+                data-testid={`printer-${metric.printer_id}`}
+              >
+                <td>{`${printersMap[metric.printer_id]?.brand || ''} - 
+                ${printersMap[metric.printer_id]?.model || ''}`}</td>
+                <td>{`${printersMap[metric.printer_id]?.location}`}</td>
+                <td>{`${metric.paper_usage_monthly}`}</td>
+                <td
+                  data-testid={`total-bw-${metric.printer_id}`}
+                >{`${metric.total_bw_pages_last_billing}`}</td>
+                <td
+                  data-testid={`total-color-${metric.printer_id}`}
+                >{`${metric.total_color_pages_last_billing}`}</td>
+                <td>{`${metric.total_pages_printed}`}</td>
+              </tr>
             ))}
-        </Stack>
+          </tbody>
+        </Table>
       </Stack>
     );
   }
@@ -192,6 +130,7 @@ class TrackingModule extends Component<TrackingProps, State> {
 const mapStateToProps = (state: AppState) => {
   return {
     printer: state.printer,
+    user: state.auth.user,
   };
 };
 
@@ -201,6 +140,6 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type TrackingProps = ConnectedProps<typeof connector>;
+type TrackingProps = ConnectedProps<typeof connector> & Props;
 
 export default connector(TrackingModule);

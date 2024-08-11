@@ -9,13 +9,13 @@ export interface AppState {
   admin: AdminState;
 }
 
-export interface IMap<T> {
+export type TypeMap<T> = {
   [key: string]: T;
-}
+};
 
-export class Map<T> {
-  static of<T>(arr: any[]): IMap<T> {
-    let map: IMap<T> = {};
+export class Map {
+  static of<T>(arr: any[]): TypeMap<T> {
+    let map: TypeMap<T> = {};
     for (const o of arr) {
       map[o.id] = o;
     }

@@ -9,8 +9,7 @@ import {
   FormSelect,
   Stack,
 } from 'react-bootstrap';
-import { AppState, IMap } from '../../../../types/app.types';
-import { MaintenanceRequest, Printer } from '../../../../types/printer.types';
+import { AppState, TypeMap } from '../../../../types/app.types';
 import { CONSTANTS } from '../../../../config/constants';
 import { departmentsMap, STATUS } from '../../../../config/app-data';
 import {
@@ -22,7 +21,7 @@ import {
 import ReportIssueComponent from './components/report-issue.component';
 
 interface State {
-  requestsMap: IMap<{ editing: boolean; status: string; original: string }>;
+  requestsMap: TypeMap<{ editing: boolean; status: string; original: string }>;
 }
 
 class MaintenanceComponent extends Component<Props, State> {
@@ -37,13 +36,14 @@ class MaintenanceComponent extends Component<Props, State> {
     let { requestsMap } = this.state;
     const { requests } = this.props.printer;
 
-    for (const request of requests) {
-      requestsMap[request.id] = {
-        editing: false,
-        status: request.status,
-        original: request.status,
-      };
-    }
+    if (requests)
+      for (const request of requests) {
+        requestsMap[request.id] = {
+          editing: false,
+          status: request.status,
+          original: request.status,
+        };
+      }
     this.setState({ requestsMap: requestsMap });
   }
 

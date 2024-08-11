@@ -111,18 +111,5 @@ CREATE VIEW department_metrics AS
     total_bw_pages_last_billing ,
     department_id
     FROM metrics 
-    RIGHT JOIN printers 
+	JOIN printers 
     ON metrics.printer_id = printers.id;
-    
--- CREATE VIEW admin_notifications AS
--- SELECT 
--- 	notifications.id,
---     printer_id,
---     department_id,
---     maintenance_id,
---     maintenance_type,
---     notification_date,
---     is_read
---     FROM notifications
--- LEFT JOIN maintenance_requests
--- ON maintenance_requests.id = notifications.maintenance_id;

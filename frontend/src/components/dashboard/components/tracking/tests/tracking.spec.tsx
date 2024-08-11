@@ -3,22 +3,25 @@ import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { initialState } from '../../../../../store/reducers/printer.reducer';
 import TrackingComponent from '../tracking.component';
-import { metrics, printers } from '../../../shared/test.data';
+import { metrics, printers, printersMap } from '../../../shared/test.data';
 
 const mockStore = configureStore([thunk]);
-let store = mockStore({ printer: initialState });
+let store = mockStore({
+  printer: {
+    printers: printers,
+    metrics: metrics,
+    printersMap: printersMap,
+  },
+  auth: {
+    user: {
+      department_id: 1,
+    },
+  },
+});
 
 describe('Tracking Component Tests', () => {
-  beforeEach(() => {
-    store = mockStore({
-      printer: {
-        printers: printers,
-        metrics: metrics,
-      },
-    });
-  });
+  beforeEach(() => {});
 
   it('should render the component', () => {
     const { getByTestId } = render(
@@ -35,7 +38,7 @@ describe('Tracking Component Tests', () => {
         <TrackingComponent></TrackingComponent>
       </Provider>
     );
-    expect(getByTestId('total-bw').innerHTML).toEqual('350');
+    expect(getByTestId('Black & White-350')).toBeInTheDocument();
   });
 
   it('should list the total color pages printed', () => {
@@ -44,10 +47,10 @@ describe('Tracking Component Tests', () => {
         <TrackingComponent></TrackingComponent>
       </Provider>
     );
-    expect(getByTestId('total-color').innerHTML).toEqual('790');
+    expect(getByTestId('Color-790')).toBeInTheDocument();
   });
 
-  it('should listmetrics for each printer', () => {
+  it('should list metrics for each printer', () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <TrackingComponent></TrackingComponent>
@@ -89,24 +92,6 @@ describe('Tracking Component Tests', () => {
     metrics.forEach((p) => {
       expect(getByTestId(`printer-${p.printer_id}`)).toBeInTheDocument();
       expect(getByTestId(`total-color-${p.printer_id}`).innerHTML).toEqual(
-        `${values[p.printer_id]}`
-      );
-    });
-  });
-
-  it('should list the total pages printed by each printer', () => {
-    const { getByTestId } = render(
-      <Provider store={store}>
-        <TrackingComponent></TrackingComponent>
-      </Provider>
-    );
-    let values: { [key: string]: number } = {};
-    for (const metric of metrics) {
-      values[metric.printer_id] = metric.paper_usage_monthly;
-    }
-    metrics.forEach((p) => {
-      expect(getByTestId(`printer-${p.printer_id}`)).toBeInTheDocument();
-      expect(getByTestId(`total-paper-${p.printer_id}`).innerHTML).toEqual(
         `${values[p.printer_id]}`
       );
     });

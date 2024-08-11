@@ -36,7 +36,7 @@ class MenuSide extends Component<ReduxProps, State> {
         style={{
           height: 'calc(100vh - 50px)',
           width: isOpen ? '250px' : '70px',
-          padding: isOpen ? '0px .5em' : '0px .35em',
+          padding: '0px .5em',
           background: 'white',
           overflow: 'hidden',
           transition: 'ease-in 250ms',
@@ -57,11 +57,12 @@ class MenuSide extends Component<ReduxProps, State> {
                     font-size: 1.1em;
                 }
                 .side-icon {
-                    width: 50px
+                    width: 40px
                 }
                 .side-link {
                   display: flex;
                   align-items: center;
+                  margin: 10px 0;
                 }`}
             </style>
 
@@ -89,7 +90,7 @@ class MenuSide extends Component<ReduxProps, State> {
                 to={'/printers'}
                 className='side-link'
               >
-                <span>
+                <span className='d-flex align-items-center'>
                   <FontAwesomeIcon
                     className='side-icon'
                     icon={faPrint}

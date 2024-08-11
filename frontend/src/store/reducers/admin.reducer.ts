@@ -1,7 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { CONSTANTS } from '../../config/constants';
 import { AdminState } from '../../types/auth.types';
-import { Map } from '../../types/app.types';
 
 const initialState: AdminState = {
   users: [],

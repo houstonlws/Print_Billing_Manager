@@ -20,7 +20,6 @@ import {
   register,
   updateUserType,
 } from '../../../../store/actions/auth.action';
-import { User } from '../../../../types/auth.types';
 
 interface State {
   switchedType: { [key: string]: boolean };

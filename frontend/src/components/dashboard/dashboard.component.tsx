@@ -104,22 +104,13 @@ class DashboardComponent extends Component<DashboardProps, State> {
                     onChange={this.onChange}
                     value={department}
                   >
-                    <option value={''}>--Select A Department</option>
+                    <option value={''}>All Departments</option>
                     {departmentsList.map((d) => (
                       <option key={d.id} value={d.id}>
                         {d.name}
                       </option>
                     ))}
                   </FormSelect>
-                  <Button
-                    style={{ whiteSpace: 'nowrap' }}
-                    onClick={() => {
-                      this.props.getAllData();
-                      this.setState({ department: '' });
-                    }}
-                  >
-                    View All
-                  </Button>
                 </Nav>
               )}
 
@@ -189,7 +180,12 @@ class DashboardComponent extends Component<DashboardProps, State> {
                     path='maintenance'
                     Component={MaintenanceComponent}
                   ></Route>
-                  <Route path='tracking' Component={TrackingComponent}></Route>
+                  <Route
+                    path='tracking'
+                    element={
+                      <TrackingComponent selectedDepartment={department} />
+                    }
+                  ></Route>
                   <Route path='profile' Component={ProfileComponent}></Route>
                   <Route
                     path='notifications'

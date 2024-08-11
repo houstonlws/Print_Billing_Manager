@@ -1,4 +1,4 @@
-import { IMap } from './app.types';
+import { TypeMap } from './app.types';
 
 export interface Printer {
   id: string;
@@ -45,5 +45,5 @@ export interface PrinterState {
   printers: Printer[];
   metrics: Metric[];
   requests: MaintenanceRequest[];
-  printersMap: IMap<Printer>;
+  printersMap: TypeMap<Printer>;
 }
