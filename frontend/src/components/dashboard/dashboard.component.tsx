@@ -33,6 +33,8 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { departmentsList } from '../../config/app-data';
 import NotificationsWidget from './components/notifications/components/notifications.widget';
+import { store } from '../../store';
+import { getJobHistory } from '../../store/actions/printer.actions';
 
 interface State {
   isOpen: boolean;
@@ -52,8 +54,10 @@ class DashboardComponent extends Component<DashboardProps, State> {
     const { user } = this.props.auth;
     if (user?.type === CONSTANTS.ADMIN) {
       await this.props.getAllData();
+      await this.props.getJobHistory();
     } else if (user?.type === CONSTANTS.USER) {
       await this.props.getAllDataUser(user.department_id);
+      await this.props.getJobHistory(user.department_id);
     }
   }
 
@@ -68,6 +72,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
       case 'department':
         this.setState({ department: event.target.value });
         await this.props.getAllDataUser(event.target.value);
+        await this.props.getJobHistory(event.target.value);
         break;
     }
   };
@@ -174,7 +179,10 @@ class DashboardComponent extends Component<DashboardProps, State> {
                       element={<Navigate to='/printers' />}
                     ></Route>
                   )}
-                  <Route path='billing' Component={BillingComponent}></Route>
+                  <Route
+                    path='billing'
+                    element={<BillingComponent department={department} />}
+                  ></Route>
                   <Route path='printers' Component={PrintersComponent}></Route>
                   <Route
                     path='maintenance'
@@ -210,6 +218,7 @@ const connector = connect(
     getAllData,
     getAllDataUser,
     logout,
+    getJobHistory,
   }
 );
 
@@ -223,7 +232,7 @@ const resetLogoutTimer = () => {
   (window as any).lastReset = Date.now();
   clearTimeout((window as any).clearPersistTimeout);
   (window as any).clearPersistTimeout = setTimeout(() => {
-    logout();
+    store.dispatch({ type: CONSTANTS.LOGOUT, payload: undefined });
   }, CONSTANTS.FIFTEEN_MINUTES);
 };
 

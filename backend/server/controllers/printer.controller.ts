@@ -21,6 +21,32 @@ class PrinterController {
     }
   }
 
+  static async getJobHistory(req: Request, res: Response) {
+    try {
+      const department_id = req.params.id;
+      const result: [{ year: string; month: string; jobs: string }] =
+        await PrinterDao.getJobHistory(department_id);
+
+      let payload: { [key: string]: { [key: string]: any[] } } = {};
+
+      if (result)
+        for (const obj of result) {
+          const arr: any[] = JSON.parse(obj.jobs);
+          while (arr.length > 0) {
+            const year = obj.year;
+            const month = obj.month;
+            if (!payload[year]) payload[year] = {};
+            if (!payload[year][month]) payload[year][month] = [];
+            payload[year][month].push(arr.pop());
+          }
+        }
+
+      res.json(payload);
+    } catch (error) {
+      res.status(400).json('error');
+    }
+  }
+
   static async getDepartmentMetrics(req: Request, res: Response) {
     try {
       const depId = req.params.id;

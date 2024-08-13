@@ -1,15 +1,6 @@
 import React, { Component, ReactNode } from 'react';
 import { ConnectedProps, connect } from 'react-redux';
 import {
-  BarElement,
-  CategoryScale,
-  Chart,
-  Legend,
-  LinearScale,
-  Title,
-  Tooltip,
-} from 'chart.js';
-import {
   Accordion,
   AccordionBody,
   AccordionHeader,
@@ -19,163 +10,184 @@ import {
   CardHeader,
   CardText,
   CardTitle,
-  Form,
-  FormSelect,
   ListGroup,
   ListGroupItem,
   Stack,
+  Table,
 } from 'react-bootstrap';
 import { AppState } from '../../../../types/app.types';
-import { CONSTANTS } from '../../../../config/constants';
 import { getDepartmentBillingHistory } from '../../../../store/actions/billing.actions';
-import { departmentsList } from '../../../../config/app-data';
+import { departmentsList, departmentsMap } from '../../../../config/app-data';
 import { Bill } from '../../../../types/billing.types';
+import { Job } from '../../../../types/printer.types';
 
-Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+interface State {}
 
-interface State {
-  selectedDepartment: string;
+interface Props {
+  department?: string;
 }
 
 class BillingComponent extends Component<BillingComponentProps, State> {
   constructor(props: BillingComponentProps) {
     super(props);
-    const depId = props.user?.department_id;
-    let initialDepartment = '';
-    if (depId) {
-      this.props.getDepartmentBillingHistory(depId);
-      initialDepartment =
-        departmentsList.find((d) => d.id === Number(depId))?.name || '';
-    }
-    this.state = {
-      selectedDepartment: initialDepartment,
-    };
   }
 
-  onChange = (event: any) => {
-    this.setState({ selectedDepartment: event.target.value });
-    const depId = departmentsList.find(
-      (d) => d.name === event.target.value
-    )?.id!;
-    this.props.getDepartmentBillingHistory(depId);
+  getTotals = (year?: string, month?: string) => {
+    const {
+      printer: { jobs, jobHistory },
+      admin: { activeProfile },
+    } = this.props;
+    let totals = {
+      totalColor: 0,
+      totalBw: 0,
+      totalPaper: 0,
+      bwCharge: 0,
+      colorCharge: 0,
+      paperCharge: 0,
+      totalCharge: 0,
+    };
+    if (jobHistory && month && year) {
+      const prevJobs = jobHistory[year][month];
+      prevJobs?.forEach((job) => {
+        totals.totalBw += Number(job?.black_and_white_pages);
+        totals.totalColor += Number(job?.color_pages);
+        totals.totalPaper += Number(job?.pages);
+      });
+    } else {
+      if (jobs)
+        for (const job of jobs) {
+          totals.totalBw += Number(job?.black_and_white_pages);
+          totals.totalColor += Number(job?.color_pages);
+          totals.totalPaper += Number(job?.pages);
+        }
+    }
+    totals.bwCharge = totals.totalBw * Number(activeProfile.bw_price);
+    totals.colorCharge = totals.totalColor * Number(activeProfile.color_price);
+    totals.paperCharge = totals.totalPaper * Number(activeProfile.paper_price);
+    totals.totalCharge =
+      totals.bwCharge + totals.colorCharge + totals.paperCharge;
+    return totals;
   };
 
-  currentBill = () => {
+  currentDate = () => {
     const now = new Date();
-    const start = new Date(now.getFullYear(), now.getMonth(), 1)
+    const m = now.getMonth();
+    const year = now.getFullYear();
+    const firstDOM = new Date(year, m, 1).toISOString().split('T')[0];
+    const lastDOM = new Date(now.getFullYear(), now.getMonth() + 1, 0)
       .toISOString()
       .split('T')[0];
-    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-      .toISOString()
-      .split('T')[0];
-    return this.props.billData?.find(
-      (b) => b.billing_cycle_start === start && b.billing_cycle_end === end
-    );
+    const billPeriod = now.toLocaleString('default', {
+      month: 'long',
+      year: 'numeric',
+    });
+    return {
+      now: now,
+      billPeriod: billPeriod,
+      year: year,
+      firstDOM: firstDOM,
+      lastDOM: lastDOM,
+    };
   };
 
   render(): ReactNode {
-    const { billData, user } = this.props;
-    const { selectedDepartment } = this.state;
-    const currentBill = this.currentBill();
+    const {
+      department,
+      printer: { jobs, jobHistory },
+      admin: { activeProfile },
+    } = this.props;
+    const totals = this.getTotals();
 
     return (
       <Stack gap={2} data-testid='billing-component'>
         <Card>
           <CardHeader>
-            <h2>Current Bill</h2>
+            <h2>Billing</h2>
           </CardHeader>
         </Card>
         <Card>
-          <CardBody className='d-flex'>
-            <CardTitle className='me-auto'>
-              <strong>Department:</strong> {selectedDepartment}
-            </CardTitle>
-            <CardTitle>
-              <strong>Billing Period: </strong>
-              <span data-testid='current-start'>
-                {currentBill?.billing_cycle_start}
-              </span>{' '}
-              {' - '}
-              <span data-testid='current-end'>
-                {currentBill?.billing_cycle_end}
-              </span>
-            </CardTitle>
-          </CardBody>
-          <ListGroup>
-            <ListGroupItem>
-              <div>
-                <strong>Total Color Pages: </strong>
-                {currentBill?.total_color_pages}
-              </div>
-            </ListGroupItem>
-            <ListGroupItem>
-              <div>
-                <strong>Total B&W Pages: </strong>
-                {currentBill?.total_bw_pages}
-              </div>
-            </ListGroupItem>
-            <ListGroupItem>
-              <CardText>
-                <strong>Total Paper: </strong>
-                {currentBill?.total_paper}
-              </CardText>
-            </ListGroupItem>
-          </ListGroup>
           <CardBody>
-            <h4>Amount Due</h4>
-            <div style={{ fontSize: '4em', lineHeight: '1em', color: 'green' }}>
-              ${currentBill?.total_charges}
+            <h3>Current Period:</h3>
+            {this.currentDate().billPeriod}
+          </CardBody>
+        </Card>
+        <Card>
+          <CardBody>
+            <div className='d-flex'>
+              <strong className='me-auto'>Department:</strong>
+              {`${department ? departmentsMap[department]?.name : 'All Departments'}`}
+            </div>
+            <div className='d-flex'>
+              <strong className='me-auto'>Total Color Pages: </strong>
+              {`$${activeProfile?.color_price} x ${totals?.totalColor}`}
+            </div>
+            <div className='d-flex'>
+              <strong className='me-auto'>Total B&W Pages: </strong>
+              {`$${activeProfile?.bw_price} x ${totals?.totalBw}`}
+            </div>
+            <div className='d-flex'>
+              <strong className='me-auto'>Total Paper: </strong>
+              {`$${activeProfile?.paper_price} x ${totals?.totalPaper}`}
+            </div>
+          </CardBody>
+          <CardBody>
+            <div className='d-flex'>
+              <h4 className='me-auto'>Amount Due</h4>
+              <div>{`$${totals.totalCharge}`}</div>
             </div>
           </CardBody>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <h2>Billing History</h2>
-          </CardHeader>
-        </Card>
-        <Accordion>
-          {billData?.map((bill: Bill, index) => (
-            <AccordionItem
-              key={index}
-              eventKey={bill.id}
-              data-testid={`previous-${bill.id}`}
-              style={{ marginTop: '5px' }}
-            >
-              <AccordionHeader className='d-flex justify-content-between'>
-                <Stack direction='horizontal' gap={3}>
-                  <div>
-                    <strong>Bill Start:</strong> {bill.billing_cycle_start}
-                  </div>
-                  <div>
-                    <strong>Bill End:</strong> {bill.billing_cycle_end}
-                  </div>
-                </Stack>
-              </AccordionHeader>
-              <AccordionBody
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  borderTop: '1px solid #c8c8c8',
-                }}
-              >
-                <div>
-                  <div>
-                    <strong>Total Charges:</strong> {bill?.total_charges}
-                  </div>
-                  <div>
-                    <strong>Total BW Charges:</strong>{' '}
-                    {bill?.color_pages_charge}
-                  </div>
-                  <div>
-                    <strong>Total Color Charges:</strong>
-                    {bill?.color_pages_charge}
-                  </div>
-                </div>
-              </AccordionBody>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <h3>Billing History</h3>
+        {Object.entries(jobHistory)
+          ?.reverse()
+          .map((year, index) => [
+            <h3 key={`${year[0]}=${index}`}>{year[0]}</h3>,
+            <Accordion key={year[0] + '-1'}>
+              {Object.entries(year[1])
+                ?.reverse()
+                .map((month) => (
+                  <AccordionItem
+                    key={`${month[0]}-${index}`}
+                    eventKey={month[0]}
+                    data-testid={`previous-${month[0]}`}
+                    style={{ marginTop: '5px' }}
+                  >
+                    <AccordionHeader className='d-flex'>
+                      <div className='me-auto'>
+                        {new Date(0, Number(month[0]) - 1).toLocaleString(
+                          'en-us',
+                          { month: 'long' }
+                        )}
+                      </div>
+                      <div>{`Total Charge: $${this.getTotals(year[0], month[0]).totalCharge}`}</div>
+                    </AccordionHeader>
+                    <AccordionBody>
+                      <Table>
+                        <tbody>
+                          <tr>
+                            <th>Date</th>
+                            <th>Department</th>
+                            <th>B&W Pages</th>
+                            <th>Color Pages</th>
+                            <th>Total Paper</th>
+                          </tr>
+                          {month[1]?.map((job) => (
+                            <tr key={`${year[0]}-${month[0]}-${job?.id}`}>
+                              <td>{job?.date}</td>
+                              <td>{`${departmentsMap[job?.department_id]?.name}`}</td>
+                              <td>{job?.black_and_white_pages}</td>
+                              <td>{job?.color_pages}</td>
+                              <td>{job?.pages}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                    </AccordionBody>
+                  </AccordionItem>
+                ))}
+            </Accordion>,
+          ])}
       </Stack>
     );
   }
@@ -183,8 +195,9 @@ class BillingComponent extends Component<BillingComponentProps, State> {
 
 const mapStateToProps = (state: AppState) => {
   return {
-    billData: state.billing.billData,
-    user: state.auth.user,
+    printer: state.printer,
+    auth: state.auth,
+    admin: state.admin,
   };
 };
 
@@ -192,6 +205,6 @@ const mapDispatchToProps = { getDepartmentBillingHistory };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
-type BillingComponentProps = ConnectedProps<typeof connector>;
+type BillingComponentProps = ConnectedProps<typeof connector> & Props;
 
 export default connector(BillingComponent);

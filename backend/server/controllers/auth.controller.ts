@@ -22,13 +22,14 @@ class AuthController {
 
       let payload: { [key: string]: any[] } = {};
 
-      for (const obj of result) {
-        const arr: any[] = JSON.parse(obj.data);
-        while (arr.length > 0) {
-          if (!payload[obj.source]) payload[obj.source] = [];
-          payload[obj.source].push(arr.pop());
+      if (result)
+        for (const obj of result) {
+          const arr: any[] = JSON.parse(obj.data);
+          while (arr.length > 0) {
+            if (!payload[obj.source]) payload[obj.source] = [];
+            payload[obj.source].push(arr.pop());
+          }
         }
-      }
 
       res.json(payload);
     } catch (err: any) {
@@ -107,6 +108,7 @@ class AuthController {
           process.env.REFRESH_TOKEN_SECRET as string,
           { expiresIn: '15m' }
         );
+        console.log('refreshed token');
         res.cookie('refreshToken', newToken).json({
           id: id,
           email: email,
@@ -117,9 +119,11 @@ class AuthController {
           type: type,
         });
       } else {
+        console.log('token expired');
         res.status(401).json('invalid token');
       }
     } catch (err) {
+      console.log('token expired');
       res.status(401).json('invalid token');
     }
   }
@@ -163,6 +167,40 @@ class AuthController {
       res.json(result);
     } else {
       res.status(400).json('error getting users');
+    }
+  }
+
+  static async updatePriceProfile(req: Request, res: Response) {
+    try {
+      const prices = req.body;
+      const updated = await authDao.updatePriceProfile(prices);
+      if (updated) {
+        res.json('profile updated');
+      } else res.status(400).json('problem adding profile');
+    } catch (error) {
+      res.status(400).json('error updating price');
+    }
+  }
+
+  static async addPriceProfile(req: Request, res: Response) {
+    try {
+      const prices = req.body.profile;
+      const added = await authDao.addPriceProfile(prices);
+      res.json('profile added');
+    } catch (error) {
+      res.status(400).json('error adding price');
+    }
+  }
+
+  static async setActivePriceProfile(req: Request, res: Response) {
+    try {
+      const id = req.params.id;
+      const updated = await authDao.setActivePriceProfile(id);
+      if (updated) {
+        res.json('profile updated');
+      } else res.status(400).json('problem setting profile');
+    } catch (error) {
+      res.status(400).json('error setting profile');
     }
   }
 }

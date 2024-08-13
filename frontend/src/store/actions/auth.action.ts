@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { CONSTANTS } from '../../config/constants';
 import AuthService from '../../services/auth.service';
-import { User } from '../../types/auth.types';
+import { PriceConfig, User } from '../../types/auth.types';
 
 export const register =
   (email: string, password: string) => async (dispatch: Dispatch) => {
@@ -54,6 +54,7 @@ export const refreshToken = () => async (dispatch: Dispatch) => {
         dispatch({ type: CONSTANTS.LOGOUT });
       }
     } else {
+      clearCookie('refreshToken');
       dispatch({ type: CONSTANTS.REFRESH_TOKEN_FAILURE });
       dispatch({ type: CONSTANTS.LOGOUT });
     }
@@ -81,6 +82,38 @@ export const getUserData = (id: string) => async (dispatch: Dispatch) => {
   }
 };
 
+export const addPriceProfile =
+  (profile: PriceConfig) => async (dispatch: Dispatch) => {
+    try {
+      const result = await AuthService.addPriceProfile(profile);
+      if (result) {
+        dispatch({
+          type: CONSTANTS.ADD_PRICE_PROFILE_SUCCESS,
+        });
+        return true;
+      } else return false;
+    } catch (error) {
+      dispatch({ type: CONSTANTS.ADD_PRICE_PROFILE_FAILURE });
+      return false;
+    }
+  };
+
+export const setPriceProfile = (id: string) => async (dispatch: Dispatch) => {
+  try {
+    const result = await AuthService.setPriceProfile(id);
+    if (result) {
+      dispatch({
+        type: CONSTANTS.SET_ACTIVE_PRICE_PROFILE_SUCCESS,
+        payload: result,
+      });
+      return true;
+    } else return false;
+  } catch (error) {
+    dispatch({ type: CONSTANTS.SET_ACTIVE_PRICE_PROFILE_FAILURE });
+    return false;
+  }
+};
+
 export const getAllData = () => async (dispatch: Dispatch) => {
   try {
     const result = await AuthService.getAllData();
@@ -102,8 +135,24 @@ export const getAllData = () => async (dispatch: Dispatch) => {
         payload: result.department_metrics,
       });
       dispatch({
+        type: CONSTANTS.GET_DEPARTMENT_BILLING_HISTORY_SUCCESS,
+        payload: result.billing,
+      });
+      dispatch({
         type: CONSTANTS.GET_USERS_SUCCESS,
         payload: result.users,
+      });
+      dispatch({
+        type: CONSTANTS.GET_JOBS_SUCCESS,
+        payload: result.jobs,
+      });
+      dispatch({
+        type: CONSTANTS.GET_PRICES_SUCCESS,
+        payload: result.prices,
+      });
+      dispatch({
+        type: CONSTANTS.GET_ACTIVE_PRICE_SUCCESS,
+        payload: result.price[0],
       });
       return true;
     } else return false;
@@ -130,8 +179,24 @@ export const getAllDataUser = (depId: string) => async (dispatch: Dispatch) => {
         payload: result.maintenance_requests,
       });
       dispatch({
+        type: CONSTANTS.GET_DEPARTMENT_BILLING_HISTORY_SUCCESS,
+        payload: result.billing,
+      });
+      dispatch({
         type: CONSTANTS.GET_DEPARTMENT_METRICS_SUCCESS,
         payload: result.department_metrics,
+      });
+      dispatch({
+        type: CONSTANTS.GET_JOBS_SUCCESS,
+        payload: result.jobs,
+      });
+      dispatch({
+        type: CONSTANTS.GET_PRICES_SUCCESS,
+        payload: result.prices,
+      });
+      dispatch({
+        type: CONSTANTS.GET_ACTIVE_PRICE_SUCCESS,
+        payload: result.price[0],
       });
       return true;
     } else return false;

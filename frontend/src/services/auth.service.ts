@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import { getAxios } from '../config/axios.config';
-import { User } from '../types/auth.types';
+import { PriceConfig, User } from '../types/auth.types';
 
 const axios = getAxios();
 
@@ -19,6 +19,28 @@ class AuthService {
   static getAllDataUser = async (depId: string) => {
     try {
       const result = await axios.get(`/getAllData/${depId}`);
+      if (result.status === 200) {
+        return result.data;
+      } else return false;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  static addPriceProfile = async (profile: PriceConfig) => {
+    try {
+      const result = await axios.post(`/priceProfile`, { profile: profile });
+      if (result.status === 200) {
+        return result.data;
+      } else return false;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  static setPriceProfile = async (id: string) => {
+    try {
+      const result = await axios.put(`/setPriceProfile/${id}`);
       if (result.status === 200) {
         return result.data;
       } else return false;

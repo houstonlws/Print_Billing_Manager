@@ -8,7 +8,7 @@ import validateToken from '../middleware/ValidateToken';
 const router = Router();
 
 router.use(authRoutes);
-router.use('/printer', validateToken, printerRoutes);
+router.use('', validateToken, printerRoutes);
 router.use('/billing', validateToken, billingRoutes);
 router.use('/maintenance', validateToken, maintenanceRoutes);
 

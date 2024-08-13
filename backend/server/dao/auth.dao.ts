@@ -1,8 +1,60 @@
 import { User } from '../models/auth.model';
 import connection from '../config/database.config';
 import { MaintenanceRequest } from '../models/maintenance.model';
+import { PriceConfig } from '../models/printer.model';
 
 export default class authDao {
+  static async updatePriceProfile(prices: PriceConfig) {
+    const query = `UPDATE prices SET bw_price=?, color_price=? , paper_price=? WHERE id=?;`;
+    return await new Promise<any>((res, rej) => {
+      connection.query(
+        query,
+        [prices.bw_price, prices.color_price, prices.paper_price, prices.id],
+        (err, result) => {
+          if (err) {
+            console.log(err.message);
+            rej(false);
+          } else {
+            res(true);
+          }
+        }
+      );
+    });
+  }
+
+  static async addPriceProfile(prices: PriceConfig) {
+    console.log('prices', prices);
+    const query = `INSERT INTO prices (name, bw_price, color_price, paper_price) VALUES (?,?,?,?)`;
+    return await new Promise<any>((res, rej) => {
+      connection.query(
+        query,
+        [prices.name, prices.bw_price, prices.color_price, prices.paper_price],
+        (err, result) => {
+          if (err) {
+            console.log(err.message);
+            rej(false);
+          } else {
+            res(true);
+          }
+        }
+      );
+    });
+  }
+
+  static async setActivePriceProfile(id: string) {
+    const query = `UPDATE prices SET is_active=FALSE, is_active=TRUE WHERE id=?`;
+    return await new Promise<any>((res, rej) => {
+      connection.query(query, id, (err, result) => {
+        if (err) {
+          console.log(err.message);
+          rej(false);
+        } else {
+          res(true);
+        }
+      });
+    });
+  }
+
   static async login(user: User) {
     const query = `SELECT * FROM auth WHERE email=? AND password=?`;
     return await new Promise<User[]>((resolve, reject) => {
@@ -123,6 +175,45 @@ export default class authDao {
       ) AS data
       FROM maintenance_requests
       ${id ? 'WHERE department_id=?' : ''}
+      UNION ALL SELECT
+      'jobs' as source,
+      JSON_OBJECT(
+        'id', id, 
+        'printer_id', printer_id, 
+        'department_id', department_id, 
+        'date', date, 
+        'title', title, 
+        'pages', pages, 
+        'color_pages', color_pages, 
+        'black_and_white_pages', black_and_white_pages
+      ) as data
+      FROM jobs
+      WHERE YEAR(date) = YEAR(CURRENT_DATE())
+      AND MONTH(date) = MONTH(CURRENT_DATE())
+      ${id ? 'AND department_id=?' : ''}
+      UNION ALL SELECT
+      'prices' as source,
+      JSON_OBJECT(
+        'id', id,
+        'name', name,
+        'bw_price', bw_price, 
+        'color_price', color_price, 
+        'paper_price', paper_price,
+        'is_active', is_active
+      ) as data
+      FROM prices
+      UNION ALL SELECT
+      'price' as source,
+      JSON_OBJECT(
+        'id', id,
+        'name', name,
+        'bw_price', bw_price, 
+        'color_price', color_price, 
+        'paper_price', paper_price,
+        'is_active', is_active
+      ) as data
+      FROM prices
+      WHERE is_active=TRUE
       UNION ALL SELECT 
       'department_metrics' AS source,
       JSON_OBJECT(
@@ -144,6 +235,22 @@ export default class authDao {
       ) AS data
       FROM department_metrics
       ${id ? 'WHERE department_id=?' : ''}
+      UNION ALL SELECT
+      'billing' as source,
+      JSON_OBJECT(
+        'id', id, 
+        'department_id', department_id, 
+        'billing_cycle_start', DATE_FORMAT(billing_cycle_start, '%Y-%m-%d'),
+        'billing_cycle_end', DATE_FORMAT(billing_cycle_end, '%Y-%m-%d'),
+        'total_charges', total_charges, 
+        'total_paper', total_paper, 
+        'total_color_pages', total_color_pages, 
+        'total_bw_pages', total_bw_pages, 
+        'color_pages_charge', color_pages_charge, 
+        'bw_pages_charge', bw_pages_charge
+      ) as data
+      FROM billing
+      ${id ? 'WHERE department_id=?' : ''}
       ${
         id
           ? ''
@@ -156,10 +263,9 @@ export default class authDao {
         'type',type
       ) as data
       FROM users`
-      }
-      ) as all_data 
+      }) as all_data 
       GROUP BY source;`;
-      connection.query(query, [id, id, id, id], (err, res) => {
+      connection.query(query, [id, id, id, id, id, id], (err, res) => {
         if (err) {
           console.log(err.message);
           reject(err);

@@ -62,6 +62,12 @@ class PrintersService {
     return [];
   }
 
+  static async getJobHistory(id?: string): Promise<any> {
+    const result = await axios.get(`/printer/jobs${id ? '/' + id : ''}`);
+    if (result.status === 200) return result.data;
+    return [];
+  }
+
   static async addMaintenanceRequest(
     request: MaintenanceRequest
   ): Promise<any> {

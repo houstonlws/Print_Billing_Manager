@@ -18,5 +18,12 @@ router.get('/getAllUsers', validateToken, AuthController.getAllUsers);
 router.put('/userType', validateToken, AuthController.updateUserType);
 router.get('/getAllData', validateToken, AuthController.getAllData);
 router.get('/getAllData/:id', validateToken, AuthController.getAllData);
+router.put(
+  '/setPriceProfile/:id',
+  validateToken,
+  AuthController.setActivePriceProfile
+);
+router.post('/priceProfile', validateToken, AuthController.addPriceProfile);
+router.put('/priceProfile', validateToken, AuthController.updatePriceProfile);
 
 export default router;

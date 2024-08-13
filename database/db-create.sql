@@ -49,6 +49,26 @@ CREATE TABLE metrics (
     FOREIGN KEY (printer_id) REFERENCES printers(id)
 );
 
+CREATE TABLE jobs (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    printer_id INT NOT NULL,
+    department_id INT NOT NULL,
+	date DATE NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    pages INT NOT NULL,
+    color_pages INT NOT NULL,
+    black_and_white_pages INT NOT NULL
+);
+
+CREATE TABLE prices (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+	bw_price DECIMAL NOT NULL,
+    color_price DECIMAL NOT NULL,
+    paper_price DECIMAL NOT NULL,
+    is_active BOOLEAN DEFAULT FALSE NOT NULL
+);
+
 CREATE TABLE maintenance_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     printer_id INT NOT NULL,
@@ -70,6 +90,7 @@ CREATE TABLE notifications (
     is_read BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (maintenance_id) REFERENCES maintenance_requests(id)
 );
+
 
 CREATE TABLE billing (
     id INT AUTO_INCREMENT PRIMARY KEY,

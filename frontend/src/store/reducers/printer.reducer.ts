@@ -2,12 +2,15 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { CONSTANTS } from '../../config/constants';
 import { PrinterState } from '../../types/printer.types';
 import { Map } from '../../types/app.types';
+import { getJobHistory } from '../actions/printer.actions';
 
 export const initialState: PrinterState = {
   printers: [],
   metrics: [],
   requests: [],
   printersMap: {},
+  jobs: [],
+  jobHistory: {},
 };
 
 const printerReducer = (state = initialState, action: PayloadAction) => {
@@ -106,6 +109,30 @@ const printerReducer = (state = initialState, action: PayloadAction) => {
     case CONSTANTS.UPDATE_MAINTENANCE_REQUEST_FAILURE: {
       return {
         ...state,
+      };
+    }
+    case CONSTANTS.GET_JOBS_SUCCESS: {
+      return {
+        ...state,
+        jobs: payload,
+      };
+    }
+    case CONSTANTS.GET_JOBS_FAILURE: {
+      return {
+        ...state,
+        jobs: [],
+      };
+    }
+    case CONSTANTS.GET_JOB_HISTORY_SUCESS: {
+      return {
+        ...state,
+        jobHistory: payload,
+      };
+    }
+    case CONSTANTS.GET_JOB_HISTORY_FAILURE: {
+      return {
+        ...state,
+        jobHistory: [],
       };
     }
     default:

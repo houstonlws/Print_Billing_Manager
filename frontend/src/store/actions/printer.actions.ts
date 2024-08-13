@@ -83,6 +83,22 @@ export const addPrinter = (printer: Printer) => async (dispatch: Dispatch) => {
   }
 };
 
+export const getJobHistory = (id?: string) => async (dispatch: Dispatch) => {
+  try {
+    const result = await PrinterService.getJobHistory(id);
+    if (result) {
+      dispatch({ type: CONSTANTS.GET_JOB_HISTORY_SUCESS, payload: result });
+      return true;
+    } else {
+      dispatch({ type: CONSTANTS.GET_JOB_HISTORY_FAILURE });
+      return false;
+    }
+  } catch (error) {
+    dispatch({ type: CONSTANTS.GET_JOB_HISTORY_FAILURE });
+    return false;
+  }
+};
+
 export const getDepartmentMaintenanceRequests =
   (depId: string) => async (dispatch: Dispatch) => {
     try {

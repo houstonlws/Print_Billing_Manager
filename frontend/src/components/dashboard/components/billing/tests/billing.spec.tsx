@@ -13,6 +13,7 @@ const mockStore = configureStore([thunk]);
 let store = mockStore({
   billing: { billData: testBillHistory },
   auth: { user: { departmet_id: '1' } },
+  admin: {},
 });
 
 const mockGetBillHistory = jest.fn(

@@ -22,6 +22,17 @@ export interface AuthState {
   notifications: Notification[];
 }
 
+export interface PriceConfig {
+  id: string;
+  name: string;
+  bw_price: string;
+  color_price: string;
+  paper_price: string;
+  is_active: string;
+}
+
 export interface AdminState {
   users: User[];
+  priceProfiles: PriceConfig[];
+  activeProfile: PriceConfig;
 }
