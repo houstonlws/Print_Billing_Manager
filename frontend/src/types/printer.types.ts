@@ -41,22 +41,9 @@ export interface MaintenanceRequest {
   status: string;
 }
 
-export interface Job {
-  id: string;
-  printer_id: string;
-  department_id: string;
-  date: string;
-  title: string;
-  pages: string;
-  color_pages: string;
-  black_and_white_pages: string;
-}
-
 export interface PrinterState {
   printers: Printer[];
   metrics: Metric[];
   requests: MaintenanceRequest[];
   printersMap: TypeMap<Printer>;
-  jobs: Job[];
-  jobHistory: TypeMap<{ [key: string]: Job[] }>;
 }

@@ -7,6 +7,8 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Nav,
+  NavItem,
   Stack,
   Table,
 } from 'react-bootstrap';
@@ -15,12 +17,17 @@ import {
   getDepartmentMetrics,
   getDepartmentPrinters,
 } from '../../../../store/actions/printer.actions';
-import { AppState } from '../../../../types/app.types';
+import { AppState, TypeMap } from '../../../../types/app.types';
 import { departmentsMap } from '../../../../config/app-data';
 import TotalsBlockComponent from './components/totals-block.component';
-import { Job } from '../../../../types/printer.types';
+import { ApexOptions } from 'apexcharts';
+import ReactApexChart from 'react-apexcharts';
+import { Job } from '../../../../types';
 
-interface State {}
+interface State {
+  series: ApexAxisChartSeries;
+  options: ApexOptions;
+}
 interface Props {
   selectedDepartment?: string;
 }
@@ -28,63 +35,206 @@ interface Props {
 class TrackingModule extends Component<TrackingProps, State> {
   constructor(props: TrackingProps) {
     super(props);
-    this.state = {};
+    this.state = {
+      series: [],
+      options: {
+        chart: {
+          stacked: false,
+          height: 100,
+          type: 'area',
+        },
+        stroke: {
+          curve: 'smooth',
+        },
+        xaxis: {
+          type: 'datetime',
+          categories: [],
+          labels: {
+            rotate: -45,
+          },
+        },
+      },
+    };
     this.getTotals();
   }
 
-  getTotals = () => {
-    const { metrics, jobs } = this.props.printer;
+  componentDidMount(): void {
+    this.populateChartBillingPeriod();
+  }
+  componentDidUpdate(
+    prevProps: Readonly<TrackingProps>,
+    prevState: Readonly<State>,
+    snapshot?: any
+  ): void {
+    if (prevState.series === this.state.series) {
+      this.populateChartBillingPeriod();
+    }
+  }
 
-    let totalPrintJobs = 0;
-    let totalPrintVolume = 0;
-    let totalColor = 0;
-    let totalBW = 0;
+  populateChartBillingPeriod = () => {
+    const {
+      tracking: { currentJobs },
+    } = this.props;
+    let dates: number[] = [];
+    let now = new Date();
+    let date = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+    while (date.getMonth() == now.getMonth()) {
+      dates.push(date.getTime());
+      date.setDate(date.getDate() + 1);
+    }
+    let bwData: TypeMap<number> = {};
+    let colorData: TypeMap<number> = {};
+    let paperData: TypeMap<number> = {};
+    if (currentJobs?.length > 0) {
+      currentJobs?.forEach((job) => {
+        const raw = new Date(job?.date);
+        const jobDate = new Date(
+          raw.getFullYear(),
+          raw.getMonth(),
+          raw.getDate() + 1
+        ).setHours(0, 0, 0, 0);
+        if (!bwData[jobDate]) bwData[jobDate] = 0;
+        if (!colorData[jobDate]) colorData[jobDate] = 0;
+        if (!paperData[jobDate]) paperData[jobDate] = 0;
 
-    jobs?.forEach((job) => {
-      totalPrintJobs++;
-      totalPrintVolume += Number(job?.pages);
-      totalColor += Number(job?.color_pages);
-      totalBW += Number(job?.black_and_white_pages);
+        bwData[jobDate] =
+          bwData[jobDate] + Number(job.black_and_white_pages) || 0;
+        colorData[jobDate] = colorData[jobDate] + Number(job.color_pages) || 0;
+        paperData[jobDate] = paperData[jobDate] + Number(job.pages) || 0;
+      });
+    }
+
+    let bwArr: { x: number; y: number }[] = [];
+    let colorArr: { x: number; y: number }[] = [];
+    let paperArr: { x: number; y: number }[] = [];
+
+    dates?.forEach((date) => {
+      if (!bwData[date]) {
+        bwArr.push({ x: date, y: 0 });
+      } else {
+        console.log(bwData[date]);
+        bwArr.push({ x: date, y: bwData[date] });
+      }
+      if (!colorData[date]) {
+        colorArr.push({ x: date, y: 0 });
+      } else {
+        colorArr.push({ x: date, y: colorData[date] });
+      }
+      if (!paperData[date]) {
+        paperArr.push({ x: date, y: 0 });
+      } else {
+        paperArr.push({ x: date, y: paperData[date] });
+      }
     });
 
-    return {
-      totalPrintJobs,
-      totalPrintVolume,
-      totalColor,
-      totalBW,
-    };
+    const series = [
+      { name: 'B&W Copies', data: bwArr },
+      { name: 'Color Copies', data: colorArr },
+      { name: 'Paper Usage', data: paperArr },
+    ];
+
+    this.setState({
+      options: { xaxis: { categories: dates } },
+      series: series,
+    });
   };
 
-  currentDate = () => {
-    const now = new Date();
-    const m = now.getMonth();
-    const year = now.getFullYear();
-    const firstDOM = new Date(year, m, 1).toISOString().split('T')[0];
-    const lastDOM = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-      .toISOString()
-      .split('T')[0];
-    const billPeriod = now.toLocaleString('default', {
+  populateChartJobHistory = () => {
+    const {
+      tracking: { jobHistory },
+    } = this.props;
+    let dates: string[] = [];
+    let bwData: number[] = [];
+    let colorData: number[] = [];
+    let paperData: number[] = [];
+    Object.entries(jobHistory)?.forEach((year) => {
+      Object.entries(year[1])?.forEach((month) => {
+        let b = 0;
+        let c = 0;
+        let p = 0;
+        dates.push(`${year[0]}-${month[0]}`);
+        month[1]?.forEach((job) => {
+          b += Number(job.black_and_white_pages);
+          c += Number(job?.color_pages);
+          p += Number(job?.pages);
+        });
+        bwData.push(b);
+        colorData.push(c);
+        paperData.push(p);
+      });
+    });
+
+    const series = [
+      { name: 'B&W Copies', data: bwData },
+      { name: 'Color Copies', data: colorData },
+      { name: 'Paper Usage', data: paperData },
+    ];
+
+    this.setState({
+      options: { xaxis: { categories: dates } },
+      series: series,
+    });
+  };
+
+  getTotals = (year?: string, month?: string) => {
+    const {
+      tracking: { currentJobs, jobHistory },
+      admin: { activeProfile },
+    } = this.props;
+    let totals = {
+      totalColor: 0,
+      totalBw: 0,
+      totalPaper: 0,
+      totalJobs: 0,
+      bwCharge: 0,
+      colorCharge: 0,
+      paperCharge: 0,
+      totalCharge: 0,
+    };
+
+    if (jobHistory && month && year) {
+      const prevJobs = jobHistory[year][month];
+      prevJobs?.forEach((job) => {
+        totals.totalBw += Number(job?.black_and_white_pages);
+        totals.totalColor += Number(job?.color_pages);
+        totals.totalPaper += Number(job?.pages);
+        totals.totalJobs++;
+      });
+    } else {
+      if (currentJobs?.length > 0) {
+        currentJobs?.forEach((job) => {
+          totals.totalBw += Number(job?.black_and_white_pages);
+          totals.totalColor += Number(job?.color_pages);
+          totals.totalPaper += Number(job?.pages);
+          totals.totalJobs++;
+        });
+      }
+    }
+
+    totals.bwCharge = totals.totalBw * Number(activeProfile.bw_price);
+    totals.colorCharge = totals.totalColor * Number(activeProfile.color_price);
+    totals.paperCharge = totals.totalPaper * Number(activeProfile.paper_price);
+    totals.totalCharge =
+      totals.bwCharge + totals.colorCharge + totals.paperCharge;
+    return totals;
+  };
+
+  getCurrentBillingPeriod = () => {
+    return new Date().toLocaleString('default', {
       month: 'long',
       year: 'numeric',
     });
-    return {
-      now: now,
-      billPeriod: billPeriod,
-      year: year,
-      firstDOM: firstDOM,
-      lastDOM: lastDOM,
-    };
   };
 
   render(): ReactNode {
     const {
       user,
-      printer: { printersMap, jobs, jobHistory },
+      printer: { printersMap },
+      tracking: { currentJobs, jobHistory },
       selectedDepartment,
+      admin: { activeProfile },
     } = this.props;
-
-    const { totalPrintJobs, totalPrintVolume, totalColor, totalBW } =
-      this.getTotals();
+    const totals = this.getTotals();
 
     return (
       <Stack data-testid='tracking-component' gap={3}>
@@ -98,35 +248,73 @@ class TrackingModule extends Component<TrackingProps, State> {
             <h2>Tracking</h2>
           </CardHeader>
         </Card>
+
         <Card>
           <CardBody>
+            <h3>{`${
+              selectedDepartment
+                ? departmentsMap[selectedDepartment].name
+                : departmentsMap[user.department_id]?.name || 'All Departments'
+            }`}</h3>
             <h3>Current Period:</h3>
-            {this.currentDate().billPeriod}
+            {this.getCurrentBillingPeriod()}
           </CardBody>
         </Card>
-        <h3>{`${selectedDepartment ? departmentsMap[selectedDepartment].name : departmentsMap[user.department_id]?.name || 'All Departments'}`}</h3>
+
+        <ReactApexChart
+          options={this.state.options}
+          series={this.state.series}
+        ></ReactApexChart>
+
+        <Card>
+          <CardBody>
+            <div className='d-flex'>
+              <strong className='me-auto'>Department:</strong>
+              {`${selectedDepartment ? departmentsMap[selectedDepartment].name : departmentsMap[user.department_id]?.name || 'All Departments'}`}
+            </div>
+            <div className='d-flex'>
+              <strong className='me-auto'>Total Color Pages: </strong>
+              {`$${activeProfile?.color_price} x ${totals?.totalColor}`}
+            </div>
+            <div className='d-flex'>
+              <strong className='me-auto'>Total B&W Pages: </strong>
+              {`$${activeProfile?.bw_price} x ${totals?.totalBw}`}
+            </div>
+            <div className='d-flex'>
+              <strong className='me-auto'>Total Paper: </strong>
+              {`$${activeProfile?.paper_price} x ${totals?.totalPaper}`}
+            </div>
+          </CardBody>
+          <CardBody>
+            <div className='d-flex'>
+              <h4 className='me-auto'>Amount Due</h4>
+              <div>{`$${totals.totalCharge.toFixed(2)}`}</div>
+            </div>
+          </CardBody>
+        </Card>
+
         <Stack direction='horizontal' gap={3}>
           <TotalsBlockComponent
-            data-test-id={`total-color-${totalColor}`}
-            value={`${totalColor}`}
+            data-test-id={`total-color-${totals.totalColor}`}
+            value={`${totals.totalColor}`}
             title='Color'
             unit='Clicks'
           ></TotalsBlockComponent>
           <TotalsBlockComponent
-            data-test-id={`total-color-${totalBW}`}
-            value={`${totalBW}`}
+            data-test-id={`total-color-${totals.totalBw}`}
+            value={`${totals.totalBw}`}
             title='Black & White'
             unit='Clicks'
           ></TotalsBlockComponent>
         </Stack>
         <Stack direction='horizontal' gap={3}>
           <TotalsBlockComponent
-            value={`${totalPrintJobs}`}
+            value={`${totals.totalJobs}`}
             title='Print Jobs'
             unit='Jobs'
           ></TotalsBlockComponent>
           <TotalsBlockComponent
-            value={`${totalPrintVolume}`}
+            value={`${totals.totalPaper}`}
             title='Print Volume'
             unit='Pages'
           ></TotalsBlockComponent>
@@ -143,80 +331,37 @@ class TrackingModule extends Component<TrackingProps, State> {
             </tr>
           </thead>
           <tbody>
-            {jobs?.map((job: Job, index) => {
-              const printer_id = job?.printer_id;
-              return (
-                <tr key={index}>
-                  <td>{job?.date}</td>
-                  <td>{`${printersMap[printer_id]?.brand || ''} - 
+            {currentJobs?.length > 0 ? (
+              currentJobs?.map((job: Job, index) => {
+                const printer_id = job?.printer_id;
+                return (
+                  <tr key={index}>
+                    <td>{job?.date}</td>
+                    <td>{`${printersMap[printer_id]?.brand || ''} - 
                 ${printersMap[printer_id]?.model || ''}`}</td>
-                  <td>{`${printersMap[printer_id]?.location}`}</td>
-                  <td>{`${job?.pages}`}</td>
-                  <td>{`${job?.black_and_white_pages}`}</td>
-                  <td>{`${job?.color_pages}`}</td>
-                </tr>
-              );
-            })}
+                    <td>{`${printersMap[printer_id]?.location}`}</td>
+                    <td>{`${job?.pages}`}</td>
+                    <td>{`${job?.black_and_white_pages}`}</td>
+                    <td>{`${job?.color_pages}`}</td>
+                  </tr>
+                );
+              })
+            ) : (
+              <></>
+            )}
           </tbody>
         </Table>
-        <h3>Job History</h3>
-        {Object.entries(jobHistory)
-          ?.reverse()
-          .map((year, index) => [
-            <h3 key={`${year[0]}=${index}`}>{year[0]}</h3>,
-            <Accordion key={year[0] + '-1'}>
-              {Object.entries(year[1])
-                ?.reverse()
-                .map((month) => (
-                  <AccordionItem
-                    key={`${month[0]}-${index}`}
-                    eventKey={month[0]}
-                    data-testid={`previous-${month[0]}`}
-                    style={{ marginTop: '5px' }}
-                  >
-                    <AccordionHeader className='d-flex justify-content-between'>
-                      <div>
-                        {new Date(0, Number(month[0]) - 1).toLocaleString(
-                          'en-us',
-                          { month: 'long' }
-                        )}
-                      </div>
-                    </AccordionHeader>
-                    <AccordionBody>
-                      <Table>
-                        <tbody>
-                          <tr>
-                            <th>Date</th>
-                            <th>Department</th>
-                            <th>B&W Pages</th>
-                            <th>Color Pages</th>
-                            <th>Total Paper</th>
-                          </tr>
-                          {month[1]?.map((job) => (
-                            <tr key={`${year[0]}-${month[0]}-${job?.id}`}>
-                              <td>{job?.date}</td>
-                              <td>{`${departmentsMap[job?.department_id]?.name}`}</td>
-                              <td>{job?.black_and_white_pages}</td>
-                              <td>{job?.color_pages}</td>
-                              <td>{job?.pages}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
-                    </AccordionBody>
-                  </AccordionItem>
-                ))}
-            </Accordion>,
-          ])}
       </Stack>
     );
   }
 }
 
-const mapStateToProps = (state: AppState) => {
+const mapStateToProps = (state: AppState, props: any) => {
   return {
     printer: state.printer,
     user: state.auth.user,
+    admin: state.admin,
+    tracking: state.tracking,
   };
 };
 

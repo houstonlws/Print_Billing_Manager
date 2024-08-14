@@ -63,9 +63,9 @@ CREATE TABLE jobs (
 CREATE TABLE prices (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-	bw_price DECIMAL NOT NULL,
-    color_price DECIMAL NOT NULL,
-    paper_price DECIMAL NOT NULL,
+	bw_price DECIMAL(10,2) NOT NULL,
+    color_price DECIMAL(10,2) NOT NULL,
+    paper_price DECIMAL(10,2) NOT NULL,
     is_active BOOLEAN DEFAULT FALSE NOT NULL
 );
 

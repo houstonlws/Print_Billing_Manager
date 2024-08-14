@@ -38,7 +38,37 @@ class PrinterDao {
         if (!err) {
           resolve(res);
         } else {
-          console.log('get all printers error', err.message);
+          console.log('error', err.message);
+          reject(err);
+        }
+      });
+    });
+  }
+
+  static async getCurrentJobs(id?: string) {
+    return await new Promise<any>((resolve, reject) => {
+      const query = `SELECT JSON_ARRAYAGG(data) as data
+      FROM( SELECT JSON_OBJECT(
+        'id', id, 
+        'printer_id', printer_id, 
+        'department_id', department_id, 
+        'date', date, 
+        'title', title, 
+        'pages', pages, 
+        'color_pages', color_pages, 
+        'black_and_white_pages', black_and_white_pages
+      ) as data
+      FROM jobs
+      WHERE YEAR(date) = YEAR(CURRENT_DATE())
+      AND MONTH(date) = MONTH(CURRENT_DATE())
+      ${id ? 'AND department_id=?' : ''}
+      ) as subquery`;
+      connection.query(query, id, (err, res) => {
+        if (!err) {
+          resolve(res);
+        } else {
+          console.log('error', err.message);
+          console.log(err.message);
           reject(err);
         }
       });

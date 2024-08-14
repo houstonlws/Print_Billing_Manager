@@ -1,11 +1,13 @@
 import { BillingState } from './billing.types';
 import { AuthState, AdminState } from './auth.types';
 import { PrinterState } from './printer.types';
+import { TrackingState } from './tracking.types';
 
 export interface AppState {
   auth: AuthState;
   billing: BillingState;
   printer: PrinterState;
+  tracking: TrackingState;
   admin: AdminState;
 }
 

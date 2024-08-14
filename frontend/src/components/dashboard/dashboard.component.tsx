@@ -34,7 +34,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { departmentsList } from '../../config/app-data';
 import NotificationsWidget from './components/notifications/components/notifications.widget';
 import { store } from '../../store';
-import { getJobHistory } from '../../store/actions/printer.actions';
+import {
+  getCurrentJobs,
+  getJobHistory,
+} from '../../store/actions/tracking.actions';
 
 interface State {
   isOpen: boolean;
@@ -73,6 +76,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
         this.setState({ department: event.target.value });
         await this.props.getAllDataUser(event.target.value);
         await this.props.getJobHistory(event.target.value);
+        await this.props.getCurrentJobs(event.target.value);
         break;
     }
   };
@@ -179,10 +183,6 @@ class DashboardComponent extends Component<DashboardProps, State> {
                       element={<Navigate to='/printers' />}
                     ></Route>
                   )}
-                  <Route
-                    path='billing'
-                    element={<BillingComponent department={department} />}
-                  ></Route>
                   <Route path='printers' Component={PrintersComponent}></Route>
                   <Route
                     path='maintenance'
@@ -193,6 +193,10 @@ class DashboardComponent extends Component<DashboardProps, State> {
                     element={
                       <TrackingComponent selectedDepartment={department} />
                     }
+                  ></Route>
+                  <Route
+                    path='billing'
+                    element={<BillingComponent department={department} />}
                   ></Route>
                   <Route path='profile' Component={ProfileComponent}></Route>
                   <Route
@@ -219,6 +223,7 @@ const connector = connect(
     getAllDataUser,
     logout,
     getJobHistory,
+    getCurrentJobs,
   }
 );
 
