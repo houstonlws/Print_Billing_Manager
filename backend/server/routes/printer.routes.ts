@@ -1,14 +1,11 @@
 import { Router } from 'express';
 import PrinterController from '../controllers/printer.controller';
-import validateToken from '../middleware/ValidateToken';
+import validateToken from '../middleware/validate-token.middleware';
 
 const router = Router();
 router.use(
   '/printer',
-  router.get('/jobHistory', PrinterController.getJobHistory),
-  router.get('/jobHistory/:id', PrinterController.getJobHistory),
-  router.get('/currentJobs', PrinterController.getCurrentJobs),
-  router.get('/currentJobs/:id', PrinterController.getCurrentJobs),
+  validateToken,
   router.get('/metrics', PrinterController.getAllMetrics),
   router.get('/:id', PrinterController.getDepartmentPrinters),
   router.get('/metrics/:id', PrinterController.getDepartmentMetrics),

@@ -1,5 +1,5 @@
 import connection from '../config/database.config';
-import { MaintenanceRequest } from '../models/maintenance.model';
+import { MaintenanceRequest } from '../types';
 
 class MaintenanceDAO {
   static getMaintenanceRequests(id: string) {

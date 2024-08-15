@@ -1,10 +1,15 @@
 import { Router } from 'express';
 import MaintenanceController from '../controllers/maintenance.controller';
+import validateToken from '../middleware/validate-token.middleware';
 const router = Router();
 
-router.get('/:id', MaintenanceController.getMaintenanceRequests);
-router.get('', MaintenanceController.getAllMaintenanceRequests);
-router.post('', MaintenanceController.addMaintenanceRequest);
-router.put('/:id', MaintenanceController.updateStatus);
+router.use(
+  '/maintenance',
+  validateToken,
+  router.get('/:id', MaintenanceController.getMaintenanceRequests),
+  router.get('', MaintenanceController.getAllMaintenanceRequests),
+  router.post('', MaintenanceController.addMaintenanceRequest),
+  router.put('/:id', MaintenanceController.updateStatus)
+);
 
 export default router;

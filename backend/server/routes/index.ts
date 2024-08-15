@@ -2,14 +2,16 @@ import authRoutes from './auth.routes';
 import printerRoutes from './printer.routes';
 import billingRoutes from './billing.routes';
 import maintenanceRoutes from './maintenance.routes';
+import trackingRoutes from './tracking.routes';
+
 import { Router } from 'express';
-import validateToken from '../middleware/ValidateToken';
 
 const router = Router();
 
 router.use(authRoutes);
-router.use('', validateToken, printerRoutes);
-router.use('/billing', validateToken, billingRoutes);
-router.use('/maintenance', validateToken, maintenanceRoutes);
+router.use(printerRoutes);
+router.use(billingRoutes);
+router.use(maintenanceRoutes);
+router.use(trackingRoutes);
 
 export default router;

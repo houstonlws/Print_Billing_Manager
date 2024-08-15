@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { User } from '../models/auth.model';
+import { User } from '../types/auth.types';
 
 const validateToken = (req: Request, res: Response, next: NextFunction) => {
   const origin = `[${req.headers.host}${req.originalUrl}]`;

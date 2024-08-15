@@ -1,4 +1,4 @@
-export interface Printer {
+export type Printer = {
   id: string;
   serial_number: string;
   model?: string;
@@ -10,9 +10,9 @@ export interface Printer {
   mac_address?: string;
   firmware_version?: string;
   department_id?: string;
-}
+};
 
-export interface Metric {
+export type Metric = {
   id: string;
   printer_id: string;
   total_pages_printed: string;
@@ -27,24 +27,4 @@ export interface Metric {
   total_color_pages_last_billing: string;
   total_bw_pages_printed: string;
   total_bw_pages_last_billing: string;
-}
-
-export interface PriceConfig {
-  id: string;
-  name: string;
-  bw_price: string;
-  color_price: string;
-  paper_price: string;
-  is_active: string;
-}
-
-export interface Job {
-  id: string;
-  printer_id: string;
-  department_id: string;
-  date: string;
-  title: string;
-  pages: string;
-  color_pages: string;
-  black_and_white_pages: string;
-}
+};

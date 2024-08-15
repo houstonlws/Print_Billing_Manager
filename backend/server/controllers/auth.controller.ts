@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { User } from '../models/auth.model';
+import { User } from '../types';
 import authDao from '../dao/auth.dao';
 
 class AuthController {

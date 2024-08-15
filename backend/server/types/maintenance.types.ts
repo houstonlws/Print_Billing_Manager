@@ -1,4 +1,4 @@
-export interface MaintenanceRequest {
+export type MaintenanceRequest = {
   id: string;
   department_id: string;
   printer_id: string;
@@ -6,4 +6,4 @@ export interface MaintenanceRequest {
   maintenance_type: string;
   description: string;
   status: string;
-}
+};

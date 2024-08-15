@@ -1,7 +1,5 @@
-import { User } from '../models/auth.model';
 import connection from '../config/database.config';
-import { MaintenanceRequest } from '../models/maintenance.model';
-import { PriceConfig } from '../models/printer.model';
+import { MaintenanceRequest, PriceConfig, User } from '../types';
 
 export default class authDao {
   static async updatePriceProfile(prices: PriceConfig) {
