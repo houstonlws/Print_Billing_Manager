@@ -8,15 +8,13 @@ import {
   FormControl,
   FormGroup,
   FormLabel,
-  FormSelect,
   Modal,
 } from 'react-bootstrap';
-import { Printer } from '../../../../../types/printer.types';
+import { Printer } from '../../../../../types';
 import {
   addPrinter,
   getDepartmentPrinters,
-} from '../../../../../store/actions/printer.actions';
-import { departmentsList } from '../../../../../config/app-data';
+} from '../../../../../store/actions';
 
 interface State {
   tempPrinter: Printer;
@@ -100,7 +98,6 @@ class AddPrinterComponent extends Component<AddProps, State> {
 
   addPrinter = () => {
     this.props.addPrinter(this.state.tempPrinter);
-    window.alert('Added Printer');
   };
 
   render(): ReactNode {

@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from 'react';
 import { ConnectedProps, connect } from 'react-redux';
-import { AppState } from '../../../../types/app.types';
-import { getDepartmentBillingHistory } from '../../../../store/actions/billing.actions';
+import { AppState } from '../../../../types';
+import { getDepartmentBillingHistory } from '../../../../store/actions';
 import { Card, CardBody, CardHeader } from 'react-bootstrap';
 
 interface State {}
@@ -11,13 +11,9 @@ interface Props {
 }
 
 class BillingComponent extends Component<BillingComponentProps, State> {
-  constructor(props: BillingComponentProps) {
-    super(props);
-  }
-
   render(): ReactNode {
     return (
-      <>
+      <div data-testid='billing-component'>
         <Card>
           <CardHeader>
             <h2>Billing</h2>
@@ -28,7 +24,7 @@ class BillingComponent extends Component<BillingComponentProps, State> {
             <h3>Make Payment</h3>
           </CardBody>
         </Card>
-      </>
+      </div>
     );
   }
 }

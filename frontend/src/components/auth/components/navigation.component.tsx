@@ -11,8 +11,8 @@ import {
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { ConnectedProps, connect } from 'react-redux';
-import { AppState } from '../../../types/app.types';
-import { login } from '../../../store/actions/auth.action';
+import { AppState } from '../../../types';
+import { login } from '../../../store/actions';
 
 interface State {
   email: string;

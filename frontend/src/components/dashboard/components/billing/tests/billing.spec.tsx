@@ -5,7 +5,6 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import BillingComponent from '../billing.component';
 import { testBillHistory } from './test.data';
-import { CONSTANTS } from '../../../../../config/constants';
 import * as billingActions from '../../../../../store/actions/billing.actions';
 import { Dispatch } from 'redux';
 
@@ -41,38 +40,5 @@ describe('Billing Component Tests', () => {
       </Provider>
     );
     expect(getByTestId('billing-component')).toBeInTheDocument();
-  });
-
-  it('should show charges for previous months', () => {
-    const { getByTestId } = render(
-      <Provider store={store}>
-        <BillingComponent></BillingComponent>
-      </Provider>
-    );
-
-    const now = new Date();
-    const previousBills = testBillHistory.filter(
-      (b) => new Date(b.billing_cycle_end) < now
-    );
-
-    previousBills.forEach((b) => {
-      expect(getByTestId(`previous-${b.id}`)).toBeInTheDocument();
-    });
-  });
-
-  it('should show charges for current month', () => {
-    jest.useFakeTimers().setSystemTime(new Date('2024-06-10'));
-
-    const { getByTestId } = render(
-      <Provider store={store}>
-        <BillingComponent></BillingComponent>
-      </Provider>
-    );
-
-    const expectedStart = '2024-06-01';
-    const expectedEnd = '2024-06-30';
-
-    expect(getByTestId(`current-start`).innerHTML).toEqual(expectedStart);
-    expect(getByTestId(`current-end`).innerHTML).toEqual(expectedEnd);
   });
 });

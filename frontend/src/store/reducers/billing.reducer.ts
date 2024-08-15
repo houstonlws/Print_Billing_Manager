@@ -1,5 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { BillingState } from '../../types/billing.types';
+import { BillingState } from '../../types';
 import { CONSTANTS } from '../../config/constants';
 
 const initialState: BillingState = {

@@ -1,6 +1,6 @@
 import { TypeMap } from './app.types';
 
-export interface Printer {
+export type Printer = {
   id: string;
   department_id: string;
   serial_number: string;
@@ -12,9 +12,9 @@ export interface Printer {
   ip_address?: string;
   mac_address?: string;
   firmware_version?: string;
-}
+};
 
-export interface Metric {
+export type Metric = {
   id: string;
   printer_id: string;
   total_pages_printed: string;
@@ -29,9 +29,9 @@ export interface Metric {
   total_color_pages_last_billing: string;
   total_bw_pages_printed: string;
   total_bw_pages_last_billing: string;
-}
+};
 
-export interface MaintenanceRequest {
+export type MaintenanceRequest = {
   id: string;
   department_id: string;
   printer_id: string;
@@ -39,7 +39,7 @@ export interface MaintenanceRequest {
   maintenance_type: string;
   description: string;
   status: string;
-}
+};
 
 export interface PrinterState {
   printers: Printer[];

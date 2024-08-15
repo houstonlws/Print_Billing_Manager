@@ -13,8 +13,8 @@ import {
   Row,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { AppState } from '../../../types/app.types';
-import { login } from '../../../store/actions/auth.action';
+import { AppState } from '../../../types';
+import { login } from '../../../store/actions';
 
 interface LoginState {
   email: string;

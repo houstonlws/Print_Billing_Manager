@@ -1,33 +1,21 @@
 import React, { Component, ReactNode } from 'react';
-import {
-  Accordion,
-  AccordionBody,
-  AccordionHeader,
-  AccordionItem,
-  Card,
-  CardBody,
-  CardHeader,
-  Nav,
-  NavItem,
-  Stack,
-  Table,
-} from 'react-bootstrap';
+import { Card, CardBody, CardHeader, Stack, Table } from 'react-bootstrap';
 import { ConnectedProps, connect } from 'react-redux';
 import {
   getDepartmentMetrics,
   getDepartmentPrinters,
-} from '../../../../store/actions/printer.actions';
-import { AppState, TypeMap } from '../../../../types/app.types';
+} from '../../../../store/actions';
 import { departmentsMap } from '../../../../config/app-data';
 import TotalsBlockComponent from './components/totals-block.component';
 import { ApexOptions } from 'apexcharts';
 import ReactApexChart from 'react-apexcharts';
-import { Job } from '../../../../types';
+import { Job, AppState, TypeMap } from '../../../../types';
 
 interface State {
   series: ApexAxisChartSeries;
   options: ApexOptions;
 }
+
 interface Props {
   selectedDepartment?: string;
 }
@@ -96,7 +84,6 @@ class TrackingModule extends Component<TrackingProps, State> {
         if (!bwData[jobDate]) bwData[jobDate] = 0;
         if (!colorData[jobDate]) colorData[jobDate] = 0;
         if (!paperData[jobDate]) paperData[jobDate] = 0;
-
         bwData[jobDate] =
           bwData[jobDate] + Number(job.black_and_white_pages) || 0;
         colorData[jobDate] = colorData[jobDate] + Number(job.color_pages) || 0;
@@ -112,7 +99,6 @@ class TrackingModule extends Component<TrackingProps, State> {
       if (!bwData[date]) {
         bwArr.push({ x: date, y: 0 });
       } else {
-        console.log(bwData[date]);
         bwArr.push({ x: date, y: bwData[date] });
       }
       if (!colorData[date]) {
@@ -230,7 +216,7 @@ class TrackingModule extends Component<TrackingProps, State> {
     const {
       user,
       printer: { printersMap },
-      tracking: { currentJobs, jobHistory },
+      tracking: { currentJobs },
       selectedDepartment,
       admin: { activeProfile },
     } = this.props;
@@ -337,8 +323,8 @@ class TrackingModule extends Component<TrackingProps, State> {
                 return (
                   <tr key={index}>
                     <td>{job?.date}</td>
-                    <td>{`${printersMap[printer_id]?.brand || ''} - 
-                ${printersMap[printer_id]?.model || ''}`}</td>
+                    <td>{`${printersMap[printer_id]?.brand} - 
+                ${printersMap[printer_id]?.model}`}</td>
                     <td>{`${printersMap[printer_id]?.location}`}</td>
                     <td>{`${job?.pages}`}</td>
                     <td>{`${job?.black_and_white_pages}`}</td>

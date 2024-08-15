@@ -9,7 +9,7 @@ import {
   FormSelect,
   Stack,
 } from 'react-bootstrap';
-import { AppState, TypeMap } from '../../../../types/app.types';
+import { AppState, TypeMap } from '../../../../types';
 import { CONSTANTS } from '../../../../config/constants';
 import { departmentsMap, STATUS } from '../../../../config/app-data';
 import {
@@ -17,7 +17,7 @@ import {
   getDepartmentMaintenanceRequests,
   getDepartmentPrinters,
   upDateMaintenanceRequestStatus,
-} from '../../../../store/actions/printer.actions';
+} from '../../../../store/actions';
 import ReportIssueComponent from './components/report-issue.component';
 
 interface State {

@@ -11,9 +11,8 @@ import {
   FormSelect,
   Row,
 } from 'react-bootstrap';
-import { AppState } from '../../../../types/app.types';
-import { updateUserData } from '../../../../store/actions/auth.action';
-import { User } from '../../../../types/auth.types';
+import { AppState, User } from '../../../../types';
+import { updateUserData } from '../../../../store/actions';
 import { departmentsList } from '../../../../config/app-data';
 import { CONSTANTS } from '../../../../config/constants';
 

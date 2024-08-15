@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { AppState } from '../../../../types/app.types';
+import { AppState, PriceConfig } from '../../../../types';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   Alert,
   Button,
   Card,
   CardBody,
-  CardHeader,
   Col,
   Form,
   FormControl,
@@ -24,8 +23,7 @@ import {
   register,
   setPriceProfile,
   updateUserType,
-} from '../../../../store/actions/auth.action';
-import { AdminState, PriceConfig, User } from '../../../../types/auth.types';
+} from '../../../../store/actions';
 
 interface State {
   switchedType: { [key: string]: boolean };

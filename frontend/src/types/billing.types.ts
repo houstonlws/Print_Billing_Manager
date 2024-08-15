@@ -1,4 +1,4 @@
-export interface Bill {
+export type Bill = {
   id: string;
   department_id: string;
   billing_cycle_start: string;
@@ -9,17 +9,17 @@ export interface Bill {
   total_bw_pages: string;
   color_pages_charge: string;
   bw_pages_charge: string;
-}
+};
 
-export interface Payment {
+export type Payment = {
   id: string;
   billing_id: string;
   payment_date: string;
   amount_paid: string;
   payment_status: string;
-}
+};
 
-export interface BillingState {
+export type BillingState = {
   billData: Bill[];
   paymentHistory: Payment[];
-}
+};

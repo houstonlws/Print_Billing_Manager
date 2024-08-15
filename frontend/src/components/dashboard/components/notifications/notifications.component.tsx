@@ -7,7 +7,7 @@ import {
   ToastHeader,
 } from 'react-bootstrap';
 import { ConnectedProps, connect } from 'react-redux';
-import { AppState } from '../../../../types/app.types';
+import { AppState } from '../../../../types';
 
 class NotificationsComponent extends Component<NotificationsProps> {
   dismissNotification = (event: any) => {

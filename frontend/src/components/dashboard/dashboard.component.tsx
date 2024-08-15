@@ -11,21 +11,25 @@ import {
   Navbar,
   NavDropdown,
 } from 'react-bootstrap';
-import { AppState } from '../../types/app.types';
+import { AppState } from '../../types';
 import {
   getAllData,
   getAllDataUser,
   getUserData,
   logout,
-} from '../../store/actions/auth.action';
-import BillingComponent from './components/billing/billing.component';
-import notificationsComponent from './components/notifications/notifications.component';
-import PrintersComponent from './components/printers/printers.component';
-import ProfileComponent from './components/profile/profile.component';
-import TrackingComponent from './components/tracking/tracking.component';
-import MaintenanceComponent from './components/maintenance/maintenance.component';
+  getCurrentJobs,
+  getJobHistory,
+} from '../../store/actions';
+import {
+  BillingComponent,
+  NotificationsComponent,
+  PrintersComponent,
+  ProfileComponent,
+  TrackingComponent,
+  MaintenanceComponent,
+  AdminSettingsComponent,
+} from './components';
 import { CONSTANTS } from '../../config/constants';
-import adminSettingsComponent from './components/admin-settings/admin-settings.component';
 import IncompleteProfileComponent from './ui/incomplete-profile.component';
 import AuthService from '../../services/auth.service';
 import MenuSideComponent from './ui/menu-side.component';
@@ -34,10 +38,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { departmentsList } from '../../config/app-data';
 import NotificationsWidget from './components/notifications/components/notifications.widget';
 import { store } from '../../store';
-import {
-  getCurrentJobs,
-  getJobHistory,
-} from '../../store/actions/tracking.actions';
 
 interface State {
   isOpen: boolean;
@@ -174,7 +174,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
                       <Route
                         key={'settings'}
                         path='settings'
-                        Component={adminSettingsComponent}
+                        Component={AdminSettingsComponent}
                       ></Route>,
                     ]
                   ) : (
@@ -201,7 +201,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
                   <Route path='profile' Component={ProfileComponent}></Route>
                   <Route
                     path='notifications'
-                    Component={notificationsComponent}
+                    Component={NotificationsComponent}
                   ></Route>
                 </Routes>
               </Container>

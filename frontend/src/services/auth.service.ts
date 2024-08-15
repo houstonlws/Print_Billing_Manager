@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import { getAxios } from '../config/axios.config';
-import { PriceConfig, User } from '../types/auth.types';
+import { PriceConfig, User } from '../types';
 
 const axios = getAxios();
 

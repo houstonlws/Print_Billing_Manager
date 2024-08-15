@@ -26,11 +26,6 @@
     "transformIgnorePatterns": [
       "/node_modules/(?!(react-bootstrap|@testing-library)/)"
     ],
-    "collectCoverage": true,
-    "coverageReporters": [
-      "html"
-    ],
-    "coverageDirectory": "coverage/app",
     "moduleNameMapper": {
       "\\.(css|less|scss|sass)$": "identity-obj-proxy",
       "^react-bootstrap(.*)$": "<rootDir>/node_modules/react-bootstrap"

@@ -1,5 +1,5 @@
 import { CONSTANTS } from '../../config/constants';
-import { AuthState } from '../../types/auth.types';
+import { AuthState } from '../../types';
 
 interface Payload {
   type: string;

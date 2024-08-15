@@ -1,6 +1,6 @@
-import { TypeMap } from './app.types';
+import { TypeMap } from './';
 
-export interface Job {
+export type Job = {
   id: string;
   printer_id: string;
   department_id: string;
@@ -9,9 +9,9 @@ export interface Job {
   pages: string;
   color_pages: string;
   black_and_white_pages: string;
-}
+};
 
-export interface TrackingState {
+export type TrackingState = {
   currentJobs: Job[];
   jobHistory: TypeMap<TypeMap<Job[]>>;
-}
+};

@@ -1,7 +1,10 @@
-import { BillingState } from './billing.types';
-import { AuthState, AdminState } from './auth.types';
-import { PrinterState } from './printer.types';
-import { TrackingState } from './tracking.types';
+import {
+  AuthState,
+  AdminState,
+  PrinterState,
+  BillingState,
+  TrackingState,
+} from './';
 
 export interface AppState {
   auth: AuthState;
@@ -14,13 +17,3 @@ export interface AppState {
 export type TypeMap<T> = {
   [key: string]: T;
 };
-
-export class Map {
-  static of<T>(arr: any[]): TypeMap<T> {
-    let map: TypeMap<T> = {};
-    for (const o of arr) {
-      map[o.id] = o;
-    }
-    return map;
-  }
-}

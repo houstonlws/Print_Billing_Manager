@@ -12,7 +12,7 @@ import {
   FormControl,
   Row,
 } from 'react-bootstrap';
-import { register } from '../../../store/actions/auth.action';
+import { register } from '../../../store/actions';
 
 interface RegisterState {
   email: string;
