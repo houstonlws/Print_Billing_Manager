@@ -31,35 +31,29 @@ export const login =
       }
     } catch (error) {
       dispatch({ type: CONSTANTS.LOGIN_FAIL });
-      window.location.assign('/login');
     }
   };
 
 export const logout = () => (dispatch: Dispatch) => {
   document.cookie = 'refreshToken=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  localStorage.removeItem('accessToken');
   dispatch({ type: CONSTANTS.CLEAR_PERSIST });
   dispatch({ type: CONSTANTS.LOGOUT });
 };
 
 export const refreshToken = () => async (dispatch: Dispatch) => {
   try {
-    const token = getCookie('refreshToken');
-    if (token) {
-      const result = await AuthService.refreshToken();
-      if (result) {
-        dispatch({ type: CONSTANTS.REFRESH_TOKEN_SUCCESS, payload: result });
-      } else {
-        clearCookie('refreshToken');
-        dispatch({ type: CONSTANTS.REFRESH_TOKEN_FAILURE });
-        dispatch({ type: CONSTANTS.LOGOUT });
-      }
+    const result = await AuthService.refreshToken();
+    if (result) {
+      dispatch({ type: CONSTANTS.REFRESH_TOKEN_SUCCESS, payload: result });
     } else {
-      clearCookie('refreshToken');
       dispatch({ type: CONSTANTS.REFRESH_TOKEN_FAILURE });
+      dispatch({ type: CONSTANTS.CLEAR_PERSIST });
       dispatch({ type: CONSTANTS.LOGOUT });
     }
   } catch (error) {
     dispatch({ type: CONSTANTS.REFRESH_TOKEN_FAILURE });
+    dispatch({ type: CONSTANTS.CLEAR_PERSIST });
     dispatch({ type: CONSTANTS.LOGOUT });
   }
 };
@@ -150,14 +144,10 @@ export const getAllData = () => async (dispatch: Dispatch) => {
         type: CONSTANTS.GET_PRICES_SUCCESS,
         payload: result.prices,
       });
-      dispatch({
-        type: CONSTANTS.GET_ACTIVE_PRICE_SUCCESS,
-        payload: result.price[0],
-      });
       return true;
     } else return false;
-  } catch (error) {
-    dispatch({ type: CONSTANTS.UPDATE_USER_DATA_FAILURE });
+  } catch (error: any) {
+    console.log(error.message);
     return false;
   }
 };

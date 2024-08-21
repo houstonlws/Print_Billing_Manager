@@ -10,16 +10,21 @@ import {
   FormLabel,
   Modal,
 } from 'react-bootstrap';
-import { Printer } from '../../../../../types';
+import { AppState, Printer } from '../../../../../types';
 import {
   addPrinter,
   getDepartmentPrinters,
 } from '../../../../../store/actions';
+import { CONSTANTS } from '../../../../../config/constants';
 
 interface State {
   tempPrinter: Printer;
   adding: boolean;
 }
+
+type Props = {
+  departmentId: string;
+};
 
 const initialState: Printer = {
   id: '',
@@ -37,10 +42,15 @@ const initialState: Printer = {
 
 class AddPrinterComponent extends Component<AddProps, State> {
   constructor(props: AddProps) {
+    const { user } = props.auth;
+    const isAdmin = user.type === CONSTANTS.ADMIN;
     super(props);
     this.state = {
       adding: false,
-      tempPrinter: { ...initialState },
+      tempPrinter: {
+        ...initialState,
+        department_id: isAdmin ? props.departmentId : user.department_id,
+      },
     };
   }
 
@@ -234,7 +244,9 @@ class AddPrinterComponent extends Component<AddProps, State> {
   }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state: AppState) => ({
+  auth: state.auth,
+});
 
 const mapDispatchToProps = {
   addPrinter,
@@ -243,6 +255,6 @@ const mapDispatchToProps = {
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
-type AddProps = ConnectedProps<typeof connector>;
+type AddProps = ConnectedProps<typeof connector> & Props;
 
 export default connector(AddPrinterComponent);

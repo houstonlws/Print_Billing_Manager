@@ -8,17 +8,24 @@ CREATE TABLE auth (
 
 CREATE TABLE users (
     id INT UNIQUE,
+    department_id INT,
+	email VARCHAR(255) UNIQUE NOT NULL,
     firstName VARCHAR(255),
     lastName VARCHAR(255),
-    email VARCHAR(255) UNIQUE NOT NULL,
-    department_id INT,
     phone VARCHAR(255),
     type VARCHAR(255),
     FOREIGN KEY (id) REFERENCES auth(id)
 );
 
+CREATE TABLE departments (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    category VARCHAR(255)
+);
+
 CREATE TABLE printers (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    department_id INT,
     serial_number VARCHAR(255) NOT NULL,
     model VARCHAR(255) NOT NULL,
     brand VARCHAR(255) NOT NULL,
@@ -27,28 +34,9 @@ CREATE TABLE printers (
     warranty_expiry_date DATE NOT NULL,
     ip_address VARCHAR(45) NOT NULL,
     mac_address VARCHAR(17) NOT NULL,
-    firmware_version VARCHAR(255) NOT NULL,
-    department_id INT
+    firmware_version VARCHAR(255) NOT NULL
 );
-
-CREATE TABLE metrics (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    printer_id INT UNIQUE,
-    total_pages_printed INT NOT NULL,
-    monthly_print_volume INT NOT NULL,
-    total_print_jobs INT NOT NULL,
-    monthly_print_jobs INT NOT NULL,
-    toner_levels VARCHAR(255) NOT NULL,
-    toner_usage_monthly VARCHAR(255) NOT NULL,
-    paper_levels VARCHAR(255) NOT NULL,
-    paper_usage_monthly INT NOT NULL,
-    total_color_pages_printed INT NOT NULL,
-    total_color_pages_last_billing INT NOT NULL,
-    total_bw_pages_printed INT NOT NULL,
-    total_bw_pages_last_billing INT NOT NULL,
-    FOREIGN KEY (printer_id) REFERENCES printers(id)
-);
-
+ 
 CREATE TABLE jobs (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     printer_id INT NOT NULL,
@@ -67,6 +55,12 @@ CREATE TABLE prices (
     color_price DECIMAL(10,2) NOT NULL,
     paper_price DECIMAL(10,2) NOT NULL,
     is_active BOOLEAN DEFAULT FALSE NOT NULL
+);
+
+CREATE TABLE statements (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    price_profile_id INT,
+    department_id INT
 );
 
 CREATE TABLE maintenance_requests (
@@ -91,7 +85,6 @@ CREATE TABLE notifications (
     FOREIGN KEY (maintenance_id) REFERENCES maintenance_requests(id)
 );
 
-
 CREATE TABLE billing (
     id INT AUTO_INCREMENT PRIMARY KEY,
     department_id INT NOT NULL,
@@ -112,6 +105,24 @@ CREATE TABLE bill_payments (
     amount_paid DECIMAL(10, 2) NOT NULL,
     payment_status ENUM('Paid', 'Pending', 'Late') NOT NULL,
     FOREIGN KEY (billing_id) REFERENCES billing(id)
+);
+
+CREATE TABLE metrics (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    printer_id INT UNIQUE,
+    total_pages_printed INT NOT NULL,
+    monthly_print_volume INT NOT NULL,
+    total_print_jobs INT NOT NULL,
+    monthly_print_jobs INT NOT NULL,
+    toner_levels VARCHAR(255) NOT NULL,
+    toner_usage_monthly VARCHAR(255) NOT NULL,
+    paper_levels VARCHAR(255) NOT NULL,
+    paper_usage_monthly INT NOT NULL,
+    total_color_pages_printed INT NOT NULL,
+    total_color_pages_last_billing INT NOT NULL,
+    total_bw_pages_printed INT NOT NULL,
+    total_bw_pages_last_billing INT NOT NULL,
+    FOREIGN KEY (printer_id) REFERENCES printers(id)
 );
 
 CREATE VIEW department_metrics AS 

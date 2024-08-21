@@ -19,6 +19,7 @@ import {
   logout,
   getCurrentJobs,
   getJobHistory,
+  refreshToken,
 } from '../../store/actions';
 import {
   BillingComponent,
@@ -31,7 +32,6 @@ import {
 } from './components';
 import { CONSTANTS } from '../../config/constants';
 import IncompleteProfileComponent from './ui/incomplete-profile.component';
-import AuthService from '../../services/auth.service';
 import MenuSideComponent from './ui/menu-side.component';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -59,6 +59,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
       await this.props.getAllData();
       await this.props.getJobHistory();
     } else if (user?.type === CONSTANTS.USER) {
+      console.log(user);
       await this.props.getAllDataUser(user.department_id);
       await this.props.getJobHistory(user.department_id);
     }
@@ -183,7 +184,10 @@ class DashboardComponent extends Component<DashboardProps, State> {
                       element={<Navigate to='/printers' />}
                     ></Route>
                   )}
-                  <Route path='printers' Component={PrintersComponent}></Route>
+                  <Route
+                    path='printers'
+                    element={<PrintersComponent departmentId={department} />}
+                  ></Route>
                   <Route
                     path='maintenance'
                     Component={MaintenanceComponent}
@@ -224,6 +228,7 @@ const connector = connect(
     logout,
     getJobHistory,
     getCurrentJobs,
+    refreshToken,
   }
 );
 
@@ -232,7 +237,6 @@ type DashboardProps = ConnectedProps<typeof connector>;
 const resetLogoutTimer = () => {
   const lastReset: number = (window as any).lastReset;
   if (lastReset && Date.now() - lastReset > 1000 * 60 * 5) {
-    AuthService.refreshToken();
   }
   (window as any).lastReset = Date.now();
   clearTimeout((window as any).clearPersistTimeout);

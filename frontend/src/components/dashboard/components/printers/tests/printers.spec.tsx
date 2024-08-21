@@ -21,7 +21,7 @@ describe('Printer tests', () => {
   it('should render the component', () => {
     const { getByTestId } = render(
       <Provider store={store}>
-        <PrintersComponent></PrintersComponent>
+        <PrintersComponent departmentId='1'></PrintersComponent>
       </Provider>
     );
     expect(getByTestId('printers-component')).toBeInTheDocument();
@@ -32,7 +32,7 @@ describe('Printer tests', () => {
 
     const { getByTestId } = render(
       <Provider store={store}>
-        <PrintersComponent></PrintersComponent>
+        <PrintersComponent departmentId='1'></PrintersComponent>
       </Provider>
     );
     expect(getByTestId('addprinter')).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe('Printer tests', () => {
 
     const { queryByTestId } = render(
       <Provider store={store}>
-        <PrintersComponent></PrintersComponent>
+        <PrintersComponent departmentId='1'></PrintersComponent>
       </Provider>
     );
     expect(queryByTestId('addprinter')).toBeNull();
@@ -57,7 +57,7 @@ describe('Printer tests', () => {
 
     const { getByTestId } = render(
       <Provider store={store}>
-        <PrintersComponent></PrintersComponent>
+        <PrintersComponent departmentId='1'></PrintersComponent>
       </Provider>
     );
 

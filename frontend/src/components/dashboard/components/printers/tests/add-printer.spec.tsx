@@ -13,7 +13,10 @@ import { initialState } from '../../../../../store/reducers/printer.reducer';
 import AddPrinterComponent from '../components/add-printer.component';
 
 const mockStore = configureStore([thunk]);
-let store = mockStore({ printer: initialState });
+let store = mockStore({
+  printer: initialState,
+  auth: { user: { department_id: '1' } },
+});
 const printer = printers[0] as unknown as Printer;
 const mockUpdatePrinter = jest.fn(
   (printer: Printer) => async (dispatch: Dispatch) => {
@@ -32,7 +35,7 @@ describe('Add printer tests', () => {
   it('should render the component', () => {
     const { getByTestId } = render(
       <Provider store={store}>
-        <AddPrinterComponent></AddPrinterComponent>
+        <AddPrinterComponent departmentId='1'></AddPrinterComponent>
       </Provider>
     );
     expect(getByTestId(`addprinter`)).toBeInTheDocument();
@@ -41,7 +44,7 @@ describe('Add printer tests', () => {
   it(' should update fields on text input', () => {
     const { getByPlaceholderText, getByTestId } = render(
       <Provider store={store}>
-        <AddPrinterComponent></AddPrinterComponent>
+        <AddPrinterComponent departmentId='1'></AddPrinterComponent>
       </Provider>
     );
 
@@ -92,7 +95,7 @@ describe('Add printer tests', () => {
   it('should call the edit printer action on form submit', async () => {
     const { getByTestId } = render(
       <Provider store={store}>
-        <AddPrinterComponent></AddPrinterComponent>
+        <AddPrinterComponent departmentId='1'></AddPrinterComponent>
       </Provider>
     );
 
@@ -102,7 +105,7 @@ describe('Add printer tests', () => {
     const button = getByTestId('submit-add');
     fireEvent.click(button);
 
-    const expected = [{ type: CONSTANTS.ADD_PRINTER_FAILURE }]; //Because add printer is a protected endpoint
+    const expected = [{ type: CONSTANTS.ADD_PRINTER_FAILURE }];
 
     await waitFor(() => {
       expect(store.getActions()).toEqual(expected);

@@ -21,6 +21,10 @@ interface State {
   tempPrinter: Printer;
 }
 
+type Props = {
+  departmentId: string;
+};
+
 const initialState: Printer = {
   id: '',
   serial_number: '',
@@ -96,12 +100,20 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
   };
 
   render(): ReactNode {
-    const { printers, type } = this.props!;
+    const {
+      printers,
+      auth: {
+        user: { type },
+      },
+      departmentId,
+    } = this.props!;
 
     return (
       <Stack data-testid='printers-component' gap={3}>
         {type === CONSTANTS.ADMIN && (
-          <AddPrinterComponent></AddPrinterComponent>
+          <AddPrinterComponent
+            departmentId={departmentId}
+          ></AddPrinterComponent>
         )}
         <Accordion>
           {printers?.map((printer: Printer, index) => (
@@ -173,13 +185,13 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
 const connector = connect(
   (state: AppState) => ({
     printers: state.printer?.printers,
-    type: state.auth?.user?.type,
+    auth: state.auth,
   }),
   {
     addPrinter,
   }
 );
 
-type PrintersComponentProps = ConnectedProps<typeof connector>;
+type PrintersComponentProps = ConnectedProps<typeof connector> & Props;
 
 export default connector(PrintersComponent);

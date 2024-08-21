@@ -5,7 +5,7 @@ const axios = getAxios();
 
 class PrintersService {
   static async getDepartmentPrinters(depId: string): Promise<Printer[]> {
-    const result = await axios.get(`/printer/${depId}`);
+    const result = await axios.get(`/protected/printer/${depId}`);
     if (result.status === 200) {
       return result.data;
     }
@@ -13,7 +13,7 @@ class PrintersService {
   }
 
   static async getDepartmentMetrics(depId: string): Promise<Metric[]> {
-    const result = await axios.get(`/printer/metrics/${depId}`);
+    const result = await axios.get(`/protected/printer/metrics/get/${depId}`);
     if (result.status === 200) {
       return result.data;
     }
@@ -21,7 +21,7 @@ class PrintersService {
   }
 
   static async getAllMetrics(): Promise<Metric[]> {
-    const result = await axios.get(`/printer/metrics`);
+    const result = await axios.get(`/protected/printer/metrics/get`);
     if (result.status === 200) {
       return result.data;
     }
@@ -29,7 +29,7 @@ class PrintersService {
   }
 
   static async updatePrinter(printer: Printer) {
-    const result = await axios.put('/printer', printer);
+    const result = await axios.patch('/protected/printer/update', printer);
     if (result.status === 200) {
       return true;
     }
@@ -37,13 +37,13 @@ class PrintersService {
   }
 
   static async getAllPrinters(): Promise<Printer[]> {
-    const result = await axios.get('/printer');
+    const result = await axios.get('/protected/printer/get');
     if (result.status === 200) return result.data;
     return [];
   }
 
   static async addPrinter(printer: Printer): Promise<any> {
-    const result = await axios.post('/printer', printer);
+    const result = await axios.post('/protected/printer/add', printer);
     if (result.status === 200) return true;
     return false;
   }
@@ -51,19 +51,13 @@ class PrintersService {
   static async getMaintenanceRequests(
     depId: string
   ): Promise<MaintenanceRequest[]> {
-    const result = await axios.get(`/maintenance/${depId}`);
+    const result = await axios.get(`/protected/maintenance/get/${depId}`);
     if (result.status === 200) return result.data;
     return [];
   }
 
   static async getAllMaintenanceRequests(): Promise<MaintenanceRequest[]> {
-    const result = await axios.get(`/maintenance`);
-    if (result.status === 200) return result.data;
-    return [];
-  }
-
-  static async getJobHistory(id?: string): Promise<any> {
-    const result = await axios.get(`/printer/jobs${id ? '/' + id : ''}`);
+    const result = await axios.get(`/protected/maintenance/get`);
     if (result.status === 200) return result.data;
     return [];
   }
@@ -71,7 +65,7 @@ class PrintersService {
   static async addMaintenanceRequest(
     request: MaintenanceRequest
   ): Promise<any> {
-    const result = await axios.post('/maintenance', request);
+    const result = await axios.post('/protected/maintenance/add', request);
     if (result.status === 200) return result.data;
     return [];
   }
@@ -80,8 +74,8 @@ class PrintersService {
     id: string,
     status: string
   ): Promise<any> {
-    const result = await axios.put(
-      `/maintenance/${id}`,
+    const result = await axios.patch(
+      `/protected/maintenance/update/${id}`,
       { status: status },
       { headers: { 'Content-Type': 'application/json' } }
     );

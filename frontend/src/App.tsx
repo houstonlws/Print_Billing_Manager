@@ -8,12 +8,11 @@ import DashboardComponent from './components/dashboard/dashboard.component';
 import authComponent from './components/auth/auth.component';
 
 class App extends React.Component<AppProps, AppState> {
-  componentDidMount() {
+  async componentDidMount() {
     this.props.refreshToken();
   }
-
   render() {
-    const { loggedIn } = this.props;
+    const { loggedIn } = this.props.auth;
 
     return (
       <div className='h-100'>
@@ -31,13 +30,13 @@ class App extends React.Component<AppProps, AppState> {
 
 const mapStateToProps = (state: AppState) => {
   return {
-    loggedIn: state.auth.loggedIn,
+    auth: state.auth,
   };
 };
 
 const mapDispatchToProps = {
-  refreshToken,
   logout,
+  refreshToken,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

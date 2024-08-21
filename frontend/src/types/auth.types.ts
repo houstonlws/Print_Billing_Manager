@@ -16,11 +16,11 @@ export type Notification = {
   is_read: string;
 };
 
-export interface AuthState {
+export type AuthState = {
   loggedIn: boolean;
   user: User;
   notifications: Notification[];
-}
+};
 
 export type PriceConfig = {
   id: string;

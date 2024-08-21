@@ -23,7 +23,7 @@ const printerReducer = (state = initialState, action: PayloadAction) => {
         currentJobs: [],
       };
     }
-    case CONSTANTS.GET_JOB_HISTORY_SUCESS: {
+    case CONSTANTS.GET_JOB_HISTORY_SUCCESS: {
       return {
         ...state,
         jobHistory: payload,

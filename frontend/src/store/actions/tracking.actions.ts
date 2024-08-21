@@ -6,7 +6,7 @@ export const getJobHistory = (id?: string) => async (dispatch: Dispatch) => {
   try {
     const result = await TrackingService.getJobHistory(id);
     if (result) {
-      dispatch({ type: CONSTANTS.GET_JOB_HISTORY_SUCESS, payload: result });
+      dispatch({ type: CONSTANTS.GET_JOB_HISTORY_SUCCESS, payload: result });
       return true;
     } else {
       dispatch({ type: CONSTANTS.GET_JOB_HISTORY_FAILURE });
