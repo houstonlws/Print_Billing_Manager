@@ -1,0 +1,412 @@
+{
+	"info": {
+		"_postman_id": "eb8df204-dea6-44e5-94a3-662cebc0b07f",
+		"name": "print_billing_system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "15526424"
+	},
+	"item": [
+		{
+			"name": "App",
+			"item": [
+				{
+					"name": "setPriceProfile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": "localhost:8080/app/priceProfile/set/1"
+					},
+					"response": []
+				},
+				{
+					"name": "addPriceProfile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"test\",\r\n    \"bw_price\": \".05\",\r\n    \"color_price\": \".12\",\r\n    \"paper_price\": \".25\",\r\n    \"is_active\": \"FALSE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/app/priceProfile/add"
+					},
+					"response": []
+				},
+				{
+					"name": "updatePriceProfile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"2\",\r\n    \"name\": \"test-1\",\r\n    \"bw_price\": \".05\",\r\n    \"color_price\": \".12\",\r\n    \"paper_price\": \".25\",\r\n    \"is_active\": \"FALSE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/app/priceProfile/update"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"dev@dev.dev\",\r\n    \"password\": \"pass\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/api/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"testEmail1@gmail.com\",\r\n    \"password\": \"pass\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/api/register"
+					},
+					"response": []
+				},
+				{
+					"name": "refreshToken",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/api/refreshToken"
+					},
+					"response": []
+				},
+				{
+					"name": "getUserData",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/api/user/get/1"
+					},
+					"response": []
+				},
+				{
+					"name": "getAllUsers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/api/user/get/*"
+					},
+					"response": []
+				},
+				{
+					"name": "getNotifications",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/api/notifications/get/1"
+					},
+					"response": []
+				},
+				{
+					"name": "updateUserData",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"1\",\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Wick\",\r\n    \"email\": \"dev@dev.dev\",\r\n    \"department_id\": \"0\",\r\n    \"phone\": null,\r\n    \"type\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/updateUserData/1"
+					},
+					"response": []
+				},
+				{
+					"name": "switchUserType",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[2]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/user/type"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Billing",
+			"item": [
+				{
+					"name": "getBilling",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/api/protected/billing/get/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Maintenance",
+			"item": [
+				{
+					"name": "getAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/api/protected/maintenance/get"
+					},
+					"response": []
+				},
+				{
+					"name": "getAllDepartment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/api/protected/maintenance/get/1"
+					},
+					"response": []
+				},
+				{
+					"name": "addRequest",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"printer_id\": \"1\",\r\n    \"department_id\": \"1\",\r\n    \"request_date\": \"2024-10-25\",\r\n    \"maintenance_type\": \"Routine Check\",\r\n    \"description\": \"help\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/api/protected/maintenance/add"
+					},
+					"response": []
+				},
+				{
+					"name": "updateRequest",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\"Resolved\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/api/protected/maintenance/update/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Printer",
+			"item": [
+				{
+					"name": "getAllMetrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/api/protected/printer/metrics/get"
+					},
+					"response": []
+				},
+				{
+					"name": "getDepartmentMetrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/api/protected/printer/metrics/get/1"
+					},
+					"response": []
+				},
+				{
+					"name": "getDepartmentPrinters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/api/protected/printer/get/1"
+					},
+					"response": []
+				},
+				{
+					"name": "getAllPrinters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/api/protected/printer/get"
+					},
+					"response": []
+				},
+				{
+					"name": "updatePrinter",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"1\",\r\n    \"serial_number\": \"SN123456\",\r\n    \"model\": \"HP LaserJet Pro M404dw\",\r\n    \"brand\": \"HP\",\r\n    \"location\": \"Office 1, Floor 2\",\r\n    \"installation_date\": \"2022-01-15\",\r\n    \"warranty_expiry_date\": \"2024-01-15\",\r\n    \"ip_address\": \"192.168.1.101\",\r\n    \"mac_address\": \"00:1A:2B:3C:4D:5E\",\r\n    \"firmware_version\": \"2023.04.01\",\r\n    \"department_id\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/api/protected/printer/update/1"
+					},
+					"response": []
+				},
+				{
+					"name": "addPrinter",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"serial_number\": \"SN12345\",\r\n    \"model\": \"HP LaserJet Pro M404dw\",\r\n    \"brand\": \"HP\",\r\n    \"location\": \"Office 1, Floor 2\",\r\n    \"installation_date\": \"2022-01-15\",\r\n    \"warranty_expiry_date\": \"2024-01-15\",\r\n    \"ip_address\": \"192.168.1.101\",\r\n    \"mac_address\": \"00:1A:2B:3C:4D:5E\",\r\n    \"firmware_version\": \"2023.04.01\",\r\n    \"department_id\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/api/protected/printer/add"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tracking",
+			"item": [
+				{
+					"name": "getAllJobHistory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/api/protected/tracking/jobHistory/get"
+					},
+					"response": []
+				},
+				{
+					"name": "getAllCurrentJobs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/tracking/currentJobs/get"
+					},
+					"response": []
+				},
+				{
+					"name": "getDepartmentJobHistory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/api/protected/tracking/jobHistory/get/1"
+					},
+					"response": []
+				},
+				{
+					"name": "getCurrentJobsDepartment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/api/protected/tracking/currentJobs/get/1"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
