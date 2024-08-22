@@ -20,6 +20,7 @@ import {
   getCurrentJobs,
   getJobHistory,
   refreshToken,
+  getCurrentTotals,
 } from '../../store/actions';
 import {
   BillingComponent,
@@ -58,10 +59,12 @@ class DashboardComponent extends Component<DashboardProps, State> {
     if (user?.type === CONSTANTS.ADMIN) {
       await this.props.getAllData();
       await this.props.getJobHistory();
+      await this.props.getCurrentTotals();
     } else if (user?.type === CONSTANTS.USER) {
       console.log(user);
       await this.props.getAllDataUser(user.department_id);
       await this.props.getJobHistory(user.department_id);
+      await this.props.getCurrentTotals(user.department_id);
     }
   }
 
@@ -229,6 +232,7 @@ const connector = connect(
     getJobHistory,
     getCurrentJobs,
     refreshToken,
+    getCurrentTotals,
   }
 );
 

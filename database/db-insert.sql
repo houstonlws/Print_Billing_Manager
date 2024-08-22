@@ -3,6 +3,8 @@ USE print_billing_db;
 INSERT INTO auth (email, password) VALUES ('dev@dev.dev', 'pass');
 INSERT INTO users (id, email, type, department_id) SELECT id, email, 'ADMIN', 0 FROM auth  WHERE email = 'dev@dev.dev';
 
+INSERT INTO prices (name, bw_price, color_price, paper_price, is_active) VALUES ('default', .05, .10, .12, 1);
+
 INSERT INTO printers (serial_number, model, brand, location, installation_date, 
 warranty_expiry_date, ip_address, mac_address, firmware_version, department_id)
 VALUES 

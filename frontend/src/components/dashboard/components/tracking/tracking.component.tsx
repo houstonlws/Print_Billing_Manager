@@ -43,7 +43,6 @@ class TrackingModule extends Component<TrackingProps, State> {
         },
       },
     };
-    this.getTotals();
   }
 
   componentDidMount(): void {
@@ -162,49 +161,6 @@ class TrackingModule extends Component<TrackingProps, State> {
     });
   };
 
-  getTotals = (year?: string, month?: string) => {
-    const {
-      tracking: { currentJobs, jobHistory },
-      admin: { activeProfile },
-    } = this.props;
-    let totals = {
-      totalColor: 0,
-      totalBw: 0,
-      totalPaper: 0,
-      totalJobs: 0,
-      bwCharge: 0,
-      colorCharge: 0,
-      paperCharge: 0,
-      totalCharge: 0,
-    };
-
-    if (jobHistory && month && year) {
-      const prevJobs = jobHistory[year][month];
-      prevJobs?.forEach((job) => {
-        totals.totalBw += Number(job?.black_and_white_pages);
-        totals.totalColor += Number(job?.color_pages);
-        totals.totalPaper += Number(job?.pages);
-        totals.totalJobs++;
-      });
-    } else {
-      if (currentJobs?.length > 0) {
-        currentJobs?.forEach((job) => {
-          totals.totalBw += Number(job?.black_and_white_pages);
-          totals.totalColor += Number(job?.color_pages);
-          totals.totalPaper += Number(job?.pages);
-          totals.totalJobs++;
-        });
-      }
-    }
-
-    totals.bwCharge = totals.totalBw * Number(activeProfile.bw_price);
-    totals.colorCharge = totals.totalColor * Number(activeProfile.color_price);
-    totals.paperCharge = totals.totalPaper * Number(activeProfile.paper_price);
-    totals.totalCharge =
-      totals.bwCharge + totals.colorCharge + totals.paperCharge;
-    return totals;
-  };
-
   getCurrentBillingPeriod = () => {
     return new Date().toLocaleString('default', {
       month: 'long',
@@ -216,11 +172,10 @@ class TrackingModule extends Component<TrackingProps, State> {
     const {
       user,
       printer: { printersMap },
-      tracking: { currentJobs },
+      tracking: { currentJobs, totals },
       selectedDepartment,
       admin: { activeProfile },
     } = this.props;
-    const totals = this.getTotals();
 
     return (
       <Stack data-testid='tracking-component' gap={3}>
@@ -274,33 +229,33 @@ class TrackingModule extends Component<TrackingProps, State> {
           <CardBody>
             <div className='d-flex'>
               <h4 className='me-auto'>Amount Due</h4>
-              <div>{`$${totals.totalCharge.toFixed(2)}`}</div>
+              <div>{`$${totals?.totalCharge}`}</div>
             </div>
           </CardBody>
         </Card>
 
         <Stack direction='horizontal' gap={3}>
           <TotalsBlockComponent
-            data-test-id={`total-color-${totals.totalColor}`}
-            value={`${totals.totalColor}`}
+            data-test-id={`total-color-${totals?.totalColor}`}
+            value={`${totals?.totalColor}`}
             title='Color'
             unit='Clicks'
           ></TotalsBlockComponent>
           <TotalsBlockComponent
-            data-test-id={`total-color-${totals.totalBw}`}
-            value={`${totals.totalBw}`}
+            data-test-id={`total-color-${totals?.totalBw}`}
+            value={`${totals?.totalBw}`}
             title='Black & White'
             unit='Clicks'
           ></TotalsBlockComponent>
         </Stack>
         <Stack direction='horizontal' gap={3}>
           <TotalsBlockComponent
-            value={`${totals.totalJobs}`}
+            value={`${totals?.totalJobs}`}
             title='Print Jobs'
             unit='Jobs'
           ></TotalsBlockComponent>
           <TotalsBlockComponent
-            value={`${totals.totalPaper}`}
+            value={`${totals?.totalPaper}`}
             title='Print Volume'
             unit='Pages'
           ></TotalsBlockComponent>

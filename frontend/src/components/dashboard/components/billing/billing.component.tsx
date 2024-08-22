@@ -19,6 +19,7 @@ class BillingComponent extends Component<BillingComponentProps, State> {
             <h2>Billing</h2>
           </CardHeader>
         </Card>
+
         <Card>
           <CardBody>
             <h3>Make Payment</h3>

@@ -11,7 +11,19 @@ export type Job = {
   black_and_white_pages: string;
 };
 
+type Totals = {
+  totalColor: number;
+  totalBw: number;
+  totalPaper: number;
+  totalJobs: number;
+  bwCharge: number;
+  colorCharge: number;
+  paperCharge: number;
+  totalCharge: number;
+};
+
 export type TrackingState = {
   currentJobs: Job[];
   jobHistory: TypeMap<TypeMap<Job[]>>;
+  totals: Totals;
 };
