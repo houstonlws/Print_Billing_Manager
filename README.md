@@ -20,80 +20,91 @@ This project aims to reduce downtime, improve resource management, and ensure th
 Before you begin, ensure you have the following installed:
 
 - **Node.js** (version 14.21.3) and npm (Node Package Manager).
+
+  - Visit the [NodeJS Download page](https://nodejs.org/en/blog/release/v14.17.3)
+
+  - Run `node -v` in your terminal to ensure Java 17 is installed.
+
 - **TypeScript** installed globally:
-  ```bash
-  npm install -g typescript
-  ```
+  `npm install -g typescript`
+- **Java 17**: Make sure you have Java 17 installed on your system.
+
+  - Visit the [Oracle JDK Download page](https://www.oracle.com/java/technologies/downloads/#java17) or install via your package manager.
+
+  - Run `java -version` in your terminal to ensure Java 17 is installed.
+
 - MySQL and MySQL Workbench for managing the database.
+
+  - Visit the [MySQL Workbench Download page](https://dev.mysql.com/downloads/workbench/)
 
 ### Cloning the Repository
 
 1. Clone the repository from GitHub to your local machine:
-   ```bash
-   git clone https://github.com/houstonlws/Print_Billing_Manager.git
-   ```
+
+   `git clone https://github.com/houstonlws/Print_Billing_Manager.git`
+
 2. Navigate to the project directory:
-   ```bash
-   cd print-billing-system
-   ```
+
+   `cd print-billing-system`
+
+## Creating a Local Database in MySQL Workbench
+
+### Step 1: Open MySQL Workbench
+
+- Launch **MySQL Workbench** and connect to your local MySQL server as the `root` user.
+
+### Step 2: Create a New Database
+
+1. **Create a Database:**
+
+   - In the **Navigator** panel, right-click on `Schemas` and select **Create Schema**.
+   - In the dialog that appears:
+     - **Name:** Enter `print_billing_db`.
+     - **Collation:** Leave it as the default or choose your preferred collation.
+   - Click **Apply** to create the database.
+
+2. **Apply SQL Script:**
+   - MySQL Workbench will generate the necessary SQL script. Review it and click **Apply** to execute the script and create the `print_billing_db` database.
+
+### Step 3: Verify the Database
+
+- In the **Navigator** panel, expand `Schemas` and confirm that `print_billing_db` appears in the list of databases.
 
 ## Setting Up the Backend
 
-### Install Backend Dependencies:
-
-1. Navigate to the backend directory
-   ```bash
-   cd backend
-   ```
-2. Install the required dependencies:
-   ```bash
-   npm install
-   ```
-
 ### Configure Environment Variables:
 
-- In the backend folder, create a .env file with the following contents:
-  ```env
-  REFRESH_TOKEN_SECRET=<your-refresh-token-secret>
-  DB_PASSWORD=<your-mysql-database-password>
-  ```
+- Crreate two system environment variables: `REFRESH_TOKEN_SECRET` and `DB_PASSWORD`
+
 - For `REFRESH_TOKEN_SECRET` you can run the following command line and copy its value:
   ```bash
   openssl rand -base64 40
   ```
 - For `DB_PASSWORD` this will be the password for your MySQL database.
 
-## Database Setup:
+### Start the server:
 
-1. Create a new MySQL database locally using MySQL Workbench.
-2. Run the SQL script located in the main directory of the project to create the necessary tables and optionally insert test data.
-
-## Start the Backend Server:
-
-    npm run start
+- Navigate to the backend directory: `cd backend`
+- Build and run the project using the following command:
+  ```bash
+  ./gradlew bootRun --console=plain
+  ```
 
 ## Setting Up the Frontend
 
-## Install Frontend Dependencies:
+### Install Frontend Dependencies:
 
-1. Navigate back to the main project directory and then to the frontend directory:
-   ```bash
-   cd ../frontend
-   ```
-2. Install the required dependencies:
-   ```bash
-   Copy code
-   npm install
-   ```
+- Navigate back to the frontend directory:
+
+  `cd ../frontend`
+
+- Install the required dependencies:
+
+  `npm install`
 
 ### Start the Frontend Application:
 
 - Run the frontend application:
   ```bash
   npm run start
-  ```
-- Run Frontend Tests:
-
-  ```bash
-  npm run test
   ```
