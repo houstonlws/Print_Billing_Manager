@@ -6,6 +6,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -19,6 +20,7 @@ public class LoggingAspect {
     @Autowired
     private HttpServletRequest request;
 
+    @RequestScope
     @Around("execution(public * com.houstonlewis.PrintBillMaster.controllers..*(..))")
     public Object prefixLogs(ProceedingJoinPoint jp) throws Throwable {
 
@@ -40,8 +42,9 @@ public class LoggingAspect {
 
                 String prefix = String.format("[%s:%s] ", method, requestPath);
                 String output = new String(b, off, len);
-                if (!output.trim().isEmpty()) originalOut.print(prefix + output);
-                else originalOut.write(b, off, len);
+                if (!output.trim().isEmpty()) {
+                    originalOut.print(prefix + output);
+                } else originalOut.write(b, off, len);
             }
         });
 

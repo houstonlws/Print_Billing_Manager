@@ -9,26 +9,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/protected/maintenance")
+@RequestMapping("/protected")
 public class MaintenanceController {
 
     @Autowired
     MaintenanceService maintenanceService;
 
-    @GetMapping({"/get", "/get/{id}"})
-    public ResponseEntity getMaintenanceRequests(@PathVariable(required = false) String id) {
+    @GetMapping({"/maintenance", "/maintenance/{id}"})
+    public ResponseEntity<List<MaintenanceRequest>> getMaintenanceRequests(@PathVariable(required = false) String id) {
         System.out.println("getting maintenance requests");
         List<MaintenanceRequest> requests = maintenanceService.getMaintenanceRequests(id);
         if (requests == null) {
             System.out.println("problem getting requests");
-            return ResponseEntity.badRequest().body("Didn't get requests");
+            return ResponseEntity.badRequest().body(null);
         }
         System.out.println("got requests successfully");
         return ResponseEntity.ok(requests);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity addMaintenanceRequest(@RequestBody MaintenanceRequest request) {
+    @PostMapping("/maintenance")
+    public ResponseEntity<String> addMaintenanceRequest(@RequestBody MaintenanceRequest request) {
         System.out.println("adding maintenance request");
         boolean added = maintenanceService.addMaintenanceRequest(request);
         if (added) {

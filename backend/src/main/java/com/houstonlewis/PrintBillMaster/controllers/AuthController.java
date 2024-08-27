@@ -20,7 +20,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody User user) {
+    public ResponseEntity<User> login(@RequestBody User user) {
         System.out.println("logging in user");
         User data = authService.login(user);
         if (data != null) {
@@ -31,12 +31,12 @@ public class AuthController {
             return ResponseEntity.ok().headers(headers).body(data);
         } else {
             System.out.println("login failure");
-            return ResponseEntity.badRequest().body("invalid login info");
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody User user) {
+    public ResponseEntity<String> register(@RequestBody User user) {
         System.out.println("registering");
         boolean registered = authService.register(user);
         if (registered) {
@@ -49,7 +49,7 @@ public class AuthController {
     }
 
     @GetMapping("/refreshToken")
-    public ResponseEntity refreshToken(@RequestHeader(value = "Authorization") String accessToken, @CookieValue(value = "refreshToken") String refreshToken) {
+    public ResponseEntity<User> refreshToken(@RequestHeader(value = "Authorization") String accessToken, @CookieValue(value = "refreshToken") String refreshToken) {
         System.out.println("refreshing token");
         String decryptedAccess = authService.validateToken(accessToken);
         if (decryptedAccess != null) {
@@ -68,13 +68,13 @@ public class AuthController {
                 return ResponseEntity.ok().headers(headers).body(user);
             } else {
                 System.out.println("token invalid");
-                return ResponseEntity.badRequest().body("invalid token");
+                return ResponseEntity.badRequest().body(null);
             }
         }
     }
 
-    @GetMapping("/user/get/{id}")
-    public ResponseEntity getUserData(@PathVariable String id) {
+    @GetMapping("/user/{id}")
+    public ResponseEntity<Object> getUserData(@PathVariable String id) {
         if (id.equalsIgnoreCase("*")) {
             System.out.println("Getting all user data");
             List<User> users = authService.getAllUsers();
@@ -96,8 +96,8 @@ public class AuthController {
         }
     }
 
-    @PatchMapping("/user/update/{id}")
-    public ResponseEntity updateUserData(@PathVariable String id, @RequestBody User data) {
+    @PatchMapping("/user/{id}")
+    public ResponseEntity<User> updateUserData(@PathVariable String id, @RequestBody User data) {
         System.out.println("updating user data - id: " + id);
         boolean updated = authService.updateUserData(id, data);
         if (updated) {
@@ -105,23 +105,23 @@ public class AuthController {
             return ResponseEntity.accepted().body(data);
         }
         System.out.println("problem updating user data");
-        return ResponseEntity.badRequest().body("didn't update user data");
+        return ResponseEntity.badRequest().body(null);
     }
 
-    @GetMapping("/notifications/get/{id}")
-    public ResponseEntity getNotifications(@PathVariable String id) {
+    @GetMapping("/notifications/{id}")
+    public ResponseEntity<List<Notification>> getNotifications(@PathVariable String id) {
         System.out.println("getting notifications");
         List<Notification> notifications = authService.getNotifications(id);
         if (notifications == null) {
             System.out.println("problem getting notifications");
-            return ResponseEntity.badRequest().body("Didn't get notifications");
+            return ResponseEntity.badRequest().body(null);
         }
         System.out.println("got notifications successfully");
         return ResponseEntity.ok(notifications);
     }
 
     @PatchMapping("/user/type")
-    public ResponseEntity changeUserType(@RequestBody String[] users) {
+    public ResponseEntity<String> changeUserType(@RequestBody String[] users) {
         System.out.println("Updating user type(s)");
         boolean changed = authService.changeUserType(users);
         if (changed) {
@@ -134,7 +134,7 @@ public class AuthController {
     }
 
     @GetMapping({"/getAllData", "/getAllData/{id}"})
-    public ResponseEntity getAllData(@PathVariable(required = false) String id) {
+    public ResponseEntity<Object> getAllData(@PathVariable(required = false) String id) {
         System.out.println("getting all data");
         Map<String, List<Object>> payload = authService.getAllData(id);
         return ResponseEntity.ok(payload);

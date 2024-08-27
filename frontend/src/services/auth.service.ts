@@ -1,4 +1,3 @@
-import Cookies from 'js-cookie';
 import { getAxios } from '../config/axios.config';
 import { PriceConfig, User } from '../types';
 
@@ -64,7 +63,7 @@ class AuthService {
 
   static getAllDataUser = async (depId: string) => {
     try {
-      const result = await axios.get(`/getAllData/${depId}`);
+      const result = await axios.get(`/getAllData${depId ? '/' + depId : ''}`);
       if (result.status === 200) {
         return result.data;
       } else return false;
@@ -75,7 +74,7 @@ class AuthService {
 
   static getUserData = async (id: string) => {
     try {
-      const result = await axios.get(`/user/get/${id}`);
+      const result = await axios.get(`/user/${id}`);
       if (result.status === 200) {
         return result;
       }
@@ -88,7 +87,7 @@ class AuthService {
   static updateUserData = async (data: User): Promise<User | boolean> => {
     try {
       console.log('[authService] sending data to update user', data);
-      const result = await axios.patch(`/user/update/${data.id}`, data);
+      const result = await axios.patch(`/user/${data.id}`, data);
       if (result.status === 200) return result.data as User;
       return true;
     } catch (err) {
@@ -98,7 +97,7 @@ class AuthService {
 
   static getNotifications = async (departmentId: string) => {
     try {
-      const result = await axios.get(`/notifications/get/${departmentId}`);
+      const result = await axios.get(`/notifications/${departmentId}`);
       if (result.status === 200) return result.data;
       return [];
     } catch (err) {
@@ -108,10 +107,7 @@ class AuthService {
 
   static addPriceProfile = async (profile: PriceConfig) => {
     try {
-      const result = await axios.post(
-        `/protected/app/priceProfile/add`,
-        profile
-      );
+      const result = await axios.post(`/protected/app/priceProfile`, profile);
       if (result.status === 200) {
         return result.data;
       } else return false;
@@ -122,7 +118,7 @@ class AuthService {
 
   static setPriceProfile = async (id: string) => {
     try {
-      const result = await axios.patch(`/protected/app/priceProfile/set/${id}`);
+      const result = await axios.patch(`/protected/app/priceProfile/${id}`);
       if (result.status === 200) {
         return result.data;
       } else return false;

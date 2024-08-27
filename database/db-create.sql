@@ -57,12 +57,6 @@ CREATE TABLE prices (
     is_active BOOLEAN DEFAULT FALSE NOT NULL
 );
 
-CREATE TABLE statements (
-	id INT AUTO_INCREMENT PRIMARY KEY,
-    price_profile_id INT,
-    department_id INT
-);
-
 CREATE TABLE maintenance_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     printer_id INT NOT NULL,
@@ -85,26 +79,29 @@ CREATE TABLE notifications (
     FOREIGN KEY (maintenance_id) REFERENCES maintenance_requests(id)
 );
 
-CREATE TABLE billing (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE billing_periods(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    date DATE NOT NULL
+);
+
+CREATE TABLE invoices (
+	id INT AUTO_INCREMENT PRIMARY KEY,
     department_id INT NOT NULL,
-    billing_cycle_start DATE NOT NULL,
-    billing_cycle_end DATE NOT NULL,
-    total_charges DECIMAL(10, 2) NOT NULL,
-    total_paper INT NOT NULL,
-    total_color_pages INT NOT NULL,
-    total_bw_pages INT NOT NULL,
-    color_pages_charge DECIMAL(10, 2) NOT NULL,
-    bw_pages_charge DECIMAL(10, 2) NOT NULL
+    bill_period_id VARCHAR(255) NOT NULL,
+    price_profile_id INT NOT NULL,
+    bw_charge DECIMAL(10,2) NOT NULL,
+    color_charge DECIMAL(10,2) NOT NULL,
+    paper_charge DECIMAL(10,2) NOT NULL,
+    status ENUM('Paid', 'Pending', 'Late') DEFAULT 'Pending' NOT NULL,
+    FOREIGN KEY (price_profile_id) REFERENCES prices(id)
 );
 
 CREATE TABLE bill_payments (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    billing_id INT NOT NULL,
+    invoice_id INT NOT NULL,
     payment_date DATE NOT NULL,
     amount_paid DECIMAL(10, 2) NOT NULL,
-    payment_status ENUM('Paid', 'Pending', 'Late') NOT NULL,
-    FOREIGN KEY (billing_id) REFERENCES billing(id)
+    FOREIGN KEY (invoice_id) REFERENCES invoices(id)
 );
 
 CREATE TABLE metrics (

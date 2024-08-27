@@ -12,5 +12,27 @@ class BillingService {
       return false;
     }
   };
+
+  static getDepartmentInvoiceHistory = async (depId?: string) => {
+    try {
+      const result = await axios.get(
+        `/protected/billing/history${depId ? '/' + depId : ''}`
+      );
+      if (result.status === 200) return result.data;
+      return false;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  static getCurrentInvoice = async (depId: string | number) => {
+    try {
+      const result = await axios.get(`/protected/billing/current/${depId}`);
+      if (result.status === 200) return result.data;
+      return false;
+    } catch (error) {
+      return false;
+    }
+  };
 }
 export default BillingService;

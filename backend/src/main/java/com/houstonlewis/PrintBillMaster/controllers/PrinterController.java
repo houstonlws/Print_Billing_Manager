@@ -10,38 +10,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/protected/printer")
+@RequestMapping("/protected")
 public class PrinterController {
 
     @Autowired
     PrinterService printerService;
 
-    @GetMapping({"/metrics/get", "/metrics/get/{id}"})
-    public ResponseEntity getMetrics(@PathVariable(required = false) String id) {
+    @GetMapping({"/printer/metrics", "/printer/metrics/{id}"})
+    public ResponseEntity<List<Metric>> getMetrics(@PathVariable(required = false) String id) {
         System.out.println("getting metrics");
         List<Metric> metrics = printerService.getMetrics(id);
         if (metrics == null) {
             System.out.println("problem getting metrics");
-            return ResponseEntity.badRequest().body("Didn't get metrics");
+            return ResponseEntity.badRequest().body(null);
         }
         System.out.println("got metrics successfully");
         return ResponseEntity.ok(metrics);
     }
 
-    @GetMapping({"/get", "/get/{id}"})
-    public ResponseEntity getPrinters(@PathVariable(name = "id", required = false) String id) {
+    @GetMapping({"/printer/get", "/printer/{id}"})
+    public ResponseEntity<List<Printer>> getPrinters(@PathVariable(name = "id", required = false) String id) {
         System.out.println("getting printers");
         List<Printer> printers = printerService.getPrinters(id);
         if (printers == null) {
             System.out.println("problem getting printers");
-            return ResponseEntity.badRequest().body("Didn't get printers");
+            return ResponseEntity.badRequest().body(null);
         }
         System.out.println("got printers successfully");
         return ResponseEntity.ok(printers);
     }
 
-    @PatchMapping("/update/{id}")
-    public ResponseEntity updatePrinter(@PathVariable String id, @RequestBody Printer printer) {
+    @PatchMapping("/printer/{id}")
+    public ResponseEntity<String> updatePrinter(@PathVariable String id, @RequestBody Printer printer) {
         System.out.println("updating printer: " + id);
         boolean updated = printerService.updatePrinter(printer);
         if (!updated) {
@@ -52,8 +52,8 @@ public class PrinterController {
         return ResponseEntity.ok("Updated printer");
     }
 
-    @PostMapping("/add")
-    public ResponseEntity addPrinter(@RequestBody Printer printer) {
+    @PostMapping("/printer")
+    public ResponseEntity<String> addPrinter(@RequestBody Printer printer) {
         System.out.println("adding printer");
         boolean added = printerService.addPrinter(printer);
         if (added) {

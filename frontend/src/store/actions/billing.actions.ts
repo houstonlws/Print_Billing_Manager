@@ -16,13 +16,57 @@ export const getDepartmentBillingHistory =
           type: CONSTANTS.GET_DEPARTMENT_BILLING_HISTORY_FAILURE,
           payload: undefined,
         });
-        dispatch({ type: CONSTANTS.LOGOUT });
       }
     } catch (error) {
       dispatch({
         type: CONSTANTS.GET_DEPARTMENT_BILLING_HISTORY_FAILURE,
         payload: undefined,
       });
-      dispatch({ type: CONSTANTS.LOGOUT });
+    }
+  };
+
+export const getDepartmentInvoiceHistory =
+  (depId?: string) => async (dispatch: Dispatch) => {
+    try {
+      const result = await BillingService.getDepartmentInvoiceHistory(depId);
+      if (result) {
+        dispatch({
+          type: CONSTANTS.GET_DEPARTMENT_INVOICE_HISTORY_SUCCESS,
+          payload: result,
+        });
+      } else {
+        dispatch({
+          type: CONSTANTS.GET_DEPARTMENT_INVOICE_HISTORY_FAILURE,
+          payload: undefined,
+        });
+      }
+    } catch (error) {
+      dispatch({
+        type: CONSTANTS.GET_DEPARTMENT_INVOICE_HISTORY_FAILURE,
+        payload: undefined,
+      });
+    }
+  };
+
+export const getCurrentInvoice =
+  (depId: string) => async (dispatch: Dispatch) => {
+    try {
+      const result = await BillingService.getCurrentInvoice(depId);
+      if (result) {
+        dispatch({
+          type: CONSTANTS.GET_CURRENT_INVOICE_SUCCESS,
+          payload: result,
+        });
+      } else {
+        dispatch({
+          type: CONSTANTS.GET_CURRENT_INVOICE_FAILURE,
+          payload: undefined,
+        });
+      }
+    } catch (error) {
+      dispatch({
+        type: CONSTANTS.GET_CURRENT_INVOICE_FAILURE,
+        payload: undefined,
+      });
     }
   };

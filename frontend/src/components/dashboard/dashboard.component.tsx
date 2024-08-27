@@ -238,21 +238,4 @@ const connector = connect(
 
 type DashboardProps = ConnectedProps<typeof connector>;
 
-const resetLogoutTimer = () => {
-  const lastReset: number = (window as any).lastReset;
-  if (lastReset && Date.now() - lastReset > 1000 * 60 * 5) {
-  }
-  (window as any).lastReset = Date.now();
-  clearTimeout((window as any).clearPersistTimeout);
-  (window as any).clearPersistTimeout = setTimeout(() => {
-    store.dispatch({ type: CONSTANTS.LOGOUT, payload: undefined });
-  }, CONSTANTS.FIFTEEN_MINUTES);
-};
-
-['click', 'keypress', 'mousemove', 'scroll'].forEach((event: any) => {
-  window.addEventListener(event, resetLogoutTimer);
-});
-
-resetLogoutTimer();
-
 export default connector(DashboardComponent);
