@@ -39,8 +39,8 @@ public class MaintenanceController {
         return ResponseEntity.badRequest().body("Didn't add request");
     }
 
-    @PatchMapping("/update/{id}")
-    public ResponseEntity updateStatus(@PathVariable String id, @RequestBody String status) {
+    @PatchMapping("/maintenance/{id}")
+    public ResponseEntity<String> updateStatus(@PathVariable String id, @RequestBody String status) {
         System.out.println("updating maintenance request");
         boolean updated = maintenanceService.updateStatus(id, status);
         if (updated) {

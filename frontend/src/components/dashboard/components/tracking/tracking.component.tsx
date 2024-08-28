@@ -4,6 +4,7 @@ import { ConnectedProps, connect } from 'react-redux';
 import {
   getDepartmentMetrics,
   getDepartmentPrinters,
+  getPriceProfile,
 } from '../../../../store/actions';
 import { departmentsMap } from '../../../../config/app-data';
 import TotalsBlockComponent from './components/totals-block.component';
@@ -45,8 +46,9 @@ class TrackingModule extends Component<TrackingProps, State> {
     };
   }
 
-  componentDidMount(): void {
+  async componentDidMount() {
     this.populateChartBillingPeriod();
+    await this.props.getPriceProfile();
   }
   componentDidUpdate(
     prevProps: Readonly<TrackingProps>,
@@ -73,7 +75,7 @@ class TrackingModule extends Component<TrackingProps, State> {
     let colorData: TypeMap<number> = {};
     let paperData: TypeMap<number> = {};
     if (currentJobs?.length > 0) {
-      currentJobs?.forEach((job) => {
+      currentJobs?.forEach((job: Job) => {
         const raw = new Date(job?.date);
         const jobDate = new Date(
           raw.getFullYear(),
@@ -309,6 +311,7 @@ const mapStateToProps = (state: AppState, props: any) => {
 const mapDispatchToProps = {
   getDepartmentMetrics,
   getDepartmentPrinters,
+  getPriceProfile,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

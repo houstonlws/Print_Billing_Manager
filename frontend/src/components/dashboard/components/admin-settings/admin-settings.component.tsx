@@ -1,31 +1,23 @@
 import React, { Component } from 'react';
-import { AppState, PriceConfig, User } from '../../../../types';
+import { AppState } from '../../../../types';
 import { connect, ConnectedProps } from 'react-redux';
-import { Stack } from 'react-bootstrap';
-import {
-  addPriceProfile,
-  getAllUsers,
-  getPriceProfile,
-  getPriceProfileList,
-  register,
-  setPriceProfile,
-  updateUserData,
-  updateUserType,
-} from '../../../../store/actions';
+import { Card, CardHeader, Stack } from 'react-bootstrap';
 import SwitchUserTypeComponent from './components/switch-user-type.component';
 import AddUserComponent from './components/add-user.component';
 import PriceProfileComponent from './components/price-profile.component';
 
-interface State {
-  priceProfile: PriceConfig;
-  selectedProfile: string;
-}
+interface State {}
 
 class AdminSettings extends Component<ReduxProps, State> {
   render(): React.ReactNode {
     return (
       <div data-testid='admin-settings-component'>
         <Stack gap={3}>
+          <Card>
+            <CardHeader>
+              <h2>Admin Settings</h2>
+            </CardHeader>
+          </Card>
           <SwitchUserTypeComponent></SwitchUserTypeComponent>
           <AddUserComponent></AddUserComponent>
           <PriceProfileComponent></PriceProfileComponent>
@@ -39,16 +31,7 @@ const mapStateToProps = (state: AppState) => ({
   admin: state.admin,
 });
 
-const mapDispatchToProps = {
-  updateUserType,
-  getAllUsers,
-  register,
-  addPriceProfile,
-  setPriceProfile,
-  updateUserData,
-  getPriceProfile,
-  getPriceProfileList,
-};
+const mapDispatchToProps = {};
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 

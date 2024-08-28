@@ -74,11 +74,9 @@ class PrintersService {
     id: string,
     status: string
   ): Promise<any> {
-    const result = await axios.patch(
-      `/protected/maintenance/${id}`,
-      { status: status },
-      { headers: { 'Content-Type': 'application/json' } }
-    );
+    const result = await axios.patch(`/protected/maintenance/${id}`, status, {
+      headers: { 'Content-Type': 'application/json' },
+    });
     if (result.status === 200) return true;
     return false;
   }

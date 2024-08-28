@@ -73,9 +73,11 @@ public class MaintenanceDAOImpl implements MaintenanceDAO {
     @Override
     public boolean updateMaintenanceStatus(String id, String status) {
         try {
-            String stmt = "UPDATE maintenance_requests SET status=? WHERE id=?";
-            int updated = jdbcTemplate.update(stmt, status, id);
-            return updated != 0;
+            return jdbcTemplate.update(
+                    "UPDATE maintenance_requests " +
+                            "SET status=" + status +
+                            " WHERE id=?",
+                    id) != 0;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
