@@ -23,7 +23,7 @@ Before you begin, ensure you have the following installed:
 
   - Visit the [NodeJS Download page](https://nodejs.org/en/blog/release/v14.17.3)
 
-  - Run `node -v` in your terminal to ensure Java 17 is installed.
+  - Run `node -v` in your terminal to ensure node 14 is installed.
 
 - **TypeScript** installed globally:
   `npm install -g typescript`
