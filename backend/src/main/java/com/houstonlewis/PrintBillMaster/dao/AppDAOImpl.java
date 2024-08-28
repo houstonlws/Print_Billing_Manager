@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static com.houstonlewis.PrintBillMaster.utilities.DAOUtilities.getString;
 
 @Repository
@@ -26,9 +28,17 @@ public class AppDAOImpl implements AppDAO {
     @Override
     public PriceProfile getPriceProfile() {
         try {
-            String query = "SELECT * FROM prices WHERE is_active=TRUE";
-            PriceProfile profile = jdbcTemplate.queryForObject(query, mapper);
-            return profile;
+            return jdbcTemplate.queryForObject("SELECT * FROM prices WHERE is_active=1", mapper);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<PriceProfile> getPriceProfileList() {
+        try {
+            return jdbcTemplate.query("SELECT * FROM prices", mapper);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -38,9 +48,7 @@ public class AppDAOImpl implements AppDAO {
     @Override
     public boolean setPriceProfile(String id) {
         try {
-            String stmt = "UPDATE prices SET is_active=IF(id != ?, 0 ,1);";
-            int updated = jdbcTemplate.update(stmt, id);
-            return updated != 0;
+            return jdbcTemplate.update("UPDATE prices SET is_active=IF(id != ?, 0 ,1);", id) != 0;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
@@ -49,16 +57,21 @@ public class AppDAOImpl implements AppDAO {
 
     @Override
     public boolean addPriceProfile(PriceProfile profile) {
-        System.out.println(profile);
-        String stmt = "INSERT INTO prices (name, bw_price, color_price, paper_price) VALUES (?,?,?,?)";
-        int inserted = jdbcTemplate.update(stmt, profile.getName(), profile.getBw_price(), profile.getColor_price(), profile.getPaper_price());
-        return inserted != 0;
+        try {
+            return jdbcTemplate.update("INSERT INTO prices (name, bw_price, color_price, paper_price) VALUES (?,?,?,?)", profile.getName(), profile.getBw_price(), profile.getColor_price(), profile.getPaper_price()) != 0;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 
     @Override
     public boolean updatePriceProfile(PriceProfile profile) {
-        String stmt = "UPDATE prices SET name=?, bw_price=?, color_price=? , paper_price=? WHERE id=?";
-        int updated = jdbcTemplate.update(stmt, profile.getName(), profile.getBw_price(), profile.getColor_price(), profile.getPaper_price(), profile.getId());
-        return updated != 0;
+        try {
+            return jdbcTemplate.update("UPDATE prices SET name=?, bw_price=?, color_price=? , paper_price=? WHERE id=?", profile.getName(), profile.getBw_price(), profile.getColor_price(), profile.getPaper_price(), profile.getId()) != 0;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 }

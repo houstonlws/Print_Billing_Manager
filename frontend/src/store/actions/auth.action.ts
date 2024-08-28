@@ -76,38 +76,6 @@ export const getUserData = (id: string) => async (dispatch: Dispatch) => {
   }
 };
 
-export const addPriceProfile =
-  (profile: PriceConfig) => async (dispatch: Dispatch) => {
-    try {
-      const result = await AuthService.addPriceProfile(profile);
-      if (result) {
-        dispatch({
-          type: CONSTANTS.ADD_PRICE_PROFILE_SUCCESS,
-        });
-        return true;
-      } else return false;
-    } catch (error) {
-      dispatch({ type: CONSTANTS.ADD_PRICE_PROFILE_FAILURE });
-      return false;
-    }
-  };
-
-export const setPriceProfile = (id: string) => async (dispatch: Dispatch) => {
-  try {
-    const result = await AuthService.setPriceProfile(id);
-    if (result) {
-      dispatch({
-        type: CONSTANTS.SET_ACTIVE_PRICE_PROFILE_SUCCESS,
-        payload: result,
-      });
-      return true;
-    } else return false;
-  } catch (error) {
-    dispatch({ type: CONSTANTS.SET_ACTIVE_PRICE_PROFILE_FAILURE });
-    return false;
-  }
-};
-
 export const getAllData = () => async (dispatch: Dispatch) => {
   try {
     const result = await AuthService.getAllData();
@@ -139,10 +107,6 @@ export const getAllData = () => async (dispatch: Dispatch) => {
       dispatch({
         type: CONSTANTS.GET_JOBS_SUCCESS,
         payload: result.jobs,
-      });
-      dispatch({
-        type: CONSTANTS.GET_PRICES_SUCCESS,
-        payload: result.prices,
       });
       return true;
     } else return false;
@@ -181,10 +145,6 @@ export const getAllDataUser = (depId: string) => async (dispatch: Dispatch) => {
         payload: result.jobs,
       });
       dispatch({
-        type: CONSTANTS.GET_PRICES_SUCCESS,
-        payload: result.prices,
-      });
-      dispatch({
         type: CONSTANTS.GET_ACTIVE_PRICE_SUCCESS,
         payload: result.price[0],
       });
@@ -209,26 +169,6 @@ export const updateUserData = (data: User) => async (dispatch: Dispatch) => {
   }
 };
 
-export const getAllUsers = () => async (dispatch: Dispatch) => {
-  try {
-    const result = await AuthService.getAllUsers();
-    if (result) {
-      dispatch({
-        type: CONSTANTS.GET_ALL_USERS_SUCCESS,
-      });
-      return result;
-    } else {
-      dispatch({ type: CONSTANTS.GET_ALL_USERS_FAILURE });
-      dispatch({ type: CONSTANTS.LOGOUT });
-      return false;
-    }
-  } catch (error) {
-    dispatch({ type: CONSTANTS.GET_ALL_USERS_FAILURE });
-    dispatch({ type: CONSTANTS.LOGOUT });
-    return false;
-  }
-};
-
 export const getNotifications =
   (departmentId: string) => async (dispatch: Dispatch) => {
     try {
@@ -236,37 +176,6 @@ export const getNotifications =
       dispatch({ type: CONSTANTS.GET_NOTIFICATIONS_SUCCESS, payload: result });
     } catch (error) {
       dispatch({ type: CONSTANTS.GET_NOTIFICATIONS_FAILURE });
-      dispatch({ type: CONSTANTS.LOGOUT });
-    }
-  };
-
-const clearCookie = (name: string) => {
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
-};
-
-const getCookie = (name: string) => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`)!;
-  if (parts.length === 2) {
-    const cookieVal = parts.pop()?.split(';').shift();
-    return cookieVal || null;
-  }
-  return null;
-};
-
-export const updateUserType =
-  (users: string[]) => async (dispatch: Dispatch) => {
-    try {
-      const result = await AuthService.updateUserType(users);
-      if (result) {
-        dispatch({ type: CONSTANTS.UPDATE_USER_TYPE_SUCCESS });
-        return true;
-      } else {
-        dispatch({ type: CONSTANTS.UPDATE_USER_TYPE_FAILURE });
-        dispatch({ type: CONSTANTS.LOGOUT });
-      }
-    } catch (error) {
-      dispatch({ type: CONSTANTS.UPDATE_USER_TYPE_FAILURE });
       dispatch({ type: CONSTANTS.LOGOUT });
     }
   };

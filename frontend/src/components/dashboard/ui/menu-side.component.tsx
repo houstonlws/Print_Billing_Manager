@@ -94,6 +94,7 @@ class MenuSide extends Component<ReduxProps, State> {
                   <FontAwesomeIcon
                     className='side-icon'
                     icon={faPrint}
+                    size={'xl'}
                   ></FontAwesomeIcon>
                 </span>
                 <span className='side-text'>Printers</span>

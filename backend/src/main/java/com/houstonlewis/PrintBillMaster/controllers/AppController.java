@@ -6,12 +6,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/protected/app")
 public class AppController {
 
     @Autowired
     AppService appService;
+
+    @GetMapping("/priceProfile")
+    public ResponseEntity<PriceProfile> getPriceProfile() {
+        System.out.println("Getting active price profile");
+        PriceProfile pp = appService.getPriceProfile();
+        if (pp == null) return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok(pp);
+    }
+
+    @GetMapping("/priceProfile/list")
+    public ResponseEntity<List<PriceProfile>> getPriceProfileList() {
+        System.out.println("Getting active price profile");
+        List<PriceProfile> list = appService.getPriceProfileList();
+        if (list == null) return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok(list);
+    }
 
     @PatchMapping("/priceProfile/{id}")
     public ResponseEntity<String> setPriceProfile(@PathVariable String id) {

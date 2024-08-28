@@ -82,20 +82,6 @@ export const authReducer = (state = initialState, action: Payload) => {
         notifications: [],
       };
     }
-    case CONSTANTS.SET_USER_TYPE: {
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          type: payload,
-        },
-      };
-    }
-    case CONSTANTS.GET_ALL_USERS_SUCCESS: {
-      return {
-        ...state,
-      };
-    }
     case CONSTANTS.UPDATE_USER_DATA_SUCCESS: {
       return {
         ...state,

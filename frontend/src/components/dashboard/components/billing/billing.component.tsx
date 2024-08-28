@@ -52,24 +52,26 @@ class BillingComponent extends Component<BillingComponentProps, State> {
         <Card>
           <CardBody>
             <Table>
-              <tr>
-                <th>Department</th>
-                <th>Billing Period</th>
-                <th>B&W Charges</th>
-                <th>Color Charges</th>
-                <th>Paper Charge</th>
-                <th>Status</th>
-              </tr>
-              {invoiceHistory?.map((invoice) => (
+              <tbody>
                 <tr>
-                  <td>{departmentsMap[invoice?.department_id]?.name}</td>
-                  <td>{invoice?.month + ' ' + invoice?.year}</td>
-                  <td>{invoice?.bw_charge}</td>
-                  <td>{invoice?.color_charge}</td>
-                  <td>{invoice?.paper_charge}</td>
-                  <td>{invoice?.status}</td>
+                  <th>Department</th>
+                  <th>Billing Period</th>
+                  <th>B&W Charges</th>
+                  <th>Color Charges</th>
+                  <th>Paper Charge</th>
+                  <th>Status</th>
                 </tr>
-              ))}
+                {invoiceHistory?.map((invoice) => (
+                  <tr key={invoice.id}>
+                    <td>{departmentsMap[invoice?.department_id]?.name}</td>
+                    <td>{invoice?.month + ' ' + invoice?.year}</td>
+                    <td>{invoice?.bw_charge}</td>
+                    <td>{invoice?.color_charge}</td>
+                    <td>{invoice?.paper_charge}</td>
+                    <td>{invoice?.status}</td>
+                  </tr>
+                ))}
+              </tbody>
             </Table>
           </CardBody>
         </Card>

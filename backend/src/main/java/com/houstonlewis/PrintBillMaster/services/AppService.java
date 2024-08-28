@@ -5,11 +5,21 @@ import com.houstonlewis.PrintBillMaster.models.PriceProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AppService {
 
     @Autowired
     private AppDAO appDAO;
+
+    public PriceProfile getPriceProfile() {
+        return appDAO.getPriceProfile();
+    }
+
+    public List<PriceProfile> getPriceProfileList() {
+        return appDAO.getPriceProfileList();
+    }
 
     public boolean setPriceProfile(String id) {
         return appDAO.setPriceProfile(id);

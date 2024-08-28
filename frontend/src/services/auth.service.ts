@@ -104,50 +104,6 @@ class AuthService {
       return [];
     }
   };
-
-  static addPriceProfile = async (profile: PriceConfig) => {
-    try {
-      const result = await axios.post(`/protected/app/priceProfile`, profile);
-      if (result.status === 200) {
-        return result.data;
-      } else return false;
-    } catch (error) {
-      return false;
-    }
-  };
-
-  static setPriceProfile = async (id: string) => {
-    try {
-      const result = await axios.patch(`/protected/app/priceProfile/${id}`);
-      if (result.status === 200) {
-        return result.data;
-      } else return false;
-    } catch (error) {
-      return false;
-    }
-  };
-
-  static updateUserType = async (users: string[]) => {
-    try {
-      const result = await axios.patch('/user/type', users);
-      if (result.status === 200) {
-        return true;
-      } else return false;
-    } catch (error) {
-      return false;
-    }
-  };
-
-  static getAllUsers = async (): Promise<User[]> => {
-    try {
-      const result = await axios.get('/user/get/*');
-      if (result.status === 200) {
-        return result.data;
-      } else return [];
-    } catch (error) {
-      return [];
-    }
-  };
 }
 
 export default AuthService;
