@@ -1,6 +1,5 @@
 package com.houstonlewis.PrintBillMaster.controllers;
 
-import com.houstonlewis.PrintBillMaster.models.Metric;
 import com.houstonlewis.PrintBillMaster.models.Printer;
 import com.houstonlewis.PrintBillMaster.services.PrinterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +14,6 @@ public class PrinterController {
 
     @Autowired
     PrinterService printerService;
-
-    @GetMapping({"/printer/metrics", "/printer/metrics/{id}"})
-    public ResponseEntity<List<Metric>> getMetrics(@PathVariable(required = false) String id) {
-        System.out.println("getting metrics");
-        List<Metric> metrics = printerService.getMetrics(id);
-        if (metrics == null) {
-            System.out.println("problem getting metrics");
-            return ResponseEntity.badRequest().body(null);
-        }
-        System.out.println("got metrics successfully");
-        return ResponseEntity.ok(metrics);
-    }
 
     @GetMapping({"/printer/get", "/printer/{id}"})
     public ResponseEntity<List<Printer>> getPrinters(@PathVariable(name = "id", required = false) String id) {

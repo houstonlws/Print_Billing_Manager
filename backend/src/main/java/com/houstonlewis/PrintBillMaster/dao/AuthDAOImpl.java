@@ -154,7 +154,7 @@ public class AuthDAOImpl implements AuthDAO {
         try {
             List<String> params = new ArrayList<>();
             if (id != null)
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 5; i++)
                     params.add(id);
 
             String query = "SELECT source, JSON_ARRAYAGG(data) AS data \n" +
@@ -238,44 +238,7 @@ public class AuthDAOImpl implements AuthDAO {
                     "        'is_active', is_active\n" +
                     "      ) as data\n" +
                     "      FROM prices\n" +
-                    "      WHERE is_active=TRUE\n" +
-                    "      UNION ALL SELECT \n" +
-                    "      'department_metrics' AS source,\n" +
-                    "      JSON_OBJECT(\n" +
-                    "        'id', id,\n" +
-                    "        'department_id', department_id,\n" +
-                    "        'printer_id', printer_id,\n" +
-                    "        'total_pages_printed', total_pages_printed,\n" +
-                    "        'monthly_print_volume', monthly_print_volume,\n" +
-                    "        'total_print_jobs', total_print_jobs,\n" +
-                    "        'monthly_print_jobs', monthly_print_jobs,\n" +
-                    "        'toner_levels', toner_levels,\n" +
-                    "        'toner_usage_monthly', toner_usage_monthly,\n" +
-                    "        'paper_levels', paper_levels,\n" +
-                    "        'paper_usage_monthly', paper_usage_monthly,\n" +
-                    "        'total_color_pages_printed', total_color_pages_printed,\n" +
-                    "        'total_color_pages_last_billing', total_color_pages_last_billing,\n" +
-                    "        'total_bw_pages_printed', total_bw_pages_printed,\n" +
-                    "        'total_bw_pages_last_billing', total_bw_pages_last_billing\n" +
-                    "      ) AS data\n" +
-                    "      FROM department_metrics\n" +
-                    (id != null ? " WHERE department_id=? \n" : " \n") +
-                    "      UNION ALL SELECT\n" +
-                    "      'billing' as source,\n" +
-                    "      JSON_OBJECT(\n" +
-                    "        'id', id, \n" +
-                    "        'department_id', department_id, \n" +
-                    "        'billing_cycle_start', DATE_FORMAT(billing_cycle_start, '%Y-%m-%d'),\n" +
-                    "        'billing_cycle_end', DATE_FORMAT(billing_cycle_end, '%Y-%m-%d'),\n" +
-                    "        'total_charges', total_charges, \n" +
-                    "        'total_paper', total_paper, \n" +
-                    "        'total_color_pages', total_color_pages, \n" +
-                    "        'total_bw_pages', total_bw_pages, \n" +
-                    "        'color_pages_charge', color_pages_charge, \n" +
-                    "        'bw_pages_charge', bw_pages_charge\n" +
-                    "      ) as data\n" +
-                    "      FROM billing\n" +
-                    (id != null ? "WHERE department_id=? \n" : " \n") +
+                    "      WHERE is_active=1\n" +
                     (id != null ? "\n" :
                             "      UNION ALL SELECT\n" +
                                     "      'users' as source,\n" +

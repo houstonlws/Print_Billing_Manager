@@ -3,8 +3,6 @@ import { BillingState } from '../../types';
 import { CONSTANTS } from '../../config/constants';
 
 const initialState: BillingState = {
-  billData: [],
-  paymentHistory: [],
   currentInvoice: {
     id: '',
     department_id: '',
@@ -23,18 +21,6 @@ const billingReducer = (state = initialState, action: PayloadAction) => {
   const { type, payload } = action;
 
   switch (type) {
-    case CONSTANTS.GET_DEPARTMENT_BILLING_HISTORY_SUCCESS: {
-      return {
-        ...state,
-        billData: payload,
-      };
-    }
-    case CONSTANTS.GET_DEPARTMENT_BILLING_HISTORY_FAILURE: {
-      return {
-        ...state,
-        billData: [],
-      };
-    }
     case CONSTANTS.GET_CURRENT_INVOICE_SUCCESS: {
       return {
         ...state,

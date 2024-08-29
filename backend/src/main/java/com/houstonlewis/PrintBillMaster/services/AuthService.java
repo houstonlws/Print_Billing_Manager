@@ -87,7 +87,6 @@ public class AuthService {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Class<?>> classMap = new HashMap<>() {{
             put("billing", Bill.class);
-            put("department_metrics", Metric.class);
             put("jobs", Job.class);
             put("maintenance_requests", MaintenanceRequest.class);
             put("notifications", Notification.class);

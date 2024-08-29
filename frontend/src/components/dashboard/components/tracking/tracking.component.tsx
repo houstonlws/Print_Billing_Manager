@@ -1,11 +1,7 @@
 import React, { Component, ReactNode } from 'react';
 import { Card, CardBody, CardHeader, Stack, Table } from 'react-bootstrap';
 import { ConnectedProps, connect } from 'react-redux';
-import {
-  getDepartmentMetrics,
-  getDepartmentPrinters,
-  getPriceProfile,
-} from '../../../../store/actions';
+import { getPriceProfile } from '../../../../store/actions';
 import { departmentsMap } from '../../../../config/app-data';
 import TotalsBlockComponent from './components/totals-block.component';
 import { ApexOptions } from 'apexcharts';
@@ -309,8 +305,6 @@ const mapStateToProps = (state: AppState, props: any) => {
 };
 
 const mapDispatchToProps = {
-  getDepartmentMetrics,
-  getDepartmentPrinters,
   getPriceProfile,
 };
 

@@ -1,27 +1,11 @@
 import { getAxios } from '../config/axios.config';
-import { MaintenanceRequest, Metric, Printer } from '../types/printer.types';
+import { MaintenanceRequest, Printer } from '../types/printer.types';
 
 const axios = getAxios();
 
 class PrintersService {
   static async getDepartmentPrinters(depId: string): Promise<Printer[]> {
     const result = await axios.get(`/protected/printer/${depId}`);
-    if (result.status === 200) {
-      return result.data;
-    }
-    return [];
-  }
-
-  static async getDepartmentMetrics(depId: string): Promise<Metric[]> {
-    const result = await axios.get(`/protected/printer/metrics/${depId}`);
-    if (result.status === 200) {
-      return result.data;
-    }
-    return [];
-  }
-
-  static async getAllMetrics(): Promise<Metric[]> {
-    const result = await axios.get(`/protected/printer/metrics`);
     if (result.status === 200) {
       return result.data;
     }

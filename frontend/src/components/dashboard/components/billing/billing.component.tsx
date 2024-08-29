@@ -3,7 +3,6 @@ import { ConnectedProps, connect } from 'react-redux';
 import { AppState } from '../../../../types';
 import {
   getCurrentInvoice,
-  getDepartmentBillingHistory,
   getDepartmentInvoiceHistory,
 } from '../../../../store/actions';
 import { Card, CardBody, CardHeader, Stack, Table } from 'react-bootstrap';
@@ -91,7 +90,6 @@ const mapStateToProps = (state: AppState) => {
 };
 
 const mapDispatchToProps = {
-  getDepartmentBillingHistory,
   getCurrentInvoice,
   getDepartmentInvoiceHistory,
 };

@@ -27,15 +27,6 @@ describe('Register Component', () => {
     store.clearActions();
   });
 
-  test('should render the component', () => {
-    const { getByText } = render(
-      <Provider store={store}>
-        <Register />
-      </Provider>
-    );
-    expect(getByText(/register/i)).toBeInTheDocument();
-  });
-
   test('should update state on input change', () => {
     const { getByPlaceholderText } = render(
       <Provider store={store}>

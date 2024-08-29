@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { printers } from '../../../shared/test.data';
-import EditPrinterComponent from '../components/edit-printer.component';
 import { Printer } from '../../../../../types/printer.types';
 import { Dispatch } from 'redux';
 import * as printerActions from '../../../../../store/actions/printer.actions';

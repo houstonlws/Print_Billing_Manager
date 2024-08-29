@@ -87,16 +87,16 @@ export const getAllUsers = () => async (dispatch: Dispatch) => {
     const result = await AdminService.getAllUsers();
     if (result) {
       dispatch({
-        type: CONSTANTS.GET_ALL_USERS_SUCCESS,
+        type: CONSTANTS.GET_USERS_SUCCESS,
       });
       return result;
     } else {
-      dispatch({ type: CONSTANTS.GET_ALL_USERS_FAILURE });
+      dispatch({ type: CONSTANTS.GET_USERS_FAILURE });
       dispatch({ type: CONSTANTS.LOGOUT });
       return false;
     }
   } catch (error) {
-    dispatch({ type: CONSTANTS.GET_ALL_USERS_FAILURE });
+    dispatch({ type: CONSTANTS.GET_USERS_FAILURE });
     dispatch({ type: CONSTANTS.LOGOUT });
     return false;
   }

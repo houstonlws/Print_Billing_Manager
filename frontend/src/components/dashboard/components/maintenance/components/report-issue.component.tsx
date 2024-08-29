@@ -37,7 +37,7 @@ class ReportIssue extends Component<ReportProps, State> {
         request_date: today,
         maintenance_type: '',
         description: '',
-        status: CONSTANTS.PENDING,
+        status: 'Pending',
       },
     };
   }
@@ -82,7 +82,7 @@ class ReportIssue extends Component<ReportProps, State> {
         request_date: today,
         maintenance_type: '',
         description: '',
-        status: CONSTANTS.PENDING,
+        status: 'Pending',
       },
     });
     this.toggleReporting();

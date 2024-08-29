@@ -17,6 +17,7 @@ CREATE TABLE users (
     FOREIGN KEY (id) REFERENCES auth(id)
 );
 
+-- TODO - create interface to add departments
 CREATE TABLE departments (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -37,10 +38,12 @@ CREATE TABLE printers (
     firmware_version VARCHAR(255) NOT NULL
 );
  
+ -- TODO - make user_id not null
 CREATE TABLE jobs (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     printer_id INT NOT NULL,
     department_id INT NOT NULL,
+    user_id INT, 
 	date DATE NOT NULL,
     title VARCHAR(255) NOT NULL,
     pages INT NOT NULL,
@@ -79,6 +82,7 @@ CREATE TABLE notifications (
     FOREIGN KEY (maintenance_id) REFERENCES maintenance_requests(id)
 );
 
+-- TODO - add mechanism to add billing periods
 CREATE TABLE billing_periods(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     date DATE NOT NULL
@@ -103,42 +107,3 @@ CREATE TABLE bill_payments (
     amount_paid DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (invoice_id) REFERENCES invoices(id)
 );
-
-CREATE TABLE metrics (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    printer_id INT UNIQUE,
-    total_pages_printed INT NOT NULL,
-    monthly_print_volume INT NOT NULL,
-    total_print_jobs INT NOT NULL,
-    monthly_print_jobs INT NOT NULL,
-    toner_levels VARCHAR(255) NOT NULL,
-    toner_usage_monthly VARCHAR(255) NOT NULL,
-    paper_levels VARCHAR(255) NOT NULL,
-    paper_usage_monthly INT NOT NULL,
-    total_color_pages_printed INT NOT NULL,
-    total_color_pages_last_billing INT NOT NULL,
-    total_bw_pages_printed INT NOT NULL,
-    total_bw_pages_last_billing INT NOT NULL,
-    FOREIGN KEY (printer_id) REFERENCES printers(id)
-);
-
-CREATE VIEW department_metrics AS 
-	SELECT 
-    metrics.id,
-	printer_id ,
-    total_pages_printed ,
-    monthly_print_volume,
-    total_print_jobs ,
-    monthly_print_jobs ,
-    toner_levels ,
-    toner_usage_monthly,
-    paper_levels,
-    paper_usage_monthly,
-    total_color_pages_printed,
-    total_color_pages_last_billing,
-    total_bw_pages_printed,
-    total_bw_pages_last_billing ,
-    department_id
-    FROM metrics 
-	JOIN printers 
-    ON metrics.printer_id = printers.id;

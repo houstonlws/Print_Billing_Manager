@@ -53,73 +53,6 @@ const printers = [
   },
 ];
 
-const metrics = [
-  {
-    id: 1,
-    printer_id: 1,
-    total_pages_printed: 5000,
-    monthly_print_volume: 1000,
-    total_print_jobs: 200,
-    monthly_print_jobs: 50,
-    toner_levels: '75% cyan, 50% magenta, 80% yellow, 20% black',
-    toner_usage_monthly: '1200 pages',
-    paper_levels: '200 sheets',
-    paper_usage_monthly: 500,
-    total_color_pages_printed: 1500,
-    total_color_pages_last_billing: 200,
-    total_bw_pages_printed: 350,
-    total_bw_pages_last_billing: 100,
-  },
-  {
-    id: 2,
-    printer_id: 2,
-    total_pages_printed: 3000,
-    monthly_print_volume: 800,
-    total_print_jobs: 150,
-    monthly_print_jobs: 40,
-    toner_levels: '60% cyan, 40% magenta, 70% yellow, 30% black',
-    toner_usage_monthly: '1000 pages',
-    paper_levels: '150 sheets',
-    paper_usage_monthly: 400,
-    total_color_pages_printed: 1000,
-    total_color_pages_last_billing: 180,
-    total_bw_pages_printed: 300,
-    total_bw_pages_last_billing: 80,
-  },
-  {
-    id: 13,
-    printer_id: 13,
-    total_pages_printed: 4200,
-    monthly_print_volume: 850,
-    total_print_jobs: 160,
-    monthly_print_jobs: 40,
-    toner_levels: '60% cyan, 50% magenta, 70% yellow, 30% black',
-    toner_usage_monthly: '900 pages',
-    paper_levels: '170 sheets',
-    paper_usage_monthly: 380,
-    total_color_pages_printed: 1200,
-    total_color_pages_last_billing: 180,
-    total_bw_pages_printed: 280,
-    total_bw_pages_last_billing: 70,
-  },
-  {
-    id: 14,
-    printer_id: 14,
-    total_pages_printed: 6300,
-    monthly_print_volume: 1300,
-    total_print_jobs: 270,
-    monthly_print_jobs: 55,
-    toner_levels: '85% cyan, 70% magenta, 95% yellow, 15% black',
-    toner_usage_monthly: '1400 pages',
-    paper_levels: '250 sheets',
-    paper_usage_monthly: 600,
-    total_color_pages_printed: 1700,
-    total_color_pages_last_billing: 230,
-    total_bw_pages_printed: 450,
-    total_bw_pages_last_billing: 100,
-  },
-];
-
 export const requests = [
   {
     id: 1,
@@ -618,4 +551,4 @@ export const printersMap = {
   },
 };
 
-export { printers, metrics };
+export { printers };

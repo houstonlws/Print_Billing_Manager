@@ -14,31 +14,6 @@ export const getDepartmentPrinters =
     }
   };
 
-export const getDepartmentMetrics =
-  (depId: string) => async (dispatch: Dispatch) => {
-    try {
-      const metrics = await PrinterService.getDepartmentMetrics(depId);
-      dispatch({
-        type: CONSTANTS.GET_DEPARTMENT_METRICS_SUCCESS,
-        payload: metrics,
-      });
-    } catch (error) {
-      dispatch({ type: CONSTANTS.GET_DEPARTMENT_PRINTERS_FAILURE });
-    }
-  };
-
-export const getAllMetrics = () => async (dispatch: Dispatch) => {
-  try {
-    const metrics = await PrinterService.getAllMetrics();
-    dispatch({
-      type: CONSTANTS.GET_DEPARTMENT_METRICS_SUCCESS,
-      payload: metrics,
-    });
-  } catch (error) {
-    dispatch({ type: CONSTANTS.GET_DEPARTMENT_PRINTERS_FAILURE });
-  }
-};
-
 export const getAllPrinters = () => async (dispatch: Dispatch) => {
   try {
     const printers = await PrinterService.getAllPrinters();
@@ -49,10 +24,6 @@ export const getAllPrinters = () => async (dispatch: Dispatch) => {
   } catch (error) {
     dispatch({ type: CONSTANTS.GET_DEPARTMENT_PRINTERS_FAILURE });
   }
-};
-
-export const selectPrinter = (selected: Printer) => (dispatch: Dispatch) => {
-  dispatch({ type: CONSTANTS.SELECT_PRINTER, payload: selected });
 };
 
 export const updatePrinter =

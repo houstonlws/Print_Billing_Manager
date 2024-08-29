@@ -93,14 +93,6 @@ export const getAllData = () => async (dispatch: Dispatch) => {
         payload: result.maintenance_requests,
       });
       dispatch({
-        type: CONSTANTS.GET_DEPARTMENT_METRICS_SUCCESS,
-        payload: result.department_metrics,
-      });
-      dispatch({
-        type: CONSTANTS.GET_DEPARTMENT_BILLING_HISTORY_SUCCESS,
-        payload: result.billing,
-      });
-      dispatch({
         type: CONSTANTS.GET_USERS_SUCCESS,
         payload: result.users,
       });
@@ -131,14 +123,6 @@ export const getAllDataUser = (depId: string) => async (dispatch: Dispatch) => {
       dispatch({
         type: CONSTANTS.GET_MAINTENANCE_REQUESTS_SUCCESS,
         payload: result.maintenance_requests,
-      });
-      dispatch({
-        type: CONSTANTS.GET_DEPARTMENT_BILLING_HISTORY_SUCCESS,
-        payload: result.billing,
-      });
-      dispatch({
-        type: CONSTANTS.GET_DEPARTMENT_METRICS_SUCCESS,
-        payload: result.department_metrics,
       });
       dispatch({
         type: CONSTANTS.GET_JOBS_SUCCESS,

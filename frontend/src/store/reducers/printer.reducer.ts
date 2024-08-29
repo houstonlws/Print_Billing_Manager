@@ -4,7 +4,6 @@ import { Printer, PrinterState, TypeMap } from '../../types';
 
 export const initialState: PrinterState = {
   printers: [],
-  metrics: [],
   requests: [],
   printersMap: {},
 };
@@ -55,24 +54,6 @@ const printerReducer = (state = initialState, action: PayloadAction) => {
       return {
         ...state,
         printers: [],
-      };
-    }
-    case CONSTANTS.GET_DEPARTMENT_METRICS_SUCCESS: {
-      return {
-        ...state,
-        metrics: payload,
-      };
-    }
-    case CONSTANTS.GET_DEPARTMENT_METRICS_FAILURE: {
-      return {
-        ...state,
-        metrics: [],
-      };
-    }
-    case CONSTANTS.SELECT_PRINTER: {
-      return {
-        ...state,
-        selected: payload,
       };
     }
     case CONSTANTS.GET_MAINTENANCE_REQUESTS_SUCCESS: {

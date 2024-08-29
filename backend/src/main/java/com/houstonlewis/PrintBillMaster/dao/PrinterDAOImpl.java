@@ -1,6 +1,5 @@
 package com.houstonlewis.PrintBillMaster.dao;
 
-import com.houstonlewis.PrintBillMaster.models.Metric;
 import com.houstonlewis.PrintBillMaster.models.Printer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,40 +27,9 @@ public class PrinterDAOImpl implements PrinterDAO {
             getString(rs, "firmware_version"),
             getString(rs, "department_id")
     );
-    private final RowMapper<Metric> metricMapper = (rs, rowNum) -> new Metric(
-            getString(rs, "id"),
-            getString(rs, "printer_id"),
-            getString(rs, "total_pages_printed"),
-            getString(rs, "monthly_print_volume"),
-            getString(rs, "total_print_jobs"),
-            getString(rs, "monthly_print_jobs"),
-            getString(rs, "toner_levels"),
-            getString(rs, "toner_usage_monthly"),
-            getString(rs, "paper_levels"),
-            getString(rs, "paper_usage_monthly"),
-            getString(rs, "total_color_pages_printed"),
-            getString(rs, "total_color_pages_last_billing"),
-            getString(rs, "total_bw_pages_printed"),
-            getString(rs, "total_bw_pages_last_billing"),
-            getString(rs, "department_id")
-    );
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @Override
-    public List<Metric> getMetrics(String id) {
-        try {
-            List<String> params = new ArrayList<>();
-            if (id != null) params.add(id);
-            return jdbcTemplate.query(
-                    "SELECT * FROM metrics\n" +
-                            (id != null ? "WHERE printer_id=?" : ""),
-                    metricMapper, params.toArray());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
 
     @Override
     public List<Printer> getPrinters(String id) {
