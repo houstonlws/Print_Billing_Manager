@@ -3,18 +3,20 @@ package com.houstonlewis.PrintBillMaster.dao;
 import com.houstonlewis.PrintBillMaster.models.Notification;
 import com.houstonlewis.PrintBillMaster.models.Source;
 import com.houstonlewis.PrintBillMaster.models.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static com.houstonlewis.PrintBillMaster.utilities.DAOUtilities.getString;
 
 @Repository
 public class AuthDAOImpl implements AuthDAO {
+
+    private static final Logger logger = Logger.getLogger(AuthDAOImpl.class.getName());
 
     private final RowMapper<User> userMapper = (rs, rowNum) -> new User(
             getString(rs, "id"),
@@ -41,8 +43,11 @@ public class AuthDAOImpl implements AuthDAO {
             getString(rs, "data")
     );
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public AuthDAOImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public boolean addLoginInfo(String email, String password) {
@@ -51,7 +56,7 @@ public class AuthDAOImpl implements AuthDAO {
             int added = jdbcTemplate.update(stmt, email, password);
             return added != 0;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return false;
         }
     }
@@ -63,7 +68,7 @@ public class AuthDAOImpl implements AuthDAO {
             int added = jdbcTemplate.update(stmt, user.getId(), user.getEmail());
             return added != 0;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return false;
         }
     }
@@ -78,7 +83,7 @@ public class AuthDAOImpl implements AuthDAO {
             List<User> users = jdbcTemplate.query(query, userMapper, params.toArray());
             return users.get(0).getId();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return "";
         }
     }
@@ -90,19 +95,35 @@ public class AuthDAOImpl implements AuthDAO {
             List<User> users = jdbcTemplate.query(query, userMapper, id);
             return users.get(0);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return null;
         }
     }
 
     @Override
     public boolean updateUserData(String id, User user) {
+        List<String> params = new ArrayList<>();
+        params.add(user.getFirstName());
+        params.add(user.getLastName());
+        if (user.getDepartment_id() != "") {
+            params.add(user.getDepartment_id());
+        }
+        params.add(user.getEmail());
+        params.add(user.getPhone());
+        params.add(id);
+
         try {
-            String stmt = "UPDATE users SET firstName=?, lastName=?, department_id=?, email=?, phone=? WHERE id=?";
-            int added = jdbcTemplate.update(stmt, user.getFirstName(), user.getLastName(), user.getDepartment_id(), user.getEmail(), user.getPhone(), id);
+            String stmt = "UPDATE users SET " +
+                    "firstName=?, " +
+                    "lastName=?, " +
+                    (user.getDepartment_id() != "" ? "department_id=?, " : "") +
+                    "email=?, " +
+                    "phone=? " +
+                    "WHERE id=?";
+            int added = jdbcTemplate.update(stmt, params.toArray());
             return added != 0;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return false;
         }
     }
@@ -117,7 +138,7 @@ public class AuthDAOImpl implements AuthDAO {
             List<Notification> notifications = jdbcTemplate.query(query, notificationMapper, id);
             return notifications;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return null;
         }
     }
@@ -129,7 +150,7 @@ public class AuthDAOImpl implements AuthDAO {
             List<User> users = jdbcTemplate.query(query, userMapper);
             return users;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return null;
         }
     }
@@ -144,7 +165,7 @@ public class AuthDAOImpl implements AuthDAO {
             int changed = jdbcTemplate.update(stmt);
             return changed != 0;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return false;
         }
     }
@@ -255,7 +276,7 @@ public class AuthDAOImpl implements AuthDAO {
             List<Source> sources = jdbcTemplate.query(query, sourceMapper, params.toArray());
             return sources;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return null;
         }
     }

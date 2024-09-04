@@ -2,7 +2,6 @@ package com.houstonlewis.PrintBillMaster.services;
 
 import com.houstonlewis.PrintBillMaster.dao.PrinterDAO;
 import com.houstonlewis.PrintBillMaster.models.Printer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,8 +9,11 @@ import java.util.List;
 @Service
 public class PrinterService {
 
-    @Autowired
-    private PrinterDAO printerDAO;
+    private final PrinterDAO printerDAO;
+
+    public PrinterService(PrinterDAO printerDAO) {
+        this.printerDAO = printerDAO;
+    }
 
     public List<Printer> getPrinters(String id) {
         return printerDAO.getPrinters(id);

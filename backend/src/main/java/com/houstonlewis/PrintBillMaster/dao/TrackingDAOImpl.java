@@ -1,21 +1,24 @@
 package com.houstonlewis.PrintBillMaster.dao;
 
+import com.houstonlewis.PrintBillMaster.controllers.TrackingController;
 import com.houstonlewis.PrintBillMaster.models.CurrentJobs;
 import com.houstonlewis.PrintBillMaster.models.Job;
 import com.houstonlewis.PrintBillMaster.models.JobHistory;
 import com.houstonlewis.PrintBillMaster.models.Totals;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static com.houstonlewis.PrintBillMaster.utilities.DAOUtilities.getString;
 
 @Repository
 public class TrackingDAOImpl implements TrackingDAO {
+
+    private static final Logger logger = Logger.getLogger(TrackingController.class.getName());
 
     private final RowMapper<Job> jobMapper = (rs, rowNum) -> new Job(
             getString(rs, "id"),
@@ -49,8 +52,11 @@ public class TrackingDAOImpl implements TrackingDAO {
             getString(rs, "totalCharge")
     );
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public TrackingDAOImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public List<JobHistory> getJobHistory(String id) {
@@ -77,7 +83,7 @@ public class TrackingDAOImpl implements TrackingDAO {
                             "GROUP BY YEAR(date), MONTH(date);",
                     jobHistoryMapper, params.toArray());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return null;
         }
     }
@@ -107,7 +113,7 @@ public class TrackingDAOImpl implements TrackingDAO {
                             ") as subquery",
                     currentJobsMapper, params.toArray());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return null;
         }
     }
@@ -138,7 +144,7 @@ public class TrackingDAOImpl implements TrackingDAO {
                             (id != null ? "AND department_id=?" : ""),
                     totalsMapper, params.toArray()).get(0);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return null;
         }
     }

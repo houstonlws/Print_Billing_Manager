@@ -2,7 +2,6 @@ package com.houstonlewis.PrintBillMaster.services;
 
 import com.houstonlewis.PrintBillMaster.dao.AppDAO;
 import com.houstonlewis.PrintBillMaster.models.PriceProfile;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,8 +9,11 @@ import java.util.List;
 @Service
 public class AppService {
 
-    @Autowired
-    private AppDAO appDAO;
+    private final AppDAO appDAO;
+
+    public AppService(AppDAO appDAO) {
+        this.appDAO = appDAO;
+    }
 
     public PriceProfile getPriceProfile() {
         return appDAO.getPriceProfile();

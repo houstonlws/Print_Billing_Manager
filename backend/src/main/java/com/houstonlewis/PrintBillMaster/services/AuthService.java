@@ -6,7 +6,6 @@ import com.houstonlewis.PrintBillMaster.dao.AuthDAO;
 import com.houstonlewis.PrintBillMaster.models.*;
 import com.houstonlewis.PrintBillMaster.utilities.JWTUtility;
 import org.json.JSONArray;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +13,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Service
 public class AuthService {
 
-    @Autowired
-    private AuthDAO authDAO;
+    private static final Logger logger = Logger.getLogger(AuthService.class.getName());
+
+    private final AuthDAO authDAO;
+
+    public AuthService(AuthDAO authDAO) {
+        this.authDAO = authDAO;
+    }
 
     public User login(User user) {
         String id = authDAO.validateLoginInfo(user.getEmail(), user.getPassword());
@@ -41,7 +46,7 @@ public class AuthService {
         try {
             return JWTUtility.decrypt(token);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return null;
         }
     }
@@ -108,7 +113,7 @@ public class AuthService {
                         payload.get(name)
                                 .add(mapper.readValue(arr.get(len).toString(), classMap.get(name)));
                     } catch (JsonProcessingException e) {
-                        System.out.println(e.getMessage());
+                        logger.severe(e.getMessage());
                     }
                     len--;
                 }

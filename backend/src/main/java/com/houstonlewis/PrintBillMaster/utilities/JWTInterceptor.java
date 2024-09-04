@@ -13,7 +13,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class JWTInterceptor implements HandlerInterceptor {
 
-
     private final JWTVerifier jwtVerifier;
     private final Algorithm algorithm = Algorithm.HMAC256(EnvConfig.getEnv("jwt.refreshTokenSecret"));
 
@@ -24,17 +23,14 @@ public class JWTInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception {
         String authHeader = req.getHeader("Authorization");
-        System.out.println(authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
-        String token = authHeader.substring(7);
         try {
-            DecodedJWT decodedJWT = jwtVerifier.verify(token);
+            DecodedJWT decodedJWT = jwtVerifier.verify(authHeader);
             req.setAttribute("user", decodedJWT.getSubject());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }

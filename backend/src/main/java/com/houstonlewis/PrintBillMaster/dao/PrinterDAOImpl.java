@@ -1,18 +1,21 @@
 package com.houstonlewis.PrintBillMaster.dao;
 
+import com.houstonlewis.PrintBillMaster.controllers.TrackingController;
 import com.houstonlewis.PrintBillMaster.models.Printer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static com.houstonlewis.PrintBillMaster.utilities.DAOUtilities.getString;
 
 @Repository
 public class PrinterDAOImpl implements PrinterDAO {
+
+    private static final Logger logger = Logger.getLogger(TrackingController.class.getName());
 
     private final RowMapper<Printer> printerMapper = (rs, rowNum) -> new Printer(
             getString(rs, "id"),
@@ -28,8 +31,11 @@ public class PrinterDAOImpl implements PrinterDAO {
             getString(rs, "department_id")
     );
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public PrinterDAOImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public List<Printer> getPrinters(String id) {
@@ -41,7 +47,7 @@ public class PrinterDAOImpl implements PrinterDAO {
                             (id == null ? "" : "WHERE department_id=?"),
                     printerMapper, params.toArray());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return null;
         }
     }
@@ -75,7 +81,7 @@ public class PrinterDAOImpl implements PrinterDAO {
                     printer.getDepartment_id())
                     != 0;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return false;
         }
     }
@@ -108,7 +114,7 @@ public class PrinterDAOImpl implements PrinterDAO {
                     printer.getId())
                     != 0;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return false;
         }
     }

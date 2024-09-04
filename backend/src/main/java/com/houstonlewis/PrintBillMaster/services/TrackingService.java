@@ -8,19 +8,24 @@ import com.houstonlewis.PrintBillMaster.models.Job;
 import com.houstonlewis.PrintBillMaster.models.JobHistory;
 import com.houstonlewis.PrintBillMaster.models.Totals;
 import org.json.JSONArray;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Service
 public class TrackingService {
 
-    @Autowired
-    private TrackingDAO trackingDAO;
+    private static final Logger logger = Logger.getLogger(TrackingService.class.getName());
+
+    private final TrackingDAO trackingDAO;
+
+    public TrackingService(TrackingDAO trackingDAO) {
+        this.trackingDAO = trackingDAO;
+    }
 
     public Map<String, Map<String, List<Object>>> getJobHistory(String id) {
 
@@ -44,7 +49,7 @@ public class TrackingService {
                 try {
                     list.add(mapper.readValue(job.toString(), Job.class));
                 } catch (JsonProcessingException e) {
-                    System.out.println(e.getMessage());
+                    logger.severe(e.getMessage());
                 }
                 len--;
             }
@@ -67,7 +72,7 @@ public class TrackingService {
             try {
                 payload.add(mapper.readValue(arr.get(len).toString(), Job.class));
             } catch (JsonProcessingException e) {
-                System.out.println(e.getMessage());
+                logger.severe(e.getMessage());
             }
             len--;
         }

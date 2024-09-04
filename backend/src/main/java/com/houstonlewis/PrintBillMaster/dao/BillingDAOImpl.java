@@ -2,18 +2,20 @@ package com.houstonlewis.PrintBillMaster.dao;
 
 import com.houstonlewis.PrintBillMaster.models.Bill;
 import com.houstonlewis.PrintBillMaster.models.Invoice;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static com.houstonlewis.PrintBillMaster.utilities.DAOUtilities.getString;
 
 @Repository
 public class BillingDAOImpl implements BillingDAO {
+
+    private static final Logger logger = Logger.getLogger(BillingDAOImpl.class.getName());
 
     private final RowMapper<Bill> billMapper = (rs, rowNum) -> new Bill(
             getString(rs, "id"),
@@ -40,8 +42,11 @@ public class BillingDAOImpl implements BillingDAO {
             getString(rs, "status")
     );
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public BillingDAOImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public List<Bill> getDepartmentBilling(String id) {
@@ -61,7 +66,7 @@ public class BillingDAOImpl implements BillingDAO {
                             "WHERE department_id=?",
                     billMapper, id);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return null;
         }
     }
@@ -89,7 +94,7 @@ public class BillingDAOImpl implements BillingDAO {
                             "ORDER BY YEAR(date) DESC, MONTH(date) DESC",
                     invoiceMapper, params.toArray());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return null;
         }
     }
@@ -120,7 +125,7 @@ public class BillingDAOImpl implements BillingDAO {
                 return null;
             } else return invoice.get(0);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.severe(e.getMessage());
             return null;
         }
     }
