@@ -84,12 +84,12 @@ class AuthService {
     }
   };
 
-  static updateUserData = async (data: User): Promise<User | boolean> => {
+  static updateUserData = async (data: User) => {
     try {
-      console.log('[authService] sending data to update user', data);
       const result = await axios.patch(`/user/${data.id}`, data);
-      if (result.status === 200) return result.data as User;
-      return true;
+      if (result.status === 200) {
+        return result.data;
+      }
     } catch (err) {
       return false;
     }

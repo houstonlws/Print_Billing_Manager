@@ -2,6 +2,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import React, { ChangeEvent, Component } from 'react';
 
 import {
+  Alert,
   Button,
   Card,
   CardBody,
@@ -15,39 +16,43 @@ import {
 import { Link } from 'react-router-dom';
 import { AppState } from '../../../types';
 import { login } from '../../../store/actions';
+import * as yup from 'yup';
+import { Formik } from 'formik';
 
-interface LoginState {
+type FormData = {
   email: string;
   password: string;
+};
+
+const initialValues: FormData = {
+  email: '',
+  password: '',
+};
+
+const schema: yup.ObjectSchema<FormData> = yup.object().shape({
+  email: yup.string().required('Email is required'),
+  password: yup.string().required('Password is required'),
+});
+
+interface LoginState {
+  message: string;
 }
 
 class Login extends Component<LoginProps, LoginState> {
   constructor(props: LoginProps) {
     super(props);
     this.state = {
-      email: '',
-      password: '',
+      message: '',
     };
   }
 
-  onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    switch (event.target.id) {
-      case 'email':
-        this.setState({ email: event.target.value });
-        break;
-      case 'password':
-        this.setState({ password: event.target.value });
-        break;
-      default:
-    }
-  };
-
-  handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    this.props.login(this.state.email, this.state.password);
+  onSubmit = async (formData: FormData) => {
+    const result = await this.props.login(formData.email, formData.password);
+    if (!result) this.setState({ message: 'Invalid email or password' });
   };
 
   render() {
+    const { message } = this.state;
     return (
       <Container data-testid='login-root' className='align-items-center h-100'>
         <Row className='h-100'>
@@ -60,33 +65,45 @@ class Login extends Component<LoginProps, LoginState> {
             <CardHeader>
               <h2>Login</h2>
             </CardHeader>
+            {message !== '' && <Alert variant='danger'>{message}</Alert>}
             <CardBody>
-              <Form onSubmit={this.handleLogin}>
-                <FloatingLabel label='Email Address' className='mb-3'>
-                  <FormControl
-                    type='email'
-                    className='form-control'
-                    id='email'
-                    aria-describedby='emailHelp'
-                    placeholder='Enter email'
-                    value={this.state.email}
-                    onChange={this.onChange}
-                  ></FormControl>
-                </FloatingLabel>
-                <FloatingLabel label='Password' className='mb-3'>
-                  <FormControl
-                    type='password'
-                    className='form-control'
-                    id='password'
-                    placeholder='Password'
-                    value={this.state.password}
-                    onChange={this.onChange}
-                  ></FormControl>
-                </FloatingLabel>
-                <Button data-testid='submit' type='submit'>
-                  Submit
-                </Button>
-              </Form>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={schema}
+                onSubmit={this.onSubmit}
+              >
+                {({ handleSubmit, handleChange, values, errors, touched }) => (
+                  <Form onSubmit={handleSubmit}>
+                    <FloatingLabel label='Email Address' className='mb-3'>
+                      <FormControl
+                        id='email'
+                        type='email'
+                        placeholder='Enter email'
+                        value={values.email}
+                        onChange={handleChange}
+                        isInvalid={touched.email && !!errors.email}
+                      ></FormControl>
+                      <FormControl.Feedback type='invalid'>
+                        {errors.email}
+                      </FormControl.Feedback>
+                    </FloatingLabel>
+                    <FloatingLabel label='Password' className='mb-3'>
+                      <FormControl
+                        id='password'
+                        type='password'
+                        placeholder='Password'
+                        value={values.password}
+                        onChange={handleChange}
+                        isInvalid={touched.password && !!errors.password}
+                      ></FormControl>
+                      <FormControl.Feedback type='invalid'>
+                        {errors.password}
+                      </FormControl.Feedback>
+                    </FloatingLabel>
+                    <Button type='submit'>Submit</Button>
+                  </Form>
+                )}
+              </Formik>
             </CardBody>
           </Card>
           <div className='text-center'>

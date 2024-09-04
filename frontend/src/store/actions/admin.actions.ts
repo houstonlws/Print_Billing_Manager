@@ -88,6 +88,7 @@ export const getAllUsers = () => async (dispatch: Dispatch) => {
     if (result) {
       dispatch({
         type: CONSTANTS.GET_USERS_SUCCESS,
+        payload: result,
       });
       return result;
     } else {

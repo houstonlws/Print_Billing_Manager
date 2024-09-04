@@ -19,8 +19,8 @@ class SwitchUserType extends Component<ReduxProps, State> {
     };
   }
 
-  componentDidMount(): void {
-    this.props.getAllUsers();
+  async componentDidMount() {
+    await this.props.getAllUsers();
   }
 
   updateUserType = (event: any) => {
@@ -50,9 +50,7 @@ class SwitchUserType extends Component<ReduxProps, State> {
   };
 
   render(): React.ReactNode {
-    const {
-      admin: { users },
-    } = this.props;
+    const { users } = this.props.admin;
     const { updated, switchedType } = this.state;
     return (
       <Card>

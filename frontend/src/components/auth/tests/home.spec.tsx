@@ -13,7 +13,7 @@ import HomeComponent from '../components/home.component';
 const store = configureStore([thunk])({ auth: initialState });
 const mockLogin = jest.fn(
   (email: string, pwd: string) => async (dispatch: Dispatch) => {
-    return Promise.resolve();
+    return Promise.resolve(false);
   }
 );
 jest.spyOn(authActions, 'login').mockImplementation(mockLogin);

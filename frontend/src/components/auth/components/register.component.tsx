@@ -10,65 +10,77 @@ import {
   FloatingLabel,
   Form,
   FormControl,
+  FormGroup,
   Row,
 } from 'react-bootstrap';
-import { register } from '../../../store/actions';
+import { register as registerUser } from '../../../store/actions';
+import { AppState, TypeMap } from '../../../types';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
-interface RegisterState {
+type FormData = {
   email: string;
   password: string;
   password2: string;
-  status: string | null;
+};
+
+const initialValues = {
+  email: '',
+  password: '',
+  password2: '',
+};
+
+const formSchema: yup.ObjectSchema<FormData> = yup.object().shape({
+  email: yup
+    .string()
+    .matches(
+      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      'Must enter valid email'
+    )
+    .required('Email is required'),
+  password: yup.string().required('Password is required'),
+  password2: yup.string().required('Must confirm password'),
+});
+
+interface RegisterState {
+  message: string;
+  success: boolean;
 }
 
 class Register extends Component<RegisterProps, RegisterState> {
   constructor(props: RegisterProps) {
     super(props);
     this.state = {
-      email: '',
-      password: '',
-      password2: '',
-      status: null,
+      message: '',
+      success: false,
     };
-    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    switch (event.target.id) {
-      case 'email':
-        this.setState({ email: event.target.value });
-        break;
-      case 'password':
-        this.setState({ password: event.target.value });
-        break;
-      case 'password2':
-        this.setState({ password2: event.target.value });
-        break;
-      default:
+  onSubmit = async (formData: FormData) => {
+    const result = await this.props.registerUser(
+      formData.email,
+      formData.password
+    );
+    if (result) {
+      this.setState({ message: 'Registration success', success: true });
+    } else {
+      this.setState({
+        message: 'Email taken',
+        success: false,
+      });
     }
-  }
-
-  registerAccount = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const { email, password, password2 } = this.state;
-    console.log('Form submitted', { email, password, password2 });
-    if (this.passwordsMatch()) {
-      console.log('Passwords match, calling register');
-      await this.props.register(email, password);
-    } else this.setState({ status: 'danger' });
   };
 
-  passwordsMatch = () => {
-    return (
-      this.state.password === this.state.password2 &&
-      this.state.password !== '' &&
-      this.state.password !== undefined
-    );
+  validate = (values: FormData) => {
+    let errors: TypeMap<string> = {};
+    if (values.password !== values.password2) {
+      errors.password2 = 'Passwords must match';
+    }
+    return errors;
   };
 
   render() {
-    const { status } = this.state;
-
+    const { message, success } = this.state;
     return (
       <Container className='h-100'>
         <Row className='h-100'>
@@ -82,46 +94,72 @@ class Register extends Component<RegisterProps, RegisterState> {
             <CardHeader>
               <h3>Register</h3>
             </CardHeader>
+            {message !== '' && (
+              <Alert
+                className='text-center'
+                variant={success ? 'success' : 'danger'}
+              >
+                {message}
+              </Alert>
+            )}
             <CardBody>
-              {status === 'danger' && (
-                <Alert variant={'danger'}>Passwords do not match.</Alert>
-              )}
-              <Form onSubmit={this.registerAccount}>
-                <FloatingLabel label='Email Address' className='mb-3'>
-                  <FormControl
-                    type='email'
-                    className='form-control'
-                    id='email'
-                    aria-describedby='emailHelp'
-                    placeholder='Enter email'
-                    value={this.state.email}
-                    onChange={this.handleChange}
-                  ></FormControl>
-                </FloatingLabel>
-                <FloatingLabel label='Password' className='mb-3'>
-                  <FormControl
-                    type='password'
-                    className='form-control'
-                    id='password'
-                    placeholder='Password'
-                    value={this.state.password}
-                    onChange={this.handleChange}
-                  ></FormControl>
-                </FloatingLabel>
-                <FloatingLabel label='Confirm Password' className='mb-3'>
-                  <FormControl
-                    type='password'
-                    className='form-control'
-                    id='password2'
-                    placeholder='Confirm password'
-                    value={this.state.password2}
-                    onChange={this.handleChange}
-                  ></FormControl>
-                </FloatingLabel>
-                <Button type='submit' className='btn btn-primary'>
-                  Submit
-                </Button>
-              </Form>
+              <Formik
+                validationSchema={formSchema}
+                initialValues={initialValues}
+                onSubmit={this.onSubmit}
+                validate={this.validate}
+              >
+                {({ handleSubmit, values, errors, touched, handleChange }) => (
+                  <Form noValidate onSubmit={handleSubmit}>
+                    <FloatingLabel label='Email Address' className='mb-3'>
+                      <FormControl
+                        id='email'
+                        type='email'
+                        placeholder='Enter email'
+                        value={values.email}
+                        onChange={handleChange}
+                        isInvalid={touched.email && !!errors.email}
+                      ></FormControl>
+                      <FormControl.Feedback type='invalid'>
+                        {errors.email}
+                      </FormControl.Feedback>
+                    </FloatingLabel>
+
+                    <FormGroup>
+                      <FloatingLabel label='Password' className='mb-3'>
+                        <FormControl
+                          id='password'
+                          type='password'
+                          required
+                          placeholder='Password'
+                          value={values.password}
+                          isInvalid={touched.password && !!errors.password}
+                          onChange={handleChange}
+                        ></FormControl>
+                        <FormControl.Feedback type='invalid'>
+                          {errors.password}
+                        </FormControl.Feedback>
+                      </FloatingLabel>
+                    </FormGroup>
+                    <FloatingLabel label='Confirm Password' className='mb-3'>
+                      <FormControl
+                        id='password2'
+                        type='password'
+                        placeholder='Confirm password'
+                        isInvalid={touched.password2 && !!errors.password2}
+                        value={values.password2}
+                        onChange={handleChange}
+                      ></FormControl>
+                      <FormControl.Feedback type='invalid'>
+                        {errors.password2}
+                      </FormControl.Feedback>
+                    </FloatingLabel>
+                    <Button type='submit' className='btn btn-primary'>
+                      Submit
+                    </Button>
+                  </Form>
+                )}
+              </Formik>
             </CardBody>
           </Card>
         </Row>
@@ -129,15 +167,13 @@ class Register extends Component<RegisterProps, RegisterState> {
     );
   }
 }
+const mapStateToProps = (state: AppState, props: any) => ({});
 
 const mapDispatchToProps = {
-  register,
+  registerUser,
 };
 
-const connector = connect(() => {
-  return {};
-}, mapDispatchToProps);
-
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type RegisterProps = ConnectedProps<typeof connector>;
 
 export default connector(Register);

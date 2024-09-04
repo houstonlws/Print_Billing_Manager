@@ -26,11 +26,14 @@ export const login =
       const result: User = await AuthService.login(email, password);
       if (result) {
         dispatch({ type: CONSTANTS.LOGIN_SUCCESS, payload: result });
+        return true;
       } else {
         dispatch({ type: CONSTANTS.LOGIN_FAIL });
+        return false;
       }
     } catch (error) {
       dispatch({ type: CONSTANTS.LOGIN_FAIL });
+      return false;
     }
   };
 
@@ -143,6 +146,7 @@ export const getAllDataUser = (depId: string) => async (dispatch: Dispatch) => {
 export const updateUserData = (data: User) => async (dispatch: Dispatch) => {
   try {
     const result = await AuthService.updateUserData(data);
+    console.log('auth action ', result);
     if (result) {
       dispatch({ type: CONSTANTS.UPDATE_USER_DATA_SUCCESS, payload: result });
       return true;
