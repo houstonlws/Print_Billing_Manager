@@ -69,11 +69,11 @@ Before you begin, ensure you have the following installed:
 
 3. **Create Tables:**
 
-   - Navigate to File > Open SQL Script, find the file named `db-create.sql` and click Open.
+   - Navigate to File > Open SQL Script, find the file named `db-create.sql` in the `database` folder and click Open.
    - In the toolbar find the lightning bolt icon and click it in order to run the script.
 
 4. **Insert Test Data:**
-   - Navigate to File > Open SQL Script, find the file named `db-insert.sql` and click Open.
+   - Navigate to File > Open SQL Script, find the file named `db-insert.sql` in the `database` folder and click Open.
    - In the toolbar find the lightning bolt icon and click it in order to run the script.
 
 ### Step 3: Verify the Database
