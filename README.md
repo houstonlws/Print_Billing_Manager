@@ -64,7 +64,17 @@ Before you begin, ensure you have the following installed:
    - Click **Apply** to create the database.
 
 2. **Apply SQL Script:**
+
    - MySQL Workbench will generate the necessary SQL script. Review it and click **Apply** to execute the script and create the `print_billing_db` database.
+
+3. **Create Tables:**
+
+   - Navigate to File > Open SQL Script, find the file named `db-create.sql` and click Open.
+   - In the toolbar find the lightning bolt icon and click it in order to run the script.
+
+4. **Insert Test Data:**
+   - Navigate to File > Open SQL Script, find the file named `db-insert.sql` and click Open.
+   - In the toolbar find the lightning bolt icon and click it in order to run the script.
 
 ### Step 3: Verify the Database
 
@@ -105,6 +115,9 @@ Before you begin, ensure you have the following installed:
 ### Start the Frontend Application:
 
 - Run the frontend application:
+
   ```bash
   npm run start
   ```
+
+- Log in using the default account credentials `dev@dev.dev | pass`
