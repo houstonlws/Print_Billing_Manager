@@ -11,7 +11,7 @@ import lombok.*;
 public class BillingPeriod {
 
     private String id;
-    private String month;
     private String year;
-    
+    private String month;
+
 }

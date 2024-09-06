@@ -1,8 +1,6 @@
 package com.houstonlewis.PrintBillMaster.dao;
 
-import com.houstonlewis.PrintBillMaster.models.CurrentJobs;
-import com.houstonlewis.PrintBillMaster.models.JobHistory;
-import com.houstonlewis.PrintBillMaster.models.Totals;
+import com.houstonlewis.PrintBillMaster.models.*;
 
 import java.util.List;
 
@@ -13,5 +11,10 @@ public interface TrackingDAO {
     List<CurrentJobs> getCurrentJobs(String id);
 
     Totals getCurrentTotals(String id);
-    
+
+    List<BillingPeriod> getBillingPeriods(String id);
+
+    BillingPeriod getCurrentBillingPeriod();
+
+    List<Job> getJobsByBillingPeriod(String depId, String bpId);
 }

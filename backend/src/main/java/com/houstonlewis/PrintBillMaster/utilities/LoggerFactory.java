@@ -1,10 +1,7 @@
 package com.houstonlewis.PrintBillMaster.utilities;
 
 import java.io.OutputStream;
-import java.util.logging.Formatter;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import java.util.logging.StreamHandler;
+import java.util.logging.*;
 
 public class LoggerFactory {
 
@@ -12,12 +9,15 @@ public class LoggerFactory {
         Logger logger = Logger.getLogger(clazz.getName());
 
         CustomConsoleHandler ch = new CustomConsoleHandler(System.out, new LogFormatter());
+        ch.setLevel(Level.FINE);
         logger.addHandler(ch);
+        logger.setLevel(Level.FINE);
 
         Logger rootLogger = Logger.getLogger("");
         for (var handler : rootLogger.getHandlers()) {
             rootLogger.removeHandler(handler);
         }
+
 
         return logger;
     }
@@ -29,6 +29,9 @@ public class LoggerFactory {
             String[] classParts = record.getSourceClassName().split("\\.");
             String color;
             switch (record.getLevel().getName()) {
+                case "FINE":
+                    color = "\u001b[34m";
+                    break;
                 case "SEVERE":
                     color = "\u001B[31m";
                     break;

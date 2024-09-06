@@ -11,8 +11,13 @@ interface Props {
 class TotalsBlock extends Component<ReduxProps, State> {
   render(): React.ReactNode {
     const { value, title, unit } = this.props;
-    return (
-      <Card className='totals-block'>
+    return [
+      <style key={'tb-styles'}>
+        {`.totals-block {
+              width: 100%;
+          }`}
+      </style>,
+      <Card key={'tb-block'} className='totals-block'>
         <CardBody>
           <strong>{title}</strong>
           <div className='d-flex align-items-center'>
@@ -20,8 +25,8 @@ class TotalsBlock extends Component<ReduxProps, State> {
             <small>{unit}</small>
           </div>
         </CardBody>
-      </Card>
-    );
+      </Card>,
+    ];
   }
 }
 const mapStateToProps = (state: AppState) => ({});

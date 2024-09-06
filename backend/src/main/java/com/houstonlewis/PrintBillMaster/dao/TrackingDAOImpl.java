@@ -1,10 +1,8 @@
 package com.houstonlewis.PrintBillMaster.dao;
 
 import com.houstonlewis.PrintBillMaster.controllers.TrackingController;
-import com.houstonlewis.PrintBillMaster.models.CurrentJobs;
-import com.houstonlewis.PrintBillMaster.models.Job;
-import com.houstonlewis.PrintBillMaster.models.JobHistory;
-import com.houstonlewis.PrintBillMaster.models.Totals;
+import com.houstonlewis.PrintBillMaster.models.*;
+import com.houstonlewis.PrintBillMaster.utilities.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -18,7 +16,7 @@ import static com.houstonlewis.PrintBillMaster.utilities.DAOUtilities.getString;
 @Repository
 public class TrackingDAOImpl implements TrackingDAO {
 
-    private static final Logger logger = Logger.getLogger(TrackingController.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(TrackingController.class);
 
     private final RowMapper<Job> jobMapper = (rs, rowNum) -> new Job(
             getString(rs, "id"),
@@ -109,7 +107,7 @@ public class TrackingDAOImpl implements TrackingDAO {
                             "FROM jobs\n" +
                             "WHERE YEAR(date) = YEAR(CURRENT_DATE())\n" +
                             "AND MONTH(date) = MONTH(CURRENT_DATE())\n" +
-                            (id != null ? "AND department_id=?\n" : "\n") +
+                            (id != null ? "AND department_id=?\n" : "") +
                             ") as subquery",
                     currentJobsMapper, params.toArray());
         } catch (Exception e) {
@@ -143,6 +141,72 @@ public class TrackingDAOImpl implements TrackingDAO {
                             "AND MONTH(date) = MONTH(CURRENT_DATE())\n" +
                             (id != null ? "AND department_id=?" : ""),
                     totalsMapper, params.toArray()).get(0);
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<BillingPeriod> getBillingPeriods(String id) {
+        try {
+            List<String> params = new ArrayList<>();
+            if (id != null) params.add(id);
+            return jdbcTemplate.query(
+                    "SELECT MAX(b.id) id, YEAR(b.date) year, MONTH(b.date) month\n" +
+                            "FROM invoices i\n" +
+                            "LEFT JOIN billing_periods b\n" +
+                            "ON i.bill_period_id = b.id\n" +
+                            (id != null ? "WHERE department_id = ?\n" : "") +
+                            "GROUP BY year, month\n" +
+                            "ORDER BY year DESC, month DESC",
+                    (rs, rowNum) -> new BillingPeriod(
+                            getString(rs, "id"),
+                            getString(rs, "year"),
+                            getString(rs, "month")
+                    ), params.toArray());
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public BillingPeriod getCurrentBillingPeriod() {
+        try {
+            return jdbcTemplate.query(
+                    "SELECT id, YEAR(date) year, MONTH(date) month\n" +
+                            "FROM billing_periods\n" +
+                            "WHERE YEAR(CURRENT_DATE()) = YEAR(date)\n" +
+                            "AND MONTH(CURRENT_DATE()) = MONTH(date)",
+                    (rs, rowNum) -> new BillingPeriod(
+                            getString(rs, "id"),
+                            getString(rs, "year"),
+                            getString(rs, "month")
+                    )).get(0);
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<Job> getJobsByBillingPeriod(String depId, String bpId) {
+        try {
+            List<String> params = new ArrayList<>();
+            if (depId != null) params.add(depId);
+            jdbcTemplate.update(
+                    "SET @month = (SELECT MONTH(date) FROM billing_periods WHERE id=?),\n" +
+                            "@year = (SELECT YEAR(date) FROM billing_periods WHERE id=?)",
+                    bpId, bpId);
+            return jdbcTemplate.query(
+                    "SELECT * \n" +
+                            "FROM jobs \n" +
+                            "WHERE MONTH(date) = @month\n" +
+                            "AND YEAR(date) = @year\n" +
+                            (depId != null ? "AND department_id = ?" : ""),
+                    jobMapper, params.toArray()
+            );
         } catch (Exception e) {
             logger.severe(e.getMessage());
             return null;

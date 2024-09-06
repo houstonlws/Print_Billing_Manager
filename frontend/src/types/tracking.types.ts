@@ -22,8 +22,16 @@ type Totals = {
   totalCharge: number;
 };
 
+export type BillingPeriod = {
+  id: string;
+  year: string;
+  month: string;
+};
+
 export type TrackingState = {
   currentJobs: Job[];
   jobHistory: TypeMap<TypeMap<Job[]>>;
   totals: Totals;
+  billingPeriods: BillingPeriod[];
+  currentBillingPeriod: BillingPeriod;
 };

@@ -154,7 +154,11 @@ class Register extends Component<RegisterProps, RegisterState> {
                         {errors.password2}
                       </FormControl.Feedback>
                     </FloatingLabel>
-                    <Button type='submit' className='btn btn-primary'>
+                    <Button
+                      data-testid='submit'
+                      type='submit'
+                      className='btn btn-primary'
+                    >
                       Submit
                     </Button>
                   </Form>

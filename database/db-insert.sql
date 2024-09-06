@@ -68,8 +68,7 @@ INSERT INTO notifications (notification_date, department_id, maintenance_id, mes
 ('2022-08-01 10:00:00', 6, 6, 'Routine maintenance scheduled for Printer SN65432.', FALSE),
 ('2022-11-01 13:00:00', 7, 7, 'Paper jam reported for Printer SN67854.', TRUE);
 
-INSERT INTO jobs (printer_id, department_id, date, title, pages, color_pages, black_and_white_pages)
-VALUES
+INSERT INTO jobs (printer_id, department_id, date, title, pages, color_pages, black_and_white_pages) VALUES
 (1, 1, '2023-02-05', 'Report Printing', 30, 10, 20),
 (1, 1, '2023-04-15', 'Brochure Printing', 50, 30, 20),
 (1, 1, '2023-06-10', 'Manual Printing', 75, 25, 50),

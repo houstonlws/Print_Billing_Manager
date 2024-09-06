@@ -21,6 +21,7 @@ import {
   getJobHistory,
   refreshToken,
   getCurrentTotals,
+  getDepartmentMaintenanceRequests,
 } from '../../store/actions';
 import {
   BillingComponent,
@@ -61,10 +62,10 @@ class DashboardComponent extends Component<DashboardProps, State> {
       await this.props.getJobHistory();
       await this.props.getCurrentTotals();
     } else if (user?.type === CONSTANTS.USER) {
-      console.log(user);
       await this.props.getAllDataUser(user.department_id);
       await this.props.getJobHistory(user.department_id);
       await this.props.getCurrentTotals(user.department_id);
+      await this.props.getDepartmentMaintenanceRequests(user.department_id);
     }
   }
 
@@ -81,6 +82,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
         await this.props.getAllDataUser(event.target.value);
         await this.props.getJobHistory(event.target.value);
         await this.props.getCurrentJobs(event.target.value);
+        await this.props.getDepartmentMaintenanceRequests(event.target.value);
         break;
     }
   };
@@ -233,6 +235,7 @@ const connector = connect(
     getCurrentJobs,
     refreshToken,
     getCurrentTotals,
+    getDepartmentMaintenanceRequests,
   }
 );
 

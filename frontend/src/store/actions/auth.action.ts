@@ -146,7 +146,6 @@ export const getAllDataUser = (depId: string) => async (dispatch: Dispatch) => {
 export const updateUserData = (data: User) => async (dispatch: Dispatch) => {
   try {
     const result = await AuthService.updateUserData(data);
-    console.log('auth action ', result);
     if (result) {
       dispatch({ type: CONSTANTS.UPDATE_USER_DATA_SUCCESS, payload: result });
       return true;

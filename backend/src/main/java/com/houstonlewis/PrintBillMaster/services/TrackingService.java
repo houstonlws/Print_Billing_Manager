@@ -3,10 +3,7 @@ package com.houstonlewis.PrintBillMaster.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.houstonlewis.PrintBillMaster.dao.TrackingDAO;
-import com.houstonlewis.PrintBillMaster.models.CurrentJobs;
-import com.houstonlewis.PrintBillMaster.models.Job;
-import com.houstonlewis.PrintBillMaster.models.JobHistory;
-import com.houstonlewis.PrintBillMaster.models.Totals;
+import com.houstonlewis.PrintBillMaster.models.*;
 import org.json.JSONArray;
 import org.springframework.stereotype.Service;
 
@@ -81,6 +78,18 @@ public class TrackingService {
 
     public Totals getCurrentTotals(String id) {
         return trackingDAO.getCurrentTotals(id);
+    }
+
+    public List<BillingPeriod> getBillingPeriods(String id) {
+        return trackingDAO.getBillingPeriods(id);
+    }
+
+    public BillingPeriod getCurrentBillingPeriod() {
+        return trackingDAO.getCurrentBillingPeriod();
+    }
+
+    public List<Job> getJobsByBillingPeriod(String depId, String bpId) {
+        return trackingDAO.getJobsByBillingPeriod(depId, bpId);
     }
 
 }

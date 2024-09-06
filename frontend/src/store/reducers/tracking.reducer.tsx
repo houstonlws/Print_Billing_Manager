@@ -17,6 +17,12 @@ export const initialState: TrackingState = {
   currentJobs: [],
   jobHistory: {},
   totals: initialTotals,
+  billingPeriods: [],
+  currentBillingPeriod: {
+    id: '',
+    year: '',
+    month: '',
+  },
 };
 
 const printerReducer = (state = initialState, action: PayloadAction) => {
@@ -69,6 +75,34 @@ const printerReducer = (state = initialState, action: PayloadAction) => {
       return {
         ...state,
         totals: initialTotals,
+      };
+    }
+    case CONSTANTS.GET_BILLING_PERIODS_SUCCESS: {
+      return {
+        ...state,
+        billingPeriods: payload,
+      };
+    }
+    case CONSTANTS.GET_BILLING_PERIODS_FAILURE: {
+      return {
+        ...state,
+        billingPeriods: [],
+      };
+    }
+    case CONSTANTS.GET_CURRENT_BILLING_PERIOD_SUCCESS: {
+      return {
+        ...state,
+        currentBillingPeriod: payload,
+      };
+    }
+    case CONSTANTS.GET_CURRENT_BILLING_PERIOD_FAILURE: {
+      return {
+        ...state,
+        currentBillingPeriod: {
+          id: '',
+          year: '',
+          month: '',
+        },
       };
     }
     default:

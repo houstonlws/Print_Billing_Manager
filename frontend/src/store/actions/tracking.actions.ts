@@ -69,3 +69,63 @@ export const getJobHistoryTotals =
       return false;
     }
   };
+
+export const getBillingPeriods =
+  (id?: string) => async (dispatch: Dispatch) => {
+    try {
+      const result = await TrackingService.getBillingPeriods(id);
+      if (result) {
+        dispatch({
+          type: CONSTANTS.GET_BILLING_PERIODS_SUCCESS,
+          payload: result,
+        });
+        return true;
+      } else {
+        dispatch({ type: CONSTANTS.GET_JOB_HISTORY_TOTALS_FAILURE });
+        return false;
+      }
+    } catch (error) {
+      dispatch({ type: CONSTANTS.GET_JOB_HISTORY_TOTALS_FAILURE });
+      return false;
+    }
+  };
+
+export const getCurrentBillingPeriod =
+  (id?: string) => async (dispatch: Dispatch) => {
+    try {
+      const result = await TrackingService.getCurrentBillingPeriod();
+      if (result) {
+        dispatch({
+          type: CONSTANTS.GET_CURRENT_BILLING_PERIOD_SUCCESS,
+          payload: result,
+        });
+        return true;
+      } else {
+        dispatch({ type: CONSTANTS.GET_CURRENT_BILLING_PERIOD_FAILURE });
+        return false;
+      }
+    } catch (error) {
+      dispatch({ type: CONSTANTS.GET_CURRENT_BILLING_PERIOD_FAILURE });
+      return false;
+    }
+  };
+
+export const getJobsByBillingPeriod =
+  (bpId: string, depId?: string) => async (dispatch: Dispatch) => {
+    try {
+      const result = await TrackingService.getJobsByBillingPeriod(bpId, depId);
+      if (result) {
+        dispatch({
+          type: CONSTANTS.GET_JOBS_SUCCESS,
+          payload: result,
+        });
+        return true;
+      } else {
+        dispatch({ type: CONSTANTS.GET_JOBS_FAILURE });
+        return false;
+      }
+    } catch (error) {
+      dispatch({ type: CONSTANTS.GET_JOBS_FAILURE });
+      return false;
+    }
+  };

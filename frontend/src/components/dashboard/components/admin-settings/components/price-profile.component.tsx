@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { AppState, PriceConfig } from '../../../../../types';
 import {
@@ -20,12 +20,6 @@ import {
   setPriceProfile,
 } from '../../../../../store/actions';
 
-interface State {
-  tempPriceProfile: PriceConfig;
-  selectedProfile: string;
-  loaded: boolean;
-}
-
 const initialProfile: PriceConfig = {
   id: '',
   name: '',
@@ -35,119 +29,95 @@ const initialProfile: PriceConfig = {
   is_active: '',
 };
 
-class PriceProfile extends Component<ReduxProps, State> {
-  constructor(props: ReduxProps) {
-    super(props);
-    this.state = {
-      tempPriceProfile: initialProfile,
-      selectedProfile: props.admin.activeProfile?.id || '',
-      loaded: false,
+const PriceProfile = (props: Props) => {
+  const [tempPriceProfile, setTempPriceProfile] =
+    useState<PriceConfig>(initialProfile);
+  const [selectedProfile, setSelectedProfile] = useState<string>(
+    props.admin.activeProfile?.id || ''
+  );
+  const [loaded, setLoaded] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await props.getPriceProfileList();
+      await props.getPriceProfile();
     };
-  }
 
-  async componentDidMount() {
-    await this.props.getPriceProfileList();
-    await this.props.getPriceProfile();
-  }
+    fetchData();
+  }, []);
 
-  componentDidUpdate(
-    prevProps: Readonly<ReduxProps>,
-    prevState: Readonly<State>,
-    snapshot?: any
-  ): void {
-    const { loaded } = this.state;
-    const {
-      admin: { priceProfiles, activeProfile },
-    } = this.props;
-    if (
-      prevState.selectedProfile === '' &&
-      !loaded &&
-      activeProfile?.id !== ''
-    ) {
-      this.setState({ selectedProfile: activeProfile.id, loaded: true });
-      const prof = priceProfiles?.find((p) => p.id == activeProfile.id);
-      if (prof) this.setState({ tempPriceProfile: prof });
-    }
-  }
-
-  addPriceProfile = async () => {
-    const { tempPriceProfile: priceProfile } = this.state;
-    const result = await this.props.addPriceProfile(priceProfile);
-    if (result) {
-      console.log('added');
-      window.location.reload();
-    }
-  };
-
-  setPriceProfile = async () => {
-    const { selectedProfile } = this.state;
-    const result = await this.props.setPriceProfile(selectedProfile);
-    if (result) {
-      console.log('set');
-      window.location.reload();
-    }
-  };
-
-  onChange = (event: any) => {
-    const { tempPriceProfile } = this.state;
-    switch (event.target.id) {
-      case 'profile-name':
-        tempPriceProfile.name = event.target.value;
-        break;
-      case 'bw-price':
-        tempPriceProfile.bw_price = event.target.value;
-        break;
-      case 'color-price':
-        tempPriceProfile.color_price = event.target.value;
-        break;
-      case 'paper-price':
-        tempPriceProfile.paper_price = event.target.value;
-        break;
-      default:
-        break;
-    }
-    this.setState({ tempPriceProfile: tempPriceProfile });
-  };
-
-  onChangeSelect = (event: any) => {
-    const {
-      admin: { priceProfiles, activeProfile },
-    } = this.props;
-    this.setState({ selectedProfile: event.target.value });
-    if (event.target.value === '') {
-      this.setState({ tempPriceProfile: initialProfile });
-    } else {
-      const prof = priceProfiles?.find((p) => p.id == activeProfile.id);
-      if (prof) this.setState({ tempPriceProfile: prof });
-    }
-  };
-
-  render(): React.ReactNode {
-    const { selectedProfile, tempPriceProfile } = this.state;
-    const {
-      admin: { priceProfiles },
-    } = this.props;
-
-    let selectedProfileData;
-    if (selectedProfile !== '') {
-      selectedProfileData = priceProfiles?.find(
-        (p) => p.id === selectedProfile
+  useEffect(() => {
+    if (!loaded && selectedProfile === '' && props.admin.activeProfile?.id) {
+      setSelectedProfile(props.admin.activeProfile.id);
+      setLoaded(true);
+      const prof = props.admin.priceProfiles?.find(
+        (p) => p.id === props.admin.activeProfile.id
       );
-    } else {
-      selectedProfileData = tempPriceProfile;
+      if (prof) setTempPriceProfile(prof);
     }
+  }, [
+    loaded,
+    selectedProfile,
+    props.admin.activeProfile,
+    props.admin.priceProfiles,
+  ]);
 
-    return [
-      <Card key={1}>
+  const addPriceProfile = async () => {
+    const result = await props.addPriceProfile(tempPriceProfile);
+    if (result) {
+      window.location.reload();
+    }
+  };
+
+  const setPriceProfile = async () => {
+    const result = await props.setPriceProfile(selectedProfile);
+    if (result) {
+      window.location.reload();
+    }
+  };
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = event.target;
+    setTempPriceProfile((prev) => ({
+      ...prev,
+      [id.replace('profile-', '')]: value || '',
+    }));
+  };
+
+  const onChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = event.target;
+    setSelectedProfile(value);
+    if (value === '') {
+      setTempPriceProfile(initialProfile);
+    } else {
+      const prof = props.admin.priceProfiles?.find((p) => p.id === value);
+      if (prof) setTempPriceProfile(prof);
+    }
+  };
+
+  const { priceProfiles } = props.admin;
+  const selectedProfileData =
+    selectedProfile !== ''
+      ? priceProfiles?.find((p) => p.id === selectedProfile)
+      : tempPriceProfile;
+
+  const profileName = selectedProfileData?.name || '';
+  const bwPrice = selectedProfileData?.bw_price || '';
+  const colorPrice = selectedProfileData?.color_price || '';
+  const paperPrice = selectedProfileData?.paper_price || '';
+
+  return (
+    <>
+      <Card>
         <CardBody>
           <div className='d-flex'>
             <h3 className='me-auto'>Set Active Price Profile</h3>
-            <Button onClick={this.setPriceProfile}>Update</Button>
+            <Button onClick={setPriceProfile}>Update</Button>
           </div>
           <FormSelect
             id={'price-profile'}
             data-testid={'select-price-profile'}
-            onChange={this.onChangeSelect}
+            onChange={onChangeSelect}
             value={selectedProfile}
           >
             <option value={''}>create new price profile</option>
@@ -158,16 +128,13 @@ class PriceProfile extends Component<ReduxProps, State> {
             ))}
           </FormSelect>
         </CardBody>
-      </Card>,
+      </Card>
 
-      <Card key={2}>
+      <Card>
         <CardBody>
           <div className='d-flex'>
             <h3 className='me-auto'>Materials Price</h3>
-            <Button
-              disabled={selectedProfile !== ''}
-              onClick={this.addPriceProfile}
-            >
+            <Button disabled={selectedProfile !== ''} onClick={addPriceProfile}>
               Add
             </Button>
           </div>
@@ -181,10 +148,10 @@ class PriceProfile extends Component<ReduxProps, State> {
                   id='profile-name'
                   type='text'
                   placeholder='Profile Name'
-                  onChange={this.onChange}
-                  value={selectedProfileData?.name}
+                  onChange={onChange}
+                  value={profileName}
                   disabled={selectedProfile !== ''}
-                ></FormControl>
+                />
               </Col>
             </FormGroup>
             <FormGroup as={Row}>
@@ -196,10 +163,10 @@ class PriceProfile extends Component<ReduxProps, State> {
                   id='bw-price'
                   type='number'
                   placeholder='B&W Price'
-                  onChange={this.onChange}
-                  value={selectedProfileData?.bw_price}
+                  onChange={onChange}
+                  value={bwPrice}
                   disabled={selectedProfile !== ''}
-                ></FormControl>
+                />
               </Col>
             </FormGroup>
             <FormGroup as={Row}>
@@ -211,10 +178,10 @@ class PriceProfile extends Component<ReduxProps, State> {
                   id='color-price'
                   type='number'
                   placeholder='Color Price'
-                  onChange={this.onChange}
-                  value={selectedProfileData?.color_price}
+                  onChange={onChange}
+                  value={colorPrice}
                   disabled={selectedProfile !== ''}
-                ></FormControl>
+                />
               </Col>
             </FormGroup>
             <FormGroup as={Row}>
@@ -226,18 +193,19 @@ class PriceProfile extends Component<ReduxProps, State> {
                   id='paper-price'
                   type='number'
                   placeholder='Paper Price'
-                  onChange={this.onChange}
-                  value={selectedProfileData?.paper_price}
+                  onChange={onChange}
+                  value={paperPrice}
                   disabled={selectedProfile !== ''}
-                ></FormControl>
+                />
               </Col>
             </FormGroup>
           </Form>
         </CardBody>
-      </Card>,
-    ];
-  }
-}
+      </Card>
+    </>
+  );
+};
+
 const mapStateToProps = (state: AppState) => ({
   admin: state.admin,
 });
@@ -247,6 +215,8 @@ const mapDispatchToProps = {
   getPriceProfile,
   getPriceProfileList,
 };
+
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type ReduxProps = ConnectedProps<typeof connector>;
+type Props = ConnectedProps<typeof connector>;
+
 export default connector(PriceProfile);

@@ -35,7 +35,9 @@ class PrintersService {
   static async getMaintenanceRequests(
     depId: string
   ): Promise<MaintenanceRequest[]> {
-    const result = await axios.get(`/protected/maintenance/${depId}`);
+    const result = await axios.get(
+      `/protected/maintenance${depId ? '/' + depId : ''}`
+    );
     if (result.status === 200) return result.data;
     return [];
   }

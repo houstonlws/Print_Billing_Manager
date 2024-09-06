@@ -16,6 +16,10 @@ interface State {
   requestsMap: TypeMap<{ editing: boolean; status: string; original: string }>;
 }
 
+type Props = {
+  selectedDepartment?: string;
+} & ReduxProps;
+
 class MaintenanceComponent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -23,6 +27,25 @@ class MaintenanceComponent extends Component<Props, State> {
       requestsMap: {},
     };
   }
+
+  componentDidUpdate(
+    prevProps: Readonly<Props>,
+    prevState: Readonly<State>,
+    snapshot?: any
+  ): void {
+    if (prevProps.printer.requests === this.props.printer.requests) {
+      this.getMaintenanceRequests();
+    }
+  }
+
+  getMaintenanceRequests = async () => {
+    const { selectedDepartment, user } = this.props;
+    const department =
+      user.type === CONSTANTS.ADMIN
+        ? selectedDepartment || ''
+        : user.department_id;
+    await this.props.getDepartmentMaintenanceRequests(department);
+  };
 
   render(): ReactNode {
     const { requests } = this.props.printer;
@@ -61,7 +84,7 @@ const mapDispatchToProps = {
   getAllPrinters,
 };
 
-type Props = ConnectedProps<typeof connector>;
+type ReduxProps = ConnectedProps<typeof connector>;
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 

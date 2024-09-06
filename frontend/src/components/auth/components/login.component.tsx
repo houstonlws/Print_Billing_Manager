@@ -100,7 +100,9 @@ class Login extends Component<LoginProps, LoginState> {
                         {errors.password}
                       </FormControl.Feedback>
                     </FloatingLabel>
-                    <Button type='submit'>Submit</Button>
+                    <Button data-testid='submit' type='submit'>
+                      Submit
+                    </Button>
                   </Form>
                 )}
               </Formik>
