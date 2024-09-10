@@ -25,6 +25,7 @@ import { departmentsMap } from '../../../../config/app-data';
 import TotalsBlockComponent from './components/totals-block.component';
 import { Job, AppState } from '../../../../types';
 import GraphComponent from './components/graph.component';
+import { CONSTANTS } from '../../../../config/constants';
 
 interface Props {
   selectedDepartment?: string;
@@ -59,7 +60,7 @@ const TrackingModule = (props: TrackingProps) => {
     setBillingPeriod(event.target.value);
     await props.getJobsByBillingPeriod(
       event.target.value,
-      user.id === '0' ? selectedDepartment : user.id
+      user.type === CONSTANTS.ADMIN ? selectedDepartment : user.id
     );
   };
 
@@ -78,8 +79,8 @@ const TrackingModule = (props: TrackingProps) => {
               ? departmentsMap[selectedDepartment].name
               : departmentsMap[user.department_id]?.name || 'All Departments'
           }`}</h3>
-          <div>
-            <FormLabel>Billing Period</FormLabel>
+          <div className='d-flex align-items-center'>
+            <strong className='text-nowrap me-1'>Billing Period:</strong>
             <FormSelect value={billingPeriod} onChange={getJobsByBillingPeriod}>
               {billingPeriods?.map(({ id, year, month }, i) => (
                 <option key={i} value={id}>{`${year}-${month}`}</option>
