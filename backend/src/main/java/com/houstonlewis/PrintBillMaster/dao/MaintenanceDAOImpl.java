@@ -38,6 +38,7 @@ public class MaintenanceDAOImpl implements MaintenanceDAO {
             List<String> params = new ArrayList<>();
             if (id != null) params.add(id);
             String query = "SELECT " +
+                    "id," +
                     "printer_id," +
                     "department_id," +
                     "DATE_FORMAT(request_date, '%Y-%m-%d') as request_date," +
