@@ -1,231 +1,219 @@
-import React, { Component, ReactNode } from 'react';
+import React, { useState } from 'react';
 import { ConnectedProps, connect } from 'react-redux';
 import {
   Button,
   ButtonGroup,
+  FloatingLabel,
   Form,
   FormControl,
   FormGroup,
-  FormLabel,
   Modal,
-  Row,
 } from 'react-bootstrap';
 import { Printer } from '../../../../../types/printer.types';
 import { updatePrinter } from '../../../../../store/actions/printer.actions';
-
-interface State {
-  tempPrinter: Printer;
-  editing: boolean;
-}
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 interface Props {
   printer: Printer;
 }
 
-class EditPrinter extends Component<EditProps, State> {
-  constructor(props: EditProps) {
-    super(props);
-    this.state = {
-      editing: false,
-      tempPrinter: { ...props.printer },
-    };
-  }
-
-  onChange = (event: any) => {
-    const { tempPrinter } = this.state;
-    switch (event.target.id) {
-      case 'serial':
-        tempPrinter.serial_number = event.target.value;
-        break;
-      case 'brand':
-        tempPrinter.brand = event.target.value;
-        break;
-      case 'model':
-        tempPrinter.model = event.target.value;
-        break;
-      case 'location':
-        tempPrinter.location = event.target.value;
-        break;
-      case 'ip':
-        tempPrinter.ip_address = event.target.value;
-        break;
-      case 'mac':
-        tempPrinter.mac_address = event.target.value;
-        break;
-      case 'install_date':
-        tempPrinter.installation_date = event.target.value;
-        break;
-      case 'warranty':
-        tempPrinter.warranty_expiry_date = event.target.value;
-        break;
-      case 'firmware':
-        tempPrinter.firmware_version = event.target.value;
-        break;
-      default:
-        return;
-    }
-    this.setState({ tempPrinter });
-  };
-
-  toggleEditing = () => {
-    this.setState((prevState) => ({
-      editing: !prevState.editing,
-    }));
-  };
-
-  saveEdit = () => {
-    const { tempPrinter } = this.state;
-    this.props.updatePrinter(tempPrinter);
-    this.toggleEditing();
-  };
-
-  discardEdit = () => {
-    this.setState({ tempPrinter: { ...this.props.printer } });
-    this.toggleEditing();
-  };
-
-  render(): ReactNode {
-    const { editing, tempPrinter } = this.state;
-    const { printer } = this.props;
-
-    return (
-      <div>
-        <div data-testid={`edit-printer-${printer.id}`}>
-          <Button data-testid={`show-editor`} onClick={this.toggleEditing}>
-            Edit
-          </Button>
-        </div>
-        <Modal
-          show={editing}
-          onHide={this.discardEdit}
-          backdrop='static'
-          keyboard={false}
-        >
-          <Modal.Header className='d-flex justify-content-center' closeButton>
-            <Modal.Title className='me-auto'>Edit Printer</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <FormGroup as={Row}>
-                <FormLabel>Serial</FormLabel>
-                <FormControl
-                  type='text'
-                  id='serial'
-                  placeholder='Serial'
-                  onChange={this.onChange}
-                  value={tempPrinter.serial_number}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Model</FormLabel>
-                <FormControl
-                  type='text'
-                  id='model'
-                  placeholder='Model'
-                  onChange={this.onChange}
-                  value={tempPrinter.model}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Brand</FormLabel>
-                <FormControl
-                  type='text'
-                  id='brand'
-                  placeholder='Brand'
-                  onChange={this.onChange}
-                  value={tempPrinter.brand}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Location</FormLabel>
-                <FormControl
-                  type='text'
-                  id='location'
-                  placeholder='Location'
-                  onChange={this.onChange}
-                  value={tempPrinter.location}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>IP Address</FormLabel>
-                <FormControl
-                  type='text'
-                  id='ip'
-                  placeholder='IP Address'
-                  onChange={this.onChange}
-                  value={tempPrinter.ip_address}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>MAC Address</FormLabel>
-                <FormControl
-                  type='text'
-                  id='mac'
-                  placeholder='MAC Address'
-                  onChange={this.onChange}
-                  value={tempPrinter.mac_address}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Firmware Version</FormLabel>
-                <FormControl
-                  type='text'
-                  id='firmware'
-                  placeholder='Firmware Version'
-                  onChange={this.onChange}
-                  value={tempPrinter.firmware_version}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Installation Date</FormLabel>
-                <FormControl
-                  type='text'
-                  id='install_date'
-                  placeholder='Installation Date'
-                  onChange={this.onChange}
-                  value={tempPrinter.installation_date}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Warranty Expiration</FormLabel>
-                <FormControl
-                  type='text'
-                  id='warranty'
-                  placeholder='Warranty Expiration'
-                  onChange={this.onChange}
-                  value={tempPrinter.warranty_expiry_date}
-                ></FormControl>
-              </FormGroup>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <ButtonGroup>
-              <Button variant='secondary' onClick={this.discardEdit}>
-                Cancel
-              </Button>
-              <Button
-                data-testid='submit-edit'
-                variant='success'
-                onClick={this.saveEdit}
-              >
-                Save
-              </Button>
-            </ButtonGroup>
-          </Modal.Footer>
-        </Modal>
-      </div>
-    );
-  }
-}
-
 const mapStateToProps = () => ({});
-
 const mapDispatchToProps = {
   updatePrinter,
 };
-
 const connector = connect(mapStateToProps, mapDispatchToProps);
-
 type EditProps = ConnectedProps<typeof connector> & Props;
+
+const EditPrinter = (props: EditProps) => {
+  const [editing, setEditing] = useState<boolean>(false);
+  const { printer } = props;
+  const schema = yup.object().shape({
+    serial_number: yup.string().required('Serial number is required'),
+    model: yup.string().required('Model is required'),
+    brand: yup.string().required('Brand is required'),
+    location: yup.string().required('Location is required'),
+    installation_date: yup.string(),
+    warranty_expiry_date: yup.string(),
+    ip_address: yup.string(),
+    mac_address: yup.string(),
+    firmware_version: yup.string(),
+    department_id: yup.string(),
+  });
+
+  const toggleEditing = () => {
+    setEditing((prev) => !prev);
+  };
+
+  const saveEdit = (formData: Printer) => {
+    props.updatePrinter(formData);
+    toggleEditing();
+  };
+
+  const discardEdit = () => {
+    toggleEditing();
+  };
+
+  return (
+    <div>
+      <div data-testid={`edit-printer-${printer.id}`}>
+        <Button data-testid={`show-editor`} onClick={toggleEditing}>
+          Edit
+        </Button>
+      </div>
+      <Modal
+        show={editing}
+        onHide={discardEdit}
+        backdrop='static'
+        keyboard={false}
+      >
+        <Modal.Header className='d-flex justify-content-center' closeButton>
+          <Modal.Title className='me-auto'>Edit Printer</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Formik
+            initialValues={props.printer}
+            onSubmit={saveEdit}
+            validationSchema={schema}
+          >
+            {({ handleSubmit, handleChange, values, errors, touched }) => (
+              <Form onSubmit={handleSubmit}>
+                <FormGroup>
+                  <FloatingLabel label='Serial Number' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='serial'
+                      placeholder='Serial'
+                      onChange={handleChange}
+                      value={values.serial_number}
+                      isInvalid={
+                        touched.serial_number && !!errors.serial_number
+                      }
+                    ></FormControl>
+                    <FormControl.Feedback type='invalid'>
+                      {errors.serial_number}
+                    </FormControl.Feedback>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='Model' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='model'
+                      placeholder='Model'
+                      onChange={handleChange}
+                      value={values.model}
+                      isInvalid={touched.model && !!errors.model}
+                    ></FormControl>
+                    <FormControl.Feedback type='invalid'>
+                      {errors.model}
+                    </FormControl.Feedback>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='Brand' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='brand'
+                      placeholder='Brand'
+                      onChange={handleChange}
+                      value={values.brand}
+                      isInvalid={touched.brand && !!errors.brand}
+                    ></FormControl>
+                    <FormControl.Feedback type='invalid'>
+                      {errors.brand}
+                    </FormControl.Feedback>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='Location' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='location'
+                      placeholder='Location'
+                      onChange={handleChange}
+                      value={values.location}
+                      isInvalid={touched.location && !!errors.location}
+                    ></FormControl>
+                    <FormControl.Feedback type='invalid'>
+                      {errors.location}
+                    </FormControl.Feedback>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='IP Address' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='ip'
+                      placeholder='IP Address'
+                      onChange={handleChange}
+                      value={values.ip_address}
+                    ></FormControl>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='MAC Address' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='mac'
+                      placeholder='MAC Address'
+                      onChange={handleChange}
+                      value={values.mac_address}
+                    ></FormControl>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='Firmware Version' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='firmware'
+                      placeholder='Firmware Version'
+                      onChange={handleChange}
+                      value={values.firmware_version}
+                    ></FormControl>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='Installation Date' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='install_date'
+                      placeholder='Installation Date'
+                      onChange={handleChange}
+                      value={values.installation_date}
+                    ></FormControl>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='Warranty Expiration' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='warranty'
+                      placeholder='Warranty Expiration'
+                      onChange={handleChange}
+                      value={values.warranty_expiry_date}
+                    ></FormControl>
+                  </FloatingLabel>
+                </FormGroup>
+                <ButtonGroup>
+                  <Button variant='secondary' onClick={discardEdit}>
+                    Cancel
+                  </Button>
+                  <Button
+                    data-testid='submit-edit'
+                    variant='primary'
+                    type='submit'
+                  >
+                    Update
+                  </Button>
+                </ButtonGroup>
+              </Form>
+            )}
+          </Formik>
+        </Modal.Body>
+      </Modal>
+    </div>
+  );
+};
 
 export default connector(EditPrinter);

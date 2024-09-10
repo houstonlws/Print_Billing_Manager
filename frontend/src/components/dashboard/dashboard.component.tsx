@@ -22,6 +22,7 @@ import {
   refreshToken,
   getCurrentTotals,
   getDepartmentMaintenanceRequests,
+  getDepartmentPrinters,
 } from '../../store/actions';
 import {
   BillingComponent,
@@ -56,6 +57,7 @@ const connector = connect(
     refreshToken,
     getCurrentTotals,
     getDepartmentMaintenanceRequests,
+    getDepartmentPrinters,
   }
 );
 
@@ -77,6 +79,7 @@ const DashboardComponent = (props: DashboardProps) => {
         await props.getJobHistory(user.department_id);
         await props.getCurrentTotals(user.department_id);
         await props.getDepartmentMaintenanceRequests(user.department_id);
+        await props.getDepartmentPrinters(user.department_id);
       }
     };
     onMount();

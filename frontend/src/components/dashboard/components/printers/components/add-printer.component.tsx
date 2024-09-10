@@ -1,9 +1,11 @@
-import React, { Component, ReactNode } from 'react';
+import React, { useState } from 'react';
 import { ConnectedProps, connect } from 'react-redux';
 import {
   Button,
+  ButtonGroup,
   Card,
   CardHeader,
+  FloatingLabel,
   Form,
   FormControl,
   FormGroup,
@@ -16,15 +18,22 @@ import {
   getDepartmentPrinters,
 } from '../../../../../store/actions';
 import { CONSTANTS } from '../../../../../config/constants';
-
-interface State {
-  tempPrinter: Printer;
-  adding: boolean;
-}
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 type Props = {
   departmentId: string;
 };
+
+const mapStateToProps = (state: AppState) => ({
+  account: state.account,
+});
+const mapDispatchToProps = {
+  addPrinter,
+  getDepartmentPrinters,
+};
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type AddProps = ConnectedProps<typeof connector> & Props;
 
 const initialState: Printer = {
   id: '',
@@ -40,221 +49,205 @@ const initialState: Printer = {
   department_id: '',
 };
 
-class AddPrinterComponent extends Component<AddProps, State> {
-  constructor(props: AddProps) {
-    const { user } = props.account;
-    const isAdmin = user.type === CONSTANTS.ADMIN;
-    super(props);
-    this.state = {
-      adding: false,
-      tempPrinter: {
-        ...initialState,
-        department_id: isAdmin ? props.departmentId : user.department_id,
-      },
-    };
-  }
+const AddPrinterComponent = (props: AddProps) => {
+  const { user } = props.account;
+  const isAdmin = user.type === CONSTANTS.ADMIN;
+  const [adding, setAdding] = useState<boolean>(false);
+  const schema = yup.object().shape({
+    serial_number: yup.string().required('Serial number is required'),
+    model: yup.string().required('Model is required'),
+    brand: yup.string().required('Brand is required'),
+    location: yup.string().required('Location is required'),
+    installation_date: yup.string(),
+    warranty_expiry_date: yup.string(),
+    ip_address: yup.string(),
+    mac_address: yup.string(),
+    firmware_version: yup.string(),
+    department_id: yup.string(),
+  });
 
-  onChange = (event: any) => {
-    const { tempPrinter } = this.state;
-
-    switch (event.target.id) {
-      case 'serial':
-        tempPrinter.serial_number = event.target.value;
-        break;
-      case 'brand':
-        tempPrinter.brand = event.target.value;
-        break;
-      case 'model':
-        tempPrinter.model = event.target.value;
-        break;
-      case 'location':
-        tempPrinter.location = event.target.value;
-        break;
-      case 'ip':
-        tempPrinter.ip_address = event.target.value;
-        break;
-      case 'mac':
-        tempPrinter.mac_address = event.target.value;
-        break;
-      case 'firmware':
-        tempPrinter.firmware_version = event.target.value;
-        break;
-      case 'install_date':
-        tempPrinter.installation_date = event.target.value;
-        break;
-      case 'warranty':
-        tempPrinter.warranty_expiry_date = event.target.value;
-        break;
-      default:
-        return;
-    }
-    this.setState({ tempPrinter });
+  const setDepartment = async (event: any) => {
+    await props.getDepartmentPrinters(event.target.value);
   };
 
-  setDepartment = async (event: any) => {
-    await this.props.getDepartmentPrinters(event.target.value);
+  const toggleAdding = () => {
+    setAdding((prev) => !prev);
   };
 
-  toggleAdding = () => {
-    this.setState((prev) => ({
-      adding: !prev.adding,
-    }));
+  const cancelAdd = () => {
+    toggleAdding();
   };
 
-  cancelAdd = () => {
-    this.setState({ tempPrinter: { ...initialState } });
-    this.toggleAdding();
+  const addPrinter = async (formData: Printer) => {
+    await props.addPrinter(formData);
   };
 
-  addPrinter = () => {
-    this.props.addPrinter(this.state.tempPrinter);
-  };
-
-  render(): ReactNode {
-    const { adding, tempPrinter } = this.state;
-
-    return (
-      <div data-testid='addprinter'>
-        <Card>
-          <CardHeader className='d-flex justify-content-between'>
-            <h2>Printers</h2>
-            <Button data-testid='toggle-add' onClick={this.toggleAdding}>
-              Add
-            </Button>
-          </CardHeader>
-        </Card>
-        <Modal
-          show={adding}
-          onHide={this.cancelAdd}
-          backdrop='static'
-          keyboard={false}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Add Printer</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <FormGroup>
-                <FormLabel>Serial</FormLabel>
-                <FormControl
-                  type='text'
-                  id='serial'
-                  placeholder='Serial'
-                  onChange={this.onChange}
-                  value={tempPrinter.serial_number}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Model</FormLabel>
-                <FormControl
-                  type='text'
-                  id='model'
-                  placeholder='Model'
-                  onChange={this.onChange}
-                  value={tempPrinter.model}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Brand</FormLabel>
-                <FormControl
-                  type='text'
-                  id='brand'
-                  placeholder='Brand'
-                  onChange={this.onChange}
-                  value={tempPrinter.brand}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Location</FormLabel>
-                <FormControl
-                  type='text'
-                  id='location'
-                  placeholder='Location'
-                  onChange={this.onChange}
-                  value={tempPrinter.location}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>IP Address</FormLabel>
-                <FormControl
-                  type='text'
-                  id='ip'
-                  placeholder='IP Address'
-                  onChange={this.onChange}
-                  value={tempPrinter.ip_address}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>MAC Address</FormLabel>
-                <FormControl
-                  type='text'
-                  id='mac'
-                  placeholder='MAC Address'
-                  onChange={this.onChange}
-                  value={tempPrinter.mac_address}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Firmware Version</FormLabel>
-                <FormControl
-                  type='text'
-                  id='firmware'
-                  placeholder='Firmware Version'
-                  onChange={this.onChange}
-                  value={tempPrinter.firmware_version}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Installation Date</FormLabel>
-                <FormControl
-                  type='text'
-                  id='install_date'
-                  placeholder='Installation Date'
-                  onChange={this.onChange}
-                  value={tempPrinter.installation_date}
-                ></FormControl>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Warranty Expiration</FormLabel>
-                <FormControl
-                  type='text'
-                  id='warranty'
-                  placeholder='Warranty Expiration'
-                  onChange={this.onChange}
-                  value={tempPrinter.warranty_expiry_date}
-                ></FormControl>
-              </FormGroup>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant='secondary' onClick={this.cancelAdd}>
-              Cancel
-            </Button>
-            <Button
-              data-testid='submit-add'
-              variant='primary'
-              onClick={this.addPrinter}
-            >
-              Add
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = (state: AppState) => ({
-  account: state.account,
-});
-
-const mapDispatchToProps = {
-  addPrinter,
-  getDepartmentPrinters,
+  return (
+    <div data-testid='addprinter'>
+      <Card>
+        <CardHeader className='d-flex justify-content-between'>
+          <h2>Printers</h2>
+          <Button data-testid='toggle-add' onClick={toggleAdding}>
+            Add
+          </Button>
+        </CardHeader>
+      </Card>
+      <Modal
+        show={adding}
+        onHide={cancelAdd}
+        backdrop='static'
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Add Printer</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Formik
+            initialValues={{
+              ...initialState,
+              department_id: isAdmin ? props.departmentId : user.department_id,
+            }}
+            onSubmit={addPrinter}
+            validationSchema={schema}
+          >
+            {({ handleSubmit, handleChange, values, errors, touched }) => (
+              <Form onSubmit={handleSubmit}>
+                <FormGroup>
+                  <FloatingLabel label='Serial Number' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='serial'
+                      placeholder='Serial'
+                      onChange={handleChange}
+                      value={values.serial_number}
+                      isInvalid={
+                        touched.serial_number && !!errors.serial_number
+                      }
+                    ></FormControl>
+                    <FormControl.Feedback type='invalid'>
+                      {errors.serial_number}
+                    </FormControl.Feedback>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='Model' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='model'
+                      placeholder='Model'
+                      onChange={handleChange}
+                      value={values.model}
+                      isInvalid={touched.model && !!errors.model}
+                    ></FormControl>
+                    <FormControl.Feedback type='invalid'>
+                      {errors.model}
+                    </FormControl.Feedback>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='Brand' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='brand'
+                      placeholder='Brand'
+                      onChange={handleChange}
+                      value={values.brand}
+                      isInvalid={touched.brand && !!errors.brand}
+                    ></FormControl>
+                    <FormControl.Feedback type='invalid'>
+                      {errors.brand}
+                    </FormControl.Feedback>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='Location' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='location'
+                      placeholder='Location'
+                      onChange={handleChange}
+                      value={values.location}
+                      isInvalid={touched.location && !!errors.location}
+                    ></FormControl>
+                    <FormControl.Feedback type='invalid'>
+                      {errors.location}
+                    </FormControl.Feedback>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='IP Address' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='ip'
+                      placeholder='IP Address'
+                      onChange={handleChange}
+                      value={values.ip_address}
+                    ></FormControl>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='MAC Address' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='mac'
+                      placeholder='MAC Address'
+                      onChange={handleChange}
+                      value={values.mac_address}
+                    ></FormControl>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='Firmware Version' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='firmware'
+                      placeholder='Firmware Version'
+                      onChange={handleChange}
+                      value={values.firmware_version}
+                    ></FormControl>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='Installation Date' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='install_date'
+                      placeholder='Installation Date'
+                      onChange={handleChange}
+                      value={values.installation_date}
+                    ></FormControl>
+                  </FloatingLabel>
+                </FormGroup>
+                <FormGroup>
+                  <FloatingLabel label='Warranty Expiration' className='mb-3'>
+                    <FormControl
+                      type='text'
+                      id='warranty'
+                      placeholder='Warranty Expiration'
+                      onChange={handleChange}
+                      value={values.warranty_expiry_date}
+                    ></FormControl>
+                  </FloatingLabel>
+                </FormGroup>
+                <ButtonGroup>
+                  <Button variant='secondary' onClick={cancelAdd}>
+                    Cancel
+                  </Button>
+                  <Button
+                    data-testid='submit-add'
+                    variant='primary'
+                    type='submit'
+                  >
+                    Add
+                  </Button>
+                </ButtonGroup>
+              </Form>
+            )}
+          </Formik>
+        </Modal.Body>
+      </Modal>
+    </div>
+  );
 };
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type AddProps = ConnectedProps<typeof connector> & Props;
 
 export default connector(AddPrinterComponent);

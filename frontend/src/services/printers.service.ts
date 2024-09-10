@@ -13,7 +13,10 @@ class PrintersService {
   }
 
   static async updatePrinter(printer: Printer) {
-    const result = await axios.patch('/protected/printer', printer);
+    const result = await axios.patch(
+      `/protected/printer/${printer.id}`,
+      printer
+    );
     if (result.status === 200) {
       return true;
     }
