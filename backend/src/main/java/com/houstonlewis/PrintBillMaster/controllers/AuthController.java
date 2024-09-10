@@ -2,6 +2,7 @@ package com.houstonlewis.PrintBillMaster.controllers;
 
 
 import com.houstonlewis.PrintBillMaster.models.User;
+import com.houstonlewis.PrintBillMaster.services.AccountService;
 import com.houstonlewis.PrintBillMaster.services.AuthService;
 import com.houstonlewis.PrintBillMaster.utilities.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -16,9 +17,11 @@ public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final AuthService authService;
+    private final AccountService accountService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, AccountService accountService) {
         this.authService = authService;
+        this.accountService = accountService;
     }
 
     @PostMapping("/login")
@@ -57,17 +60,19 @@ public class AuthController {
         if (decryptedAccess != null) {
             logger.info("token refreshed");
             User user = User.fromString(decryptedAccess);
-            String access = authService.getAccessToken(user);
+            User updated = accountService.getUserData(user.getId());
+            String access = authService.getAccessToken(updated);
             HttpHeaders headers = authService.getHeaders(access, refreshToken);
-            return ResponseEntity.ok().headers(headers).body(user);
+            return ResponseEntity.ok().headers(headers).body(updated);
         } else {
             String decryptedRefresh = authService.validateToken(refreshToken);
             if (decryptedRefresh != null) {
                 logger.info("token refreshed");
                 User user = User.fromString(decryptedRefresh);
-                String access = authService.getAccessToken(user);
+                User updated = accountService.getUserData(user.getId());
+                String access = authService.getAccessToken(updated);
                 HttpHeaders headers = authService.getHeaders(access, refreshToken);
-                return ResponseEntity.ok().headers(headers).body(user);
+                return ResponseEntity.ok().headers(headers).body(updated);
             } else {
                 logger.warning("token invalid");
                 return ResponseEntity.badRequest().body(null);
