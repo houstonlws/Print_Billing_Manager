@@ -2,6 +2,7 @@ import { Dispatch } from '@reduxjs/toolkit';
 import AdminService from '../../services/admin.service';
 import { CONSTANTS } from '../../config/constants';
 import { PriceConfig } from '../../types';
+import AccountService from '../../services/account.service';
 
 export const getPriceProfile = () => async (dispatch: Dispatch) => {
   try {
@@ -70,7 +71,7 @@ export const setPriceProfile = (id: string) => async (dispatch: Dispatch) => {
 export const updateUserType =
   (users: string[]) => async (dispatch: Dispatch) => {
     try {
-      const result = await AdminService.updateUserType(users);
+      const result = await AccountService.updateUserType(users);
       if (result) {
         dispatch({ type: CONSTANTS.UPDATE_USER_TYPE_SUCCESS });
         return true;
@@ -84,7 +85,7 @@ export const updateUserType =
 
 export const getAllUsers = () => async (dispatch: Dispatch) => {
   try {
-    const result = await AdminService.getAllUsers();
+    const result = await AccountService.getAllUsers();
     if (result) {
       dispatch({
         type: CONSTANTS.GET_USERS_SUCCESS,

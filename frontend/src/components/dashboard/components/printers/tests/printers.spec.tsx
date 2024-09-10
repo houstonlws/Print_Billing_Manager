@@ -13,7 +13,7 @@ let store = mockStore({});
 describe('Printer tests', () => {
   beforeEach(() => {
     store = mockStore({
-      auth: { user: { type: CONSTANTS.USER } },
+      account: { user: { type: CONSTANTS.USER } },
       printer: { printers: printers },
     });
   });
@@ -28,7 +28,7 @@ describe('Printer tests', () => {
   });
 
   it('should allow an admin to add a printer', () => {
-    store = mockStore({ auth: { user: { type: CONSTANTS.ADMIN } } });
+    store = mockStore({ account: { user: { type: CONSTANTS.ADMIN } } });
 
     const { getByTestId } = render(
       <Provider store={store}>
@@ -39,7 +39,7 @@ describe('Printer tests', () => {
   });
 
   it('should not allow a user to add a printer', () => {
-    store = mockStore({ auth: { user: { type: CONSTANTS.USER } } });
+    store = mockStore({ account: { user: { type: CONSTANTS.USER } } });
 
     const { queryByTestId } = render(
       <Provider store={store}>
@@ -51,7 +51,7 @@ describe('Printer tests', () => {
 
   it('should allow admin to edit printers', () => {
     store = mockStore({
-      auth: { user: { type: CONSTANTS.ADMIN } },
+      account: { user: { type: CONSTANTS.ADMIN } },
       printer: { printers: printers },
     });
 

@@ -14,7 +14,7 @@ import {
   FormSelect,
 } from 'react-bootstrap';
 import { departmentsList } from '../../../config/app-data';
-import { updateUserData } from '../../../store/actions/auth.action';
+import { updateUserData } from '../../../store/actions';
 import { CONSTANTS } from '../../../config/constants';
 
 interface State {
@@ -148,7 +148,7 @@ class IncompleteProfile extends Component<ReduxProps, State> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  user: state.auth.user,
+  user: state.account.user,
 });
 const mapDispatchToProps = {
   updateUserData,

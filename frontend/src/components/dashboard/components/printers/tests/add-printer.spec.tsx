@@ -14,7 +14,7 @@ import AddPrinterComponent from '../components/add-printer.component';
 const mockStore = configureStore([thunk]);
 let store = mockStore({
   printer: initialState,
-  auth: { user: { department_id: '1' } },
+  account: { user: { department_id: '1' } },
 });
 const printer = printers[0] as unknown as Printer;
 const mockUpdatePrinter = jest.fn(

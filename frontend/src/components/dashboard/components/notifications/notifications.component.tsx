@@ -1,13 +1,16 @@
 import React, { Component, ReactNode } from 'react';
 import {
   Badge,
+  Card,
+  CardHeader,
+  Container,
   Toast,
   ToastBody,
   ToastContainer,
   ToastHeader,
 } from 'react-bootstrap';
 import { ConnectedProps, connect } from 'react-redux';
-import { AppState } from '../../../../types';
+import { AppState, Notification } from '../../../../types';
 
 class NotificationsComponent extends Component<NotificationsProps> {
   dismissNotification = (event: any) => {
@@ -18,10 +21,14 @@ class NotificationsComponent extends Component<NotificationsProps> {
     const { notifications } = this.props;
 
     return (
-      <>
-        <strong>Notifications</strong>
+      <Container>
+        <Card>
+          <CardHeader>
+            <h2>Notifications</h2>
+          </CardHeader>
+        </Card>
         <ToastContainer>
-          {notifications?.map((note) => (
+          {notifications?.map((note: Notification) => (
             <Toast key={note.id}>
               <ToastHeader closeButton={false}>
                 <strong className='me-auto'>{note.notification_date}</strong>
@@ -31,14 +38,14 @@ class NotificationsComponent extends Component<NotificationsProps> {
             </Toast>
           ))}
         </ToastContainer>
-      </>
+      </Container>
     );
   }
 }
 
 const mapStateToProps = (state: AppState) => {
   return {
-    notifications: state.auth.notifications,
+    notifications: state.account.notifications,
   };
 };
 

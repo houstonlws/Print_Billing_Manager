@@ -15,7 +15,7 @@ import ReportIssueComponent from './report-issue.component';
 
 const mockStore = configureStore([thunk]);
 let store = mockStore({
-  auth: { user: {} },
+  account: { user: {} },
   printer: { printers: [] },
 });
 const printer = printers[0] as unknown as Printer;

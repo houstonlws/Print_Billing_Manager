@@ -4,9 +4,11 @@ import {
   PrinterState,
   BillingState,
   TrackingState,
+  AccountState,
 } from './';
 
 export interface AppState {
+  account: AccountState;
   auth: AuthState;
   billing: BillingState;
   printer: PrinterState;

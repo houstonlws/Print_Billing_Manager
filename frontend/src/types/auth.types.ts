@@ -1,27 +1,4 @@
-export type User = {
-  id: string;
-  email: string;
-  type: string;
-  password?: string;
-  firstName?: string;
-  lastName?: string;
-  department_id: string;
-  phone?: string;
-};
-
-export type Notification = {
-  id: string;
-  user_id: string;
-  notification_date: string;
-  message: string;
-  is_read: string;
-};
-
-export type AuthState = {
-  loggedIn: boolean;
-  user: User;
-  notifications: Notification[];
-};
+import { User } from './account.types';
 
 export type PriceConfig = {
   id: string;
@@ -36,4 +13,8 @@ export type AdminState = {
   users: User[];
   priceProfiles: PriceConfig[];
   activeProfile: PriceConfig;
+};
+
+export type AuthState = {
+  loggedIn: boolean;
 };

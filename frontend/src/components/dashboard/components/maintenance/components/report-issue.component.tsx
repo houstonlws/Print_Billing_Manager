@@ -175,7 +175,7 @@ class ReportIssue extends Component<ReportProps, State> {
 
 const mapStateToProps = (state: AppState) => ({
   printers: state.printer.printers,
-  depId: state.auth.user.department_id,
+  depId: state.account.user.department_id,
 });
 
 const mapDispatchToProps = {

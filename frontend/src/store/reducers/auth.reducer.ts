@@ -8,13 +8,6 @@ interface Payload {
 
 export const initialState: AuthState = {
   loggedIn: false,
-  user: {
-    id: '',
-    email: '',
-    type: '',
-    department_id: '',
-  },
-  notifications: [],
 };
 
 export const authReducer = (state = initialState, action: Payload) => {
@@ -25,7 +18,6 @@ export const authReducer = (state = initialState, action: Payload) => {
       return {
         ...state,
         loggedIn: true,
-        user: payload,
       };
     }
     case CONSTANTS.REFRESH_TOKEN_FAILURE: {
@@ -59,34 +51,6 @@ export const authReducer = (state = initialState, action: Payload) => {
     }
     case CONSTANTS.LOGOUT: {
       return initialState;
-    }
-    case CONSTANTS.GET_USER_DATA_SUCCESS: {
-      return {
-        ...state,
-        loggedIn: true,
-        user: payload,
-      };
-    }
-    case CONSTANTS.GET_USER_DATA_FAIL: {
-      return initialState;
-    }
-    case CONSTANTS.GET_NOTIFICATIONS_SUCCESS: {
-      return {
-        ...state,
-        notifications: payload,
-      };
-    }
-    case CONSTANTS.GET_NOTIFICATIONS_FAILURE: {
-      return {
-        ...state,
-        notifications: [],
-      };
-    }
-    case CONSTANTS.UPDATE_USER_DATA_SUCCESS: {
-      return {
-        ...state,
-        user: payload,
-      };
     }
     default:
       return state;

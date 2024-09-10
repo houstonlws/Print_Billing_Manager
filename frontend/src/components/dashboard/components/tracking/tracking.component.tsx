@@ -184,7 +184,7 @@ const TrackingModule = (props: TrackingProps) => {
 const mapStateToProps = (state: AppState, props: any) => {
   return {
     printer: state.printer,
-    user: state.auth.user,
+    user: state.account.user,
     admin: state.admin,
     tracking: state.tracking,
   };

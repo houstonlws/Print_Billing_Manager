@@ -102,7 +102,7 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
   render(): ReactNode {
     const {
       printers,
-      auth: {
+      account: {
         user: { type },
       },
       departmentId,
@@ -184,6 +184,7 @@ class PrintersComponent extends Component<PrintersComponentProps, State> {
 
 const connector = connect(
   (state: AppState) => ({
+    account: state.account,
     printers: state.printer?.printers,
     auth: state.auth,
   }),

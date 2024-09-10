@@ -42,7 +42,7 @@ const initialState: Printer = {
 
 class AddPrinterComponent extends Component<AddProps, State> {
   constructor(props: AddProps) {
-    const { user } = props.auth;
+    const { user } = props.account;
     const isAdmin = user.type === CONSTANTS.ADMIN;
     super(props);
     this.state = {
@@ -245,7 +245,7 @@ class AddPrinterComponent extends Component<AddProps, State> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  auth: state.auth,
+  account: state.account,
 });
 
 const mapDispatchToProps = {

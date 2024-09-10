@@ -23,7 +23,7 @@ jest
 describe('Maintenance tests', () => {
   beforeEach(() => {
     store = mockStore({
-      auth: { user: { department_id: '1', type: CONSTANTS.USER } },
+      account: { user: { department_id: '1', type: CONSTANTS.USER } },
       printer: {
         printers: printers,
         requests: requests,

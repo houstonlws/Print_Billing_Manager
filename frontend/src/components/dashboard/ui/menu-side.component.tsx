@@ -30,7 +30,7 @@ class MenuSide extends Component<ReduxProps, State> {
   render(): React.ReactNode {
     const { isOpen } = this.props;
     const { pathname } = this.props.router.location;
-    const { user } = this.props.auth;
+    const { user } = this.props.account;
     return (
       <div
         style={{
@@ -153,6 +153,7 @@ class MenuSide extends Component<ReduxProps, State> {
 }
 
 const mapStateToProps = (state: AppState, props: any) => ({
+  account: state.account,
   auth: state.auth,
   router: props.router,
 });

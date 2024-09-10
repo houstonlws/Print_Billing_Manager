@@ -5,10 +5,10 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { MemoryRouter } from 'react-router-dom';
 import { Dispatch } from '@reduxjs/toolkit';
-import * as authActions from '../../../../store/actions/auth.action';
+import * as accountActions from '../../../../store/actions/account.actions';
 import ProfileComponent from './profile.component';
 import { CONSTANTS } from '../../../../config/constants';
-import { User } from '../../../../types/auth.types';
+import { User } from '../../../../types';
 
 const mockStore = configureStore([thunk]);
 
@@ -22,7 +22,7 @@ const initialUser = {
   phone: '555-555-5555',
 };
 
-let store = mockStore({ auth: { user: initialUser } });
+let store = mockStore({ account: { user: initialUser } });
 
 const mockUpdateUserData = jest.fn(
   (data: User) => async (dispatch: Dispatch) => {
@@ -30,12 +30,12 @@ const mockUpdateUserData = jest.fn(
   }
 );
 jest
-  .spyOn(authActions, 'updateUserData')
+  .spyOn(accountActions, 'updateUserData')
   .mockImplementation(mockUpdateUserData);
 
 describe('Profile Component', () => {
   beforeEach(() => {
-    store = mockStore({ auth: { user: initialUser } });
+    store = mockStore({ account: { user: initialUser } });
     store.clearActions();
   });
 

@@ -38,7 +38,7 @@ import MenuSideComponent from './ui/menu-side.component';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { departmentsList } from '../../config/app-data';
-import NotificationsWidget from './components/notifications/components/notifications.widget';
+import NotificationsWidget from './ui/notifications.widget';
 import { store } from '../../store';
 
 interface State {
@@ -56,7 +56,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
   }
 
   async componentDidMount(): Promise<void> {
-    const { user } = this.props.auth;
+    const { user } = this.props.account;
     if (user?.type === CONSTANTS.ADMIN) {
       await this.props.getAllData();
       await this.props.getJobHistory();
@@ -76,20 +76,19 @@ class DashboardComponent extends Component<DashboardProps, State> {
   };
 
   onChange = async (event: any) => {
-    switch (event.target.id) {
-      case 'department':
-        this.setState({ department: event.target.value });
-        await this.props.getAllDataUser(event.target.value);
-        await this.props.getJobHistory(event.target.value);
-        await this.props.getCurrentJobs(event.target.value);
-        await this.props.getDepartmentMaintenanceRequests(event.target.value);
-        break;
-    }
+    this.setState({ department: event.target.value });
+    await this.props.getAllDataUser(event.target.value);
+    await this.props.getJobHistory(event.target.value);
+    await this.props.getCurrentJobs(event.target.value);
+    await this.props.getDepartmentMaintenanceRequests(event.target.value);
   };
 
   render() {
     const { isOpen, department } = this.state;
-    const { user, loggedIn } = this.props.auth;
+    const {
+      account: { user },
+      auth: { loggedIn },
+    } = this.props;
     let completedProfile =
       user.firstName && user.lastName && user.department_id !== '';
     if (!completedProfile && loggedIn) {
@@ -132,6 +131,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
               <Nav className='align-items-center'>
                 <NotificationsWidget></NotificationsWidget>
                 <NavDropdown
+                  as={Button}
                   align={'end'}
                   title={
                     <img
@@ -223,6 +223,7 @@ class DashboardComponent extends Component<DashboardProps, State> {
 
 const connector = connect(
   (state: AppState, props: any) => ({
+    account: state.account,
     auth: state.auth,
     billing: state.billing,
   }),

@@ -191,7 +191,7 @@ class ProfileComponent extends Component<ProfileProps, ProfileState> {
 
 const mapStateToProps = (state: AppState) => {
   return {
-    user: state.auth.user,
+    user: state.account.user,
   };
 };
 

@@ -53,7 +53,7 @@ class MaintenanceRequestItem extends Component<ReduxProps, State> {
     const { editing } = this.state;
     const {
       request,
-      auth: {
+      account: {
         user: { type },
       },
       printer: { printersMap },
@@ -155,7 +155,7 @@ class MaintenanceRequestItem extends Component<ReduxProps, State> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  auth: state.auth,
+  account: state.account,
   printer: state.printer,
 });
 const mapDispatchToProps = {

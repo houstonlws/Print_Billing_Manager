@@ -74,7 +74,7 @@ class MaintenanceComponent extends Component<Props, State> {
 
 const mapStateToProps = (state: AppState) => ({
   printer: state.printer,
-  user: state.auth?.user,
+  user: state.account?.user,
 });
 
 const mapDispatchToProps = {
