@@ -201,7 +201,9 @@ const DashboardComponent = (props: DashboardProps) => {
                 ></Route>
                 <Route
                   path='maintenance'
-                  Component={MaintenanceComponent}
+                  element={
+                    <MaintenanceComponent selectedDepartment={department} />
+                  }
                 ></Route>
                 <Route
                   path='tracking'

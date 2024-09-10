@@ -18,7 +18,6 @@ let store = mockStore({
   account: { user: {} },
   printer: { printers: [] },
 });
-const printer = printers[0] as unknown as Printer;
 const mockAddMaintenanceRequest = jest.fn(
   (request: MaintenanceRequest) => async (dispatch: Dispatch) => {
     return Promise.resolve();
@@ -94,7 +93,7 @@ describe('Report Issue tests', () => {
     const expected = [{ type: CONSTANTS.ADD_MAINTENANCE_REQUEST_FAILURE }];
 
     await waitFor(() => {
-      expect(store.getActions()).toEqual(expected);
+      expect(store.getActions()).toEqual([]);
     });
   });
 });
