@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { AppState, User } from '../../../../../types';
 import {
@@ -6,83 +6,14 @@ import {
   Button,
   Card,
   CardBody,
+  FloatingLabel,
   Form,
   FormControl,
 } from 'react-bootstrap';
 import { getAllUsers, register } from '../../../../../store/actions';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
-interface State {
-  tempUser: User;
-  added: boolean;
-}
-
-class AddUser extends Component<ReduxProps, State> {
-  constructor(props: ReduxProps) {
-    super(props);
-    this.state = {
-      tempUser: {
-        id: '',
-        email: '',
-        type: '',
-        department_id: '',
-      },
-      added: false,
-    };
-  }
-
-  createUser = async () => {
-    const { tempUser } = this.state;
-    const email = tempUser.email;
-    const pass = tempUser.password!;
-    const result = await this.props.register(email, pass);
-    if (result) this.setState({ added: true });
-  };
-
-  changeTempUser = (event: any) => {
-    const { tempUser } = this.state;
-    switch (event.target.id) {
-      case 'user-email':
-        tempUser.email = event.target.value;
-        break;
-      case 'user-temp-pass':
-        tempUser.password = event.target.value;
-        break;
-      default:
-        break;
-    }
-    this.setState({ tempUser: tempUser });
-  };
-
-  render(): React.ReactNode {
-    const {} = this.props;
-    const { added } = this.state;
-    return (
-      <Card>
-        <CardBody>
-          <Form onSubmit={this.createUser}>
-            <div className='d-flex'>
-              <h3 className='me-auto'>Add User</h3>
-              <Button type='submit'>Submit</Button>
-            </div>
-            <FormControl
-              id='user-email'
-              type='email'
-              placeholder='Email'
-              onChange={this.changeTempUser}
-            ></FormControl>
-            <FormControl
-              id='user-temp-pass'
-              type='text'
-              placeholder='Temp Password'
-              onChange={this.changeTempUser}
-            ></FormControl>
-          </Form>
-          {added && <Alert>User Created</Alert>}
-        </CardBody>
-      </Card>
-    );
-  }
-}
 const mapStateToProps = (state: AppState) => ({
   admin: state.admin,
 });
@@ -92,4 +23,84 @@ const mapDispatchToProps = {
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type ReduxProps = ConnectedProps<typeof connector>;
+
+const AddUser = (props: ReduxProps) => {
+  const [tempUser, setTempUser] = useState<User>({
+    id: '',
+    email: '',
+    type: '',
+    department_id: '',
+  });
+  const [added, setAdded] = useState<boolean>(false);
+  const [failed, setFailed] = useState<boolean>(false);
+
+  const schema = yup.object().shape({
+    email: yup.string().required('Email is required'),
+    password: yup.string().required('Password is required'),
+  });
+
+  const createUser = async (formData: User) => {
+    const result = await props.register(formData.email, formData.password!);
+    if (result) {
+      setAdded(true);
+      window.location.reload();
+    } else setFailed(true);
+  };
+
+  return (
+    <Card>
+      <CardBody>
+        {failed && <Alert variant='danger'>Problem adding user</Alert>}
+        <Formik
+          initialValues={{
+            id: '',
+            email: '',
+            type: '',
+            department_id: '',
+            password: '',
+          }}
+          onSubmit={createUser}
+          validationSchema={schema}
+        >
+          {({ handleSubmit, handleChange, values, touched, errors }) => (
+            <Form onSubmit={handleSubmit}>
+              <div className='d-flex'>
+                <h3 className='me-auto'>Add User</h3>
+                <Button type='submit'>Submit</Button>
+              </div>
+              <FloatingLabel label='Email' className='mb-3'>
+                <FormControl
+                  id='email'
+                  type='email'
+                  placeholder='Email'
+                  value={values.email}
+                  onChange={handleChange}
+                  isInvalid={touched.email && !!errors.email}
+                ></FormControl>
+                <FormControl.Feedback type='invalid'>
+                  {errors.email}
+                </FormControl.Feedback>
+              </FloatingLabel>
+              <FloatingLabel label='Temp Password' className='mb-3'>
+                <FormControl
+                  id='password'
+                  type='text'
+                  placeholder='Temp Password'
+                  value={values.password || ''}
+                  onChange={handleChange}
+                  isInvalid={touched.password && !!errors.password}
+                ></FormControl>
+                <FormControl.Feedback type='invalid'>
+                  {errors.password}
+                </FormControl.Feedback>
+              </FloatingLabel>
+            </Form>
+          )}
+        </Formik>
+        {added && <Alert>User Created</Alert>}
+      </CardBody>
+    </Card>
+  );
+};
+
 export default connector(AddUser);

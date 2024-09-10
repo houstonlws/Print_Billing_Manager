@@ -19,6 +19,8 @@ import {
   getPriceProfileList,
   setPriceProfile,
 } from '../../../../../store/actions';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 const initialProfile: PriceConfig = {
   id: '',
@@ -29,20 +31,41 @@ const initialProfile: PriceConfig = {
   is_active: '',
 };
 
+const mapStateToProps = (state: AppState) => ({
+  admin: state.admin,
+});
+const mapDispatchToProps = {
+  setPriceProfile,
+  addPriceProfile,
+  getPriceProfile,
+  getPriceProfileList,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type Props = ConnectedProps<typeof connector>;
+
 const PriceProfile = (props: Props) => {
   const [tempPriceProfile, setTempPriceProfile] =
     useState<PriceConfig>(initialProfile);
+
   const [selectedProfile, setSelectedProfile] = useState<string>(
     props.admin.activeProfile?.id || ''
   );
+
   const [loaded, setLoaded] = useState<boolean>(false);
+
+  const schema = yup.object().shape({
+    name: yup.string().required('Name is required'),
+    bw_price: yup.string().required('Black & White price is required'),
+    color_price: yup.string().required('Color price is required'),
+    paper_price: yup.string().required('Paper price is required'),
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       await props.getPriceProfileList();
       await props.getPriceProfile();
     };
-
     fetchData();
   }, []);
 
@@ -62,8 +85,8 @@ const PriceProfile = (props: Props) => {
     props.admin.priceProfiles,
   ]);
 
-  const addPriceProfile = async () => {
-    const result = await props.addPriceProfile(tempPriceProfile);
+  const addPriceProfile = async (formData: PriceConfig) => {
+    const result = await props.addPriceProfile(formData);
     if (result) {
       window.location.reload();
     }
@@ -74,14 +97,6 @@ const PriceProfile = (props: Props) => {
     if (result) {
       window.location.reload();
     }
-  };
-
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = event.target;
-    setTempPriceProfile((prev) => ({
-      ...prev,
-      [id.replace('profile-', '')]: value || '',
-    }));
   };
 
   const onChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -132,91 +147,106 @@ const PriceProfile = (props: Props) => {
 
       <Card>
         <CardBody>
-          <div className='d-flex'>
-            <h3 className='me-auto'>Materials Price</h3>
-            <Button disabled={selectedProfile !== ''} onClick={addPriceProfile}>
-              Add
-            </Button>
-          </div>
-          <Form>
-            <FormGroup as={Row}>
-              <Col sm='3'>
-                <FormLabel>Profile Name</FormLabel>
-              </Col>
-              <Col sm='9'>
-                <FormControl
-                  id='profile-name'
-                  type='text'
-                  placeholder='Profile Name'
-                  onChange={onChange}
-                  value={profileName}
-                  disabled={selectedProfile !== ''}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup as={Row}>
-              <Col sm='3'>
-                <FormLabel>B&W Price</FormLabel>
-              </Col>
-              <Col sm='9'>
-                <FormControl
-                  id='bw-price'
-                  type='number'
-                  placeholder='B&W Price'
-                  onChange={onChange}
-                  value={bwPrice}
-                  disabled={selectedProfile !== ''}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup as={Row}>
-              <Col sm='3'>
-                <FormLabel>Color Price</FormLabel>
-              </Col>
-              <Col sm='9'>
-                <FormControl
-                  id='color-price'
-                  type='number'
-                  placeholder='Color Price'
-                  onChange={onChange}
-                  value={colorPrice}
-                  disabled={selectedProfile !== ''}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup as={Row}>
-              <Col sm='3'>
-                <FormLabel>Paper Price</FormLabel>
-              </Col>
-              <Col sm='9'>
-                <FormControl
-                  id='paper-price'
-                  type='number'
-                  placeholder='Paper Price'
-                  onChange={onChange}
-                  value={paperPrice}
-                  disabled={selectedProfile !== ''}
-                />
-              </Col>
-            </FormGroup>
-          </Form>
+          <Formik
+            initialValues={initialProfile}
+            onSubmit={addPriceProfile}
+            validationSchema={schema}
+          >
+            {({ handleSubmit, handleChange, values, errors, touched }) => (
+              <Form onSubmit={handleSubmit}>
+                <div className='d-flex'>
+                  <h3 className='me-auto'>Materials Price</h3>
+                  <Button disabled={selectedProfile !== ''} type='submit'>
+                    Add
+                  </Button>
+                </div>
+                <FormGroup as={Row}>
+                  <Col sm='3'>
+                    <FormLabel>Profile Name</FormLabel>
+                  </Col>
+                  <Col sm='9'>
+                    <FormControl
+                      id='name'
+                      type='text'
+                      placeholder='Profile Name'
+                      onChange={handleChange}
+                      value={selectedProfile !== '' ? profileName : values.name}
+                      isInvalid={touched.name && !!errors.name}
+                      disabled={selectedProfile !== ''}
+                    />
+                    <FormControl.Feedback type='invalid'>
+                      {errors.name}
+                    </FormControl.Feedback>
+                  </Col>
+                </FormGroup>
+                <FormGroup as={Row}>
+                  <Col sm='3'>
+                    <FormLabel>B&W Price</FormLabel>
+                  </Col>
+                  <Col sm='9'>
+                    <FormControl
+                      id='bw_price'
+                      type='number'
+                      placeholder='B&W Price'
+                      onChange={handleChange}
+                      value={selectedProfile !== '' ? bwPrice : values.bw_price}
+                      isInvalid={touched.bw_price && !!errors.bw_price}
+                      disabled={selectedProfile !== ''}
+                    />
+                    <FormControl.Feedback type='invalid'>
+                      {errors.bw_price}
+                    </FormControl.Feedback>
+                  </Col>
+                </FormGroup>
+                <FormGroup as={Row}>
+                  <Col sm='3'>
+                    <FormLabel>Color Price</FormLabel>
+                  </Col>
+                  <Col sm='9'>
+                    <FormControl
+                      id='color_price'
+                      type='number'
+                      placeholder='Color Price'
+                      onChange={handleChange}
+                      value={
+                        selectedProfile !== '' ? colorPrice : values.color_price
+                      }
+                      isInvalid={touched.color_price && !!errors.color_price}
+                      disabled={selectedProfile !== ''}
+                    />
+                    <FormControl.Feedback type='invalid'>
+                      {errors.color_price}
+                    </FormControl.Feedback>
+                  </Col>
+                </FormGroup>
+                <FormGroup as={Row}>
+                  <Col sm='3'>
+                    <FormLabel>Paper Price</FormLabel>
+                  </Col>
+                  <Col sm='9'>
+                    <FormControl
+                      id='paper_price'
+                      type='number'
+                      placeholder='Paper Price'
+                      onChange={handleChange}
+                      value={
+                        selectedProfile !== '' ? paperPrice : values.paper_price
+                      }
+                      isInvalid={touched.paper_price && !!errors.paper_price}
+                      disabled={selectedProfile !== ''}
+                    />
+                    <FormControl.Feedback type='invalid'>
+                      {errors.paper_price}
+                    </FormControl.Feedback>
+                  </Col>
+                </FormGroup>
+              </Form>
+            )}
+          </Formik>
         </CardBody>
       </Card>
     </>
   );
 };
-
-const mapStateToProps = (state: AppState) => ({
-  admin: state.admin,
-});
-const mapDispatchToProps = {
-  setPriceProfile,
-  addPriceProfile,
-  getPriceProfile,
-  getPriceProfileList,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type Props = ConnectedProps<typeof connector>;
 
 export default connector(PriceProfile);
