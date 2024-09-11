@@ -1,22 +1,28 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { AppState } from '../../../../../types/app.types';
 import { Card, CardBody } from 'react-bootstrap';
-interface State {}
+
 interface Props {
   title: string;
   value: string;
   unit?: string;
 }
-class TotalsBlock extends Component<ReduxProps, State> {
-  render(): React.ReactNode {
-    const { value, title, unit } = this.props;
-    return [
+
+const mapStateToProps = (state: AppState) => ({});
+const mapDispatchToProps = {};
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type ReduxProps = ConnectedProps<typeof connector> & Props;
+
+const TotalsBlock = (props: ReduxProps) => {
+  const { value, title, unit } = props;
+  return (
+    <>
       <style key={'tb-styles'}>
         {`.totals-block {
               width: 100%;
           }`}
-      </style>,
+      </style>
       <Card key={'tb-block'} className='totals-block'>
         <CardBody>
           <strong>{title}</strong>
@@ -25,13 +31,9 @@ class TotalsBlock extends Component<ReduxProps, State> {
             <small>{unit}</small>
           </div>
         </CardBody>
-      </Card>,
-    ];
-  }
-}
-const mapStateToProps = (state: AppState) => ({});
-const mapDispatchToProps = {};
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type ReduxProps = ConnectedProps<typeof connector> & Props;
+      </Card>
+    </>
+  );
+};
 
 export default connector(TotalsBlock);
