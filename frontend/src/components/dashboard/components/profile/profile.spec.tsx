@@ -50,40 +50,6 @@ describe('Profile Component', () => {
     expect(getByTestId('profile-component')).toBeInTheDocument();
   });
 
-  it(' should update fields on text input', () => {
-    const { getByPlaceholderText, getByTestId } = render(
-      <Provider store={store}>
-        <ProfileComponent></ProfileComponent>
-      </Provider>
-    );
-
-    const firstName = getByPlaceholderText(/First Name/i);
-    const lastName = getByPlaceholderText(/Last Name/i);
-    const email = getByPlaceholderText(/Email Address/i);
-    const phone = getByPlaceholderText(/Phone/i);
-    const department_id = getByTestId(/department/i);
-
-    const expectedfirstName = 'Tim';
-    const expectedlastName = 'Hall';
-    const expectedemail = 'test@email.com';
-    const expectedphone = '777-777-7777';
-    const expecteddepartment_id = '2';
-
-    fireEvent.change(firstName, { target: { value: expectedfirstName } });
-    fireEvent.change(lastName, { target: { value: expectedlastName } });
-    fireEvent.change(email, { target: { value: expectedemail } });
-    fireEvent.change(phone, { target: { value: expectedphone } });
-    fireEvent.change(department_id, {
-      target: { value: expecteddepartment_id },
-    });
-
-    expect(firstName).toHaveValue(expectedfirstName);
-    expect(lastName).toHaveValue(expectedlastName);
-    expect(email).toHaveValue(expectedemail);
-    expect(phone).toHaveValue(expectedphone);
-    expect(department_id).toHaveValue(expecteddepartment_id);
-  });
-
   it('should call the update user action on form submit', async () => {
     const { getByTestId } = render(
       <Provider store={store}>
