@@ -51,8 +51,9 @@ public class AccountController {
         logger.info("updating user data - id: " + id);
         boolean updated = accountService.updateUserData(id, data);
         if (updated) {
+            User latest = accountService.getUserData(id);
             logger.info("user data updated");
-            return ResponseEntity.ok().body(data);
+            return ResponseEntity.ok().body(latest);
         }
         logger.warning("problem updating user data");
         return ResponseEntity.badRequest().body(null);
