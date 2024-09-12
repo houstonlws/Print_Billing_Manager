@@ -25,8 +25,7 @@ public class AuthService {
 
     public User login(User user) {
         String id = authDAO.validateLoginInfo(user.getEmail(), user.getPassword());
-        User data = accountDAO.getUserData(id);
-        return data;
+        return accountDAO.getUserData(id);
     }
 
     public boolean register(User user) {
@@ -60,5 +59,9 @@ public class AuthService {
 
     public HttpHeaders getHeaders(String accessToken, String refreshToken) {
         return JWTUtility.getHeaders(accessToken, refreshToken);
+    }
+
+    public HttpHeaders logout() {
+        return JWTUtility.clearCookies();
     }
 }

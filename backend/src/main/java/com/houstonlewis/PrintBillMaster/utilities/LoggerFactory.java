@@ -17,8 +17,7 @@ public class LoggerFactory {
         for (var handler : rootLogger.getHandlers()) {
             rootLogger.removeHandler(handler);
         }
-
-
+        
         return logger;
     }
 
