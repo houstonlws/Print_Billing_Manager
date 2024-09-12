@@ -30,7 +30,6 @@ export const authReducer = (state = initialState, action: Payload) => {
       return {
         ...state,
         loggedIn: true,
-        user: payload,
       };
     }
     case CONSTANTS.LOGIN_FAIL: {

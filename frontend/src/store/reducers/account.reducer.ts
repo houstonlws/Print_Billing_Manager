@@ -53,6 +53,15 @@ export const accountReducer = (state = initialState, action: Payload) => {
         user: payload,
       };
     }
+    case CONSTANTS.LOGIN_SUCCESS: {
+      return {
+        ...state,
+        user: payload,
+      };
+    }
+    case CONSTANTS.LOGOUT: {
+      return initialState;
+    }
     default:
       return state;
   }

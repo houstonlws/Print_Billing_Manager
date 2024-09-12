@@ -37,11 +37,12 @@ export const login =
     }
   };
 
-export const logout = () => (dispatch: Dispatch) => {
-  document.cookie = 'refreshToken=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-  localStorage.removeItem('accessToken');
-  dispatch({ type: CONSTANTS.CLEAR_PERSIST });
-  dispatch({ type: CONSTANTS.LOGOUT });
+export const logout = () => async (dispatch: Dispatch) => {
+  if (await AuthService.logout()) {
+    localStorage.removeItem('accessToken');
+    dispatch({ type: CONSTANTS.CLEAR_PERSIST });
+    dispatch({ type: CONSTANTS.LOGOUT });
+  }
 };
 
 export const refreshToken = () => async (dispatch: Dispatch) => {

@@ -48,6 +48,19 @@ class AuthService {
       return false;
     }
   };
+
+  static logout = async () => {
+    try {
+      const result = await axios.get('/logout');
+      if (result.status === 200) {
+        return result.data;
+      }
+      return false;
+    } catch (error: any) {
+      console.log(error.message);
+      return false;
+    }
+  };
 }
 
 export default AuthService;
