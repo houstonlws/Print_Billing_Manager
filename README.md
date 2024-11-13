@@ -117,7 +117,7 @@ Before you begin, ensure you have the following installed:
 - Run the frontend application:
 
   ```bash
-  npm run start
+  npm run dev
   ```
 
 - Log in using the default account credentials `dev@dev.dev | pass`
