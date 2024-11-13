@@ -1,14 +1,13 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import React from 'react';
 import { Provider } from 'react-redux';
 import { Dispatch } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { printers } from '../../../../../components/dashboard/shared/test.data';
 import { CONSTANTS } from '../../../../../config/constants';
 import * as printerActions from '../../../../../store/actions/printer.actions';
 import { initialState } from '../../../../../store/reducers/printer.reducer';
 import { Printer } from '../../../../../types';
+import { printers } from '../../../shared/test.data';
 import EditPrinterComponent from '../components/edit-printer.component';
 
 const mockStore = configureStore([thunk]);

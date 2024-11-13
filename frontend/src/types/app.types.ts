@@ -1,11 +1,11 @@
 import {
-  AuthState,
-  AdminState,
-  PrinterState,
-  BillingState,
-  TrackingState,
   AccountState,
-} from './';
+  AdminState,
+  AuthState,
+  BillingState,
+  PrinterState,
+  TrackingState,
+} from '.';
 
 export interface AppState {
   account: AccountState;

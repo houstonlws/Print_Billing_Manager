@@ -1,15 +1,11 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
+  "files": [],
   "compilerOptions": {
-    "jsx": "react",
-    "target": "ES6",
-    "module": "CommonJS",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "jsx": "react-jsx"
   },
-  "exclude": ["node_modules"],
-  "types": ["jest", "node"]
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }

@@ -1,12 +1,11 @@
 import { Dispatch } from '@reduxjs/toolkit';
 import { render, screen } from '@testing-library/react';
-import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import * as authActions from '../../../store//actions/auth.action';
-import { initialState } from '../../../store//reducers/auth.reducer';
+import * as authActions from '../../../store/actions/auth.action';
+import { initialState } from '../../../store/reducers/auth.reducer';
 import HomeComponent from '../components/home.component';
 
 const store = configureStore([thunk])({ auth: initialState });

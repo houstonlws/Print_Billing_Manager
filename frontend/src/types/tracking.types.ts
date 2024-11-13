@@ -1,4 +1,4 @@
-import { TypeMap } from './';
+import { TypeMap } from '.';
 
 export type Job = {
   id: string;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import {
   Button,
   Container,
@@ -11,7 +11,7 @@ import {
 } from 'react-bootstrap';
 import { ConnectedProps, connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { login } from '../../../store//actions';
+import { login } from '../../../store/actions';
 import { AppState } from '../../../types';
 
 interface State {
