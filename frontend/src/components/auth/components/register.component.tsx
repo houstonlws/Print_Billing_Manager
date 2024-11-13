@@ -1,5 +1,5 @@
+import { Formik } from 'formik';
 import React, { Component } from 'react';
-import { ConnectedProps, connect } from 'react-redux';
 import {
   Alert,
   Button,
@@ -13,10 +13,10 @@ import {
   FormGroup,
   Row,
 } from 'react-bootstrap';
+import { ConnectedProps, connect } from 'react-redux';
+import * as yup from 'yup';
 import { register as registerUser } from '../../../store/actions';
 import { AppState, TypeMap } from '../../../types';
-import { Formik } from 'formik';
-import * as yup from 'yup';
 
 type FormData = {
   email: string;

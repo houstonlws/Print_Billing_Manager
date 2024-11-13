@@ -1,10 +1,10 @@
+import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import AdminSettingsComponent from './admin-settings.component';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { CONSTANTS } from '../../../../config/constants';
+import AdminSettingsComponent from './admin-settings.component';
 
 const mockStore = configureStore([thunk]);
 let store = mockStore({
@@ -18,22 +18,24 @@ describe('Admin Settings Tests', () => {
   beforeEach(() => {});
 
   it('should render the component', () => {
-    const { getByTestId } = render(
+    render(
       <Provider store={store}>
         <AdminSettingsComponent></AdminSettingsComponent>
       </Provider>
     );
-    expect(getByTestId('admin-settings-component')).toBeInTheDocument();
+    expect(screen.getByTestId('admin-settings-component')).toBeInTheDocument();
   });
 
   it('should call update user action to make changes to users', async () => {
-    const { getByTestId } = render(
+    render(
       <Provider store={store}>
         <AdminSettingsComponent></AdminSettingsComponent>
       </Provider>
     );
     await waitFor(() => {
-      expect(getByTestId('admin-settings-component')).toBeInTheDocument();
+      expect(
+        screen.getByTestId('admin-settings-component')
+      ).toBeInTheDocument();
     });
   });
 });

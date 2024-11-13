@@ -1,8 +1,6 @@
-import React, { Component, useEffect, useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { AppState } from '../../../types/app.types';
+import { Formik } from 'formik';
+import React, { useEffect } from 'react';
 import {
-  Alert,
   Button,
   Card,
   CardBody,
@@ -11,16 +9,16 @@ import {
   Form,
   FormControl,
   FormGroup,
-  FormLabel,
   FormSelect,
 } from 'react-bootstrap';
-import { departmentsList } from '../../../config/app-data';
-import { getUserData, updateUserData } from '../../../store/actions';
-import { CONSTANTS } from '../../../config/constants';
+import { connect, ConnectedProps } from 'react-redux';
 import * as yup from 'yup';
-import { Formik } from 'formik';
+import { departmentsList } from '../../../config/app-data';
+import { CONSTANTS } from '../../../config/constants';
+import { getUserData, updateUserData } from '../../../store/actions';
+import { AppState } from '../../../types';
 
-type Form = {
+type FormData = {
   firstName: string;
   lastName: string;
   department: string;
@@ -42,7 +40,7 @@ const IncompleteProfile = (props: ReduxProps) => {
       await props.getUserData(props.user.id);
     };
     onMount();
-  }, []);
+  }, [props]);
 
   const schema = yup.object().shape({
     firstName: yup.string().required('Must provide first name'),
@@ -50,7 +48,7 @@ const IncompleteProfile = (props: ReduxProps) => {
     department: yup.string().required('Must provide department id'),
   });
 
-  const onSubmit = async (formData: Form) => {
+  const onSubmit = async (formData: FormData) => {
     const { type } = props.user;
     const user = {
       ...props.user,

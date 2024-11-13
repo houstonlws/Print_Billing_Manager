@@ -1,20 +1,17 @@
-import React, { Component, ReactNode, useEffect, useState } from 'react';
+import { faBell } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useEffect, useState } from 'react';
 import {
   Badge,
-  Button,
-  Card,
-  CardBody,
   NavDropdown,
   Toast,
   ToastBody,
   ToastHeader,
 } from 'react-bootstrap';
 import { ConnectedProps, connect } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell } from '@fortawesome/free-solid-svg-icons';
-import { AppState, Notification } from '../../../types';
-import { getNotifications } from '../../../store/actions';
 import { CONSTANTS } from '../../../config/constants';
+import { getNotifications } from '../../../store/actions';
+import { AppState, Notification } from '../../../types';
 
 const mapStateToProps = (state: AppState) => {
   return {
@@ -39,11 +36,8 @@ const NotificationsWidget = (props: NotificationsProps) => {
       setNotifications(notifications);
     };
     onMount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const dismissNotification = (event: any) => {
-    event.preventDefault();
-  };
 
   return (
     <NavDropdown

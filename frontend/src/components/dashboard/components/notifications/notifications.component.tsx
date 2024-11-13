@@ -25,10 +25,6 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type NotificationsProps = ConnectedProps<typeof connector>;
 
 const NotificationsComponent = (props: NotificationsProps) => {
-  const dismissNotification = (event: any) => {
-    event.preventDefault();
-  };
-
   const { notifications } = props;
 
   return (

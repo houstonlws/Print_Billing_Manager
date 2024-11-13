@@ -1,7 +1,7 @@
 import React from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { AppState } from '../../../../../types/app.types';
 import { Card, CardBody } from 'react-bootstrap';
+import { connect, ConnectedProps } from 'react-redux';
+import { AppState } from '../../../../../types';
 
 interface Props {
   title: string;

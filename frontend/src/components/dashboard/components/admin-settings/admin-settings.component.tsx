@@ -1,10 +1,10 @@
 import React from 'react';
-import { AppState } from '../../../../types';
-import { connect, ConnectedProps } from 'react-redux';
 import { Card, CardHeader, Stack } from 'react-bootstrap';
-import SwitchUserTypeComponent from './components/switch-user-type.component';
+import { connect, ConnectedProps } from 'react-redux';
+import { AppState } from '../../../../types';
 import AddUserComponent from './components/add-user.component';
 import PriceProfileComponent from './components/price-profile.component';
+import SwitchUserTypeComponent from './components/switch-user-type.component';
 
 const mapStateToProps = (state: AppState) => ({});
 

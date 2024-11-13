@@ -15,7 +15,7 @@ class BillingService {
     }
   };
 
-  static getCurrentInvoice = async (depId: string | number) => {
+  static getCurrentInvoice = async (depId?: string) => {
     try {
       const result = await axios.get(`/protected/billing/current/${depId}`);
       if (result.status === 200) return result.data;

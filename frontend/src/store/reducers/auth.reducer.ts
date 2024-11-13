@@ -11,7 +11,7 @@ export const initialState: AuthState = {
 };
 
 export const authReducer = (state = initialState, action: Payload) => {
-  const { type, payload } = action;
+  const { type } = action;
 
   switch (type) {
     case CONSTANTS.REFRESH_TOKEN_SUCCESS: {

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
 import { Card, CardHeader, Stack } from 'react-bootstrap';
-import { AppState } from '../../../../types';
+import { connect, ConnectedProps } from 'react-redux';
 import { CONSTANTS } from '../../../../config/constants';
 import {
   getAllPrinters,
@@ -9,8 +8,9 @@ import {
   getDepartmentPrinters,
   upDateMaintenanceRequestStatus,
 } from '../../../../store/actions';
-import ReportIssueComponent from './components/report-issue.component';
+import { AppState } from '../../../../types';
 import MaintenanceRequestItemComponent from './components/maintenance-request-item.component';
+import ReportIssueComponent from './components/report-issue.component';
 
 const mapStateToProps = (state: AppState) => ({
   printer: state.printer,
@@ -33,17 +33,17 @@ type Props = {
 
 const MaintenanceComponent = (props: Props) => {
   useEffect(() => {
+    const getMaintenanceRequests = async () => {
+      const { selectedDepartment, user } = props;
+      const department =
+        user.type === CONSTANTS.ADMIN
+          ? selectedDepartment || ''
+          : user.department_id;
+      await props.getDepartmentMaintenanceRequests(department);
+    };
     getMaintenanceRequests();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const getMaintenanceRequests = async () => {
-    const { selectedDepartment, user } = props;
-    const department =
-      user.type === CONSTANTS.ADMIN
-        ? selectedDepartment || ''
-        : user.department_id;
-    await props.getDepartmentMaintenanceRequests(department);
-  };
 
   const { requests } = props.printer;
   const { type } = props.user;

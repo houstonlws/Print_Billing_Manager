@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { AppState, MaintenanceRequest } from '../../../../../types';
 import {
   Badge,
   Button,
@@ -9,9 +7,11 @@ import {
   CardHeader,
   Form,
 } from 'react-bootstrap';
+import { connect, ConnectedProps } from 'react-redux';
 import { departmentsMap } from '../../../../../config/app-data';
 import { CONSTANTS } from '../../../../../config/constants';
 import { upDateMaintenanceRequestStatus } from '../../../../../store/actions';
+import { AppState, MaintenanceRequest } from '../../../../../types';
 
 interface Props {
   request: MaintenanceRequest;

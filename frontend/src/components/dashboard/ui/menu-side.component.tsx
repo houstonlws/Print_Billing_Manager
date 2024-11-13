@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { AppState } from '../../../types/app.types';
-import { Nav, Navbar } from 'react-bootstrap';
 import {
+  faChartLine,
+  faDollarSign,
   faGear,
   faPrint,
   faWrench,
-  faChartLine,
-  faDollarSign,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import { Nav, Navbar } from 'react-bootstrap';
+import { connect, ConnectedProps } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { CONSTANTS } from '../../../config/constants';
+import { AppState } from '../../../types';
 
 interface Props {
   isOpen: boolean;

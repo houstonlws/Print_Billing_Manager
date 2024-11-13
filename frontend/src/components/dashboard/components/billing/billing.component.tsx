@@ -1,12 +1,13 @@
-import React, { Component, ReactNode, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { Card, CardBody, CardHeader, Stack, Table } from 'react-bootstrap';
 import { ConnectedProps, connect } from 'react-redux';
-import { AppState } from '../../../../types';
+import { departmentsMap } from '../../../../config/app-data';
+import { CONSTANTS } from '../../../../config/constants';
 import {
   getCurrentInvoice,
   getDepartmentInvoiceHistory,
 } from '../../../../store/actions';
-import { Card, CardBody, CardHeader, Stack, Table } from 'react-bootstrap';
-import { departmentsMap } from '../../../../config/app-data';
+import { AppState } from '../../../../types';
 
 interface Props {
   department?: string;
@@ -15,6 +16,9 @@ interface Props {
 const mapStateToProps = (state: AppState) => {
   return {
     billing: state.billing,
+    account: state.account,
+    admin: state.admin,
+    tracking: state.tracking,
   };
 };
 
@@ -29,22 +33,23 @@ type BillingComponentProps = ConnectedProps<typeof connector> & Props;
 
 const BillingComponent = (props: BillingComponentProps) => {
   const {
+    department,
     billing: { invoiceHistory },
+    account: { user },
+    admin: { activeProfile },
+    tracking: { totals },
   } = props;
 
   useEffect(() => {
+    const getBillingInfo = async () => {
+      if (user?.type === CONSTANTS.ADMIN) {
+        await props.getCurrentInvoice(department);
+        await props.getDepartmentInvoiceHistory(department);
+      }
+    };
     getBillingInfo();
-  }, [props.department]);
-
-  const getBillingInfo = async () => {
-    const { department } = props;
-    if (department) {
-      await props.getCurrentInvoice(department);
-      await props.getDepartmentInvoiceHistory(department);
-    } else {
-      await props.getDepartmentInvoiceHistory();
-    }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [department, user?.type]);
 
   return (
     <div data-testid='billing-component'>
@@ -54,6 +59,34 @@ const BillingComponent = (props: BillingComponentProps) => {
             <h2>Billing</h2>
           </CardHeader>
         </Card>
+
+        <Card>
+          <CardBody>
+            <div className='d-flex'>
+              <strong className='me-auto'>Department:</strong>
+              {`${department ? departmentsMap[department].name : departmentsMap[user?.department_id]?.name || 'All Departments'}`}
+            </div>
+            <div className='d-flex'>
+              <strong className='me-auto'>Total Color Pages: </strong>
+              {`$${activeProfile?.color_price} x ${totals?.totalColor}`}
+            </div>
+            <div className='d-flex'>
+              <strong className='me-auto'>Total B&W Pages: </strong>
+              {`$${activeProfile?.bw_price} x ${totals?.totalBw}`}
+            </div>
+            <div className='d-flex'>
+              <strong className='me-auto'>Total Paper: </strong>
+              {`$${activeProfile?.paper_price} x ${totals?.totalPaper}`}
+            </div>
+          </CardBody>
+          <CardBody>
+            <div className='d-flex'>
+              <h4 className='me-auto'>Amount Due</h4>
+              <div>{`$${totals?.totalCharge}`}</div>
+            </div>
+          </CardBody>
+        </Card>
+
         <Card>
           <CardBody>
             <Table>

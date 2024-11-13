@@ -1,14 +1,14 @@
+import { Dispatch } from '@reduxjs/toolkit';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { MemoryRouter } from 'react-router-dom';
-import { Dispatch } from '@reduxjs/toolkit';
-import * as accountActions from '../../../../store/actions/account.actions';
-import ProfileComponent from './profile.component';
 import { CONSTANTS } from '../../../../config/constants';
+import * as accountActions from '../../../../store/actions/account.actions';
 import { User } from '../../../../types';
+import ProfileComponent from './profile.component';
 
 const mockStore = configureStore([thunk]);
 
@@ -40,25 +40,25 @@ describe('Profile Component', () => {
   });
 
   it('should render the component', () => {
-    const { getByTestId } = render(
+    render(
       <Provider store={store}>
         <MemoryRouter>
           <ProfileComponent></ProfileComponent>
         </MemoryRouter>
       </Provider>
     );
-    expect(getByTestId('profile-component')).toBeInTheDocument();
+    expect(screen.getByTestId('profile-component')).toBeInTheDocument();
   });
 
   it('should call the update user action on form submit', async () => {
-    const { getByTestId } = render(
+    render(
       <Provider store={store}>
         <MemoryRouter>
           <ProfileComponent></ProfileComponent>
         </MemoryRouter>
       </Provider>
     );
-    const button = getByTestId('update-user-submit');
+    const button = screen.getByTestId('update-user-submit');
     fireEvent.submit(button);
 
     const expected: any[] = [];

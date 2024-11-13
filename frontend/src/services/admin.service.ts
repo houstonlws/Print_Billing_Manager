@@ -1,5 +1,5 @@
 import { getAxios } from '../config/axios.config';
-import { PriceConfig, User } from '../types';
+import { PriceConfig } from '../types';
 
 const axios = getAxios();
 

@@ -1,31 +1,24 @@
-import React, {
-  ChangeEvent,
-  Component,
-  ReactNode,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import {
   Card,
   CardBody,
   CardHeader,
-  FormLabel,
   FormSelect,
   Stack,
   Table,
 } from 'react-bootstrap';
 import { ConnectedProps, connect } from 'react-redux';
+import { departmentsMap } from '../../../../config/app-data';
+import { CONSTANTS } from '../../../../config/constants';
 import {
   getBillingPeriods,
   getCurrentBillingPeriod,
   getJobsByBillingPeriod,
   getPriceProfile,
 } from '../../../../store/actions';
-import { departmentsMap } from '../../../../config/app-data';
-import TotalsBlockComponent from './components/totals-block.component';
-import { Job, AppState } from '../../../../types';
+import { AppState, Job } from '../../../../types';
 import GraphComponent from './components/graph.component';
-import { CONSTANTS } from '../../../../config/constants';
+import TotalsBlockComponent from './components/totals-block.component';
 
 interface Props {
   selectedDepartment?: string;
@@ -41,7 +34,6 @@ const TrackingModule = (props: TrackingProps) => {
     printer: { printersMap },
     tracking: { currentJobs, totals, billingPeriods },
     selectedDepartment,
-    admin: { activeProfile },
   } = props;
 
   useEffect(() => {
@@ -52,6 +44,7 @@ const TrackingModule = (props: TrackingProps) => {
       setBillingPeriod(props.tracking.currentBillingPeriod.id);
     };
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.tracking.currentBillingPeriod.id]);
 
   const getJobsByBillingPeriod = async (
@@ -91,33 +84,6 @@ const TrackingModule = (props: TrackingProps) => {
       </Card>
 
       <GraphComponent />
-
-      <Card>
-        <CardBody>
-          <div className='d-flex'>
-            <strong className='me-auto'>Department:</strong>
-            {`${selectedDepartment ? departmentsMap[selectedDepartment].name : departmentsMap[user.department_id]?.name || 'All Departments'}`}
-          </div>
-          <div className='d-flex'>
-            <strong className='me-auto'>Total Color Pages: </strong>
-            {`$${activeProfile?.color_price} x ${totals?.totalColor}`}
-          </div>
-          <div className='d-flex'>
-            <strong className='me-auto'>Total B&W Pages: </strong>
-            {`$${activeProfile?.bw_price} x ${totals?.totalBw}`}
-          </div>
-          <div className='d-flex'>
-            <strong className='me-auto'>Total Paper: </strong>
-            {`$${activeProfile?.paper_price} x ${totals?.totalPaper}`}
-          </div>
-        </CardBody>
-        <CardBody>
-          <div className='d-flex'>
-            <h4 className='me-auto'>Amount Due</h4>
-            <div>{`$${totals?.totalCharge}`}</div>
-          </div>
-        </CardBody>
-      </Card>
 
       <Stack direction='horizontal' gap={3}>
         <TotalsBlockComponent

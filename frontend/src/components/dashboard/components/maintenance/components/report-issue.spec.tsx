@@ -1,16 +1,11 @@
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import { Dispatch } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { printers } from '../../../shared/test.data';
-import {
-  MaintenanceRequest,
-  Printer,
-} from '../../../../../types/printer.types';
-import { Dispatch } from 'redux';
 import * as printerActions from '../../../../../store/actions/printer.actions';
-import { CONSTANTS } from '../../../../../config/constants';
+import { MaintenanceRequest } from '../../../../../types/printer.types';
 import ReportIssueComponent from './report-issue.component';
 
 const mockStore = configureStore([thunk]);
@@ -33,26 +28,26 @@ describe('Report Issue tests', () => {
   });
 
   it('should render the component', () => {
-    const { getByTestId } = render(
+    render(
       <Provider store={store}>
         <ReportIssueComponent></ReportIssueComponent>
       </Provider>
     );
-    expect(getByTestId(`report-issue-root`)).toBeInTheDocument();
+    expect(screen.getByTestId(`report-issue-root`)).toBeInTheDocument();
   });
 
-  it(' should update fields on text input', () => {
-    const { getByPlaceholderText, getByTestId } = render(
+  it('should update fields on text input', () => {
+    render(
       <Provider store={store}>
         <ReportIssueComponent></ReportIssueComponent>
       </Provider>
     );
 
-    const button = getByTestId('report-toggler');
+    const button = screen.getByTestId('report-toggler');
     fireEvent.click(button);
 
-    const maintenance_type = getByTestId('maintenance_type');
-    const description = getByPlaceholderText(/description/i);
+    const maintenance_type = screen.getByTestId('maintenance_type');
+    const description = screen.getByPlaceholderText(/description/i);
 
     const expectedmaintenance_type = 'Paper Jam';
     const expecteddescription = 'paper in the machine';
@@ -67,17 +62,17 @@ describe('Report Issue tests', () => {
   });
 
   it('should call the add maintenance request action on form submit', async () => {
-    const { getByTestId, getByPlaceholderText } = render(
+    render(
       <Provider store={store}>
         <ReportIssueComponent></ReportIssueComponent>
       </Provider>
     );
 
-    const button = getByTestId('report-toggler');
+    const button = screen.getByTestId('report-toggler');
     fireEvent.click(button);
 
-    const maintenance_type = getByTestId('maintenance_type');
-    const description = getByPlaceholderText(/description/i);
+    const maintenance_type = screen.getByTestId('maintenance_type');
+    const description = screen.getByPlaceholderText(/description/i);
 
     const expectedmaintenance_type = 'Paper Jam';
     const expecteddescription = 'paper in the machine';
@@ -87,10 +82,8 @@ describe('Report Issue tests', () => {
     });
     fireEvent.change(description, { target: { value: expecteddescription } });
 
-    const submit = getByTestId('submit-report');
+    const submit = screen.getByTestId('submit-report');
     fireEvent.click(submit);
-
-    const expected = [{ type: CONSTANTS.ADD_MAINTENANCE_REQUEST_FAILURE }];
 
     await waitFor(() => {
       expect(store.getActions()).toEqual([]);

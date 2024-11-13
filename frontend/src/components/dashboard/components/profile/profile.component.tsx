@@ -1,5 +1,5 @@
+import { Formik } from 'formik';
 import React, { useState } from 'react';
-import { ConnectedProps, connect } from 'react-redux';
 import {
   Alert,
   Button,
@@ -13,12 +13,12 @@ import {
   FormSelect,
   Row,
 } from 'react-bootstrap';
-import { AppState, User } from '../../../../types';
-import { updateUserData } from '../../../../store/actions';
+import { ConnectedProps, connect } from 'react-redux';
+import * as yup from 'yup';
 import { departmentsList } from '../../../../config/app-data';
 import { CONSTANTS } from '../../../../config/constants';
-import { Formik } from 'formik';
-import * as yup from 'yup';
+import { updateUserData } from '../../../../store/actions';
+import { AppState, User } from '../../../../types';
 
 const mapStateToProps = (state: AppState) => {
   return {
@@ -43,7 +43,6 @@ const ProfileComponent = (props: ProfileProps) => {
   });
 
   const handleFormSubmit = async (formData: User) => {
-    const { type, id } = props.user;
     const result = await props.updateUserData(formData);
     if (result) {
       setStatus('success');

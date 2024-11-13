@@ -1,5 +1,5 @@
+import { Formik } from 'formik';
 import React, { useState } from 'react';
-import { ConnectedProps, connect } from 'react-redux';
 import {
   Button,
   ButtonGroup,
@@ -9,15 +9,11 @@ import {
   FormSelect,
   Modal,
 } from 'react-bootstrap';
-import {
-  MaintenanceRequest,
-  Printer,
-} from '../../../../../types/printer.types';
+import { ConnectedProps, connect } from 'react-redux';
+import * as yup from 'yup';
 import { maintenanceTypes } from '../../../../../config/app-data';
 import { addMaintenanceRequest } from '../../../../../store/actions/printer.actions';
-import { AppState } from '../../../../../types/app.types';
-import * as yup from 'yup';
-import { Formik } from 'formik';
+import { AppState, MaintenanceRequest, Printer } from '../../../../../types';
 
 interface Props {}
 

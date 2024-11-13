@@ -1,6 +1,6 @@
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
-import { ConnectedProps, connect } from 'react-redux';
-import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
   Button,
   CardHeader,
@@ -11,34 +11,34 @@ import {
   Navbar,
   NavDropdown,
 } from 'react-bootstrap';
-import { AppState } from '../../types';
+import { connect, ConnectedProps } from 'react-redux';
+import { Link, Navigate, Route, Routes } from 'react-router-dom';
+import { departmentsList } from '../../config/app-data';
+import { CONSTANTS } from '../../config/constants';
 import {
   getAllData,
   getAllDataUser,
-  getUserData,
-  logout,
   getCurrentJobs,
-  getJobHistory,
-  refreshToken,
   getCurrentTotals,
   getDepartmentMaintenanceRequests,
   getDepartmentPrinters,
+  getJobHistory,
+  getUserData,
+  logout,
+  refreshToken,
 } from '../../store/actions';
+import { AppState } from '../../types';
 import {
+  AdminSettingsComponent,
   BillingComponent,
+  MaintenanceComponent,
   NotificationsComponent,
   PrintersComponent,
   ProfileComponent,
   TrackingComponent,
-  MaintenanceComponent,
-  AdminSettingsComponent,
 } from './components';
-import { CONSTANTS } from '../../config/constants';
 import IncompleteProfileComponent from './ui/incomplete-profile.component';
 import MenuSideComponent from './ui/menu-side.component';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { departmentsList } from '../../config/app-data';
 import NotificationsWidget from './ui/notifications.widget';
 
 const connector = connect(
@@ -65,7 +65,11 @@ type DashboardProps = ConnectedProps<typeof connector>;
 
 const DashboardComponent = (props: DashboardProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
-  const [department, setDepartment] = useState<string>('');
+  const [department, setDepartment] = useState<string>();
+  const {
+    account: { user },
+    auth: { loggedIn },
+  } = props;
 
   useEffect(() => {
     const onMount = async () => {
@@ -83,6 +87,7 @@ const DashboardComponent = (props: DashboardProps) => {
       }
     };
     onMount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleOpen = () => {
@@ -97,10 +102,6 @@ const DashboardComponent = (props: DashboardProps) => {
     await props.getDepartmentMaintenanceRequests(event.target.value);
   };
 
-  const {
-    account: { user },
-    auth: { loggedIn },
-  } = props;
   let completedProfile =
     user.firstName && user.lastName && user.department_id !== '';
   if (!completedProfile && loggedIn) {

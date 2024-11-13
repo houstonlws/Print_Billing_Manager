@@ -1,13 +1,12 @@
-import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
-import { initialState } from '../../../store/reducers/auth.reducer';
-import thunk from 'redux-thunk';
-import { MemoryRouter } from 'react-router-dom';
 import { Dispatch } from '@reduxjs/toolkit';
-import { CONSTANTS } from '../../../config/constants';
-import * as authActions from '../../../store/actions/auth.action';
+import { render, screen } from '@testing-library/react';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import * as authActions from '../../../store//actions/auth.action';
+import { initialState } from '../../../store//reducers/auth.reducer';
 import HomeComponent from '../components/home.component';
 
 const store = configureStore([thunk])({ auth: initialState });
@@ -22,13 +21,13 @@ describe('Login Component', () => {
   beforeEach(() => {});
 
   it('should render the component', () => {
-    const { getByTestId } = render(
+    render(
       <Provider store={store}>
         <MemoryRouter>
           <HomeComponent></HomeComponent>
         </MemoryRouter>
       </Provider>
     );
-    expect(getByTestId('home-root')).toBeInTheDocument();
+    expect(screen.getByTestId('home-root')).toBeInTheDocument();
   });
 });

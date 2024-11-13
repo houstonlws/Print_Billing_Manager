@@ -1,5 +1,5 @@
+import { Formik } from 'formik';
 import React, { useState } from 'react';
-import { ConnectedProps, connect } from 'react-redux';
 import {
   Button,
   ButtonGroup,
@@ -9,10 +9,10 @@ import {
   FormGroup,
   Modal,
 } from 'react-bootstrap';
-import { Printer } from '../../../../../types/printer.types';
-import { updatePrinter } from '../../../../../store/actions/printer.actions';
-import { Formik } from 'formik';
+import { ConnectedProps, connect } from 'react-redux';
 import * as yup from 'yup';
+import { updatePrinter } from '../../../../../store/actions/printer.actions';
+import { Printer } from '../../../../../types';
 
 interface Props {
   printer: Printer;

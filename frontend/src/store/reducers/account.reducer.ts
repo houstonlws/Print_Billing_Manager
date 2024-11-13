@@ -17,7 +17,7 @@ export const initialState: AccountState = {
 };
 
 export const accountReducer = (state = initialState, action: Payload) => {
-  const { type, payload } = action;
+  const { payload } = action;
   switch (action.type) {
     case CONSTANTS.GET_USER_DATA_SUCCESS: {
       return {

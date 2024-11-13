@@ -9,17 +9,16 @@ import {
   Stack,
 } from 'react-bootstrap';
 import { ConnectedProps, connect } from 'react-redux';
-import { AppState } from '../../../../types/app.types';
+import { departmentsMap } from '../../../../config/app-data';
+import { CONSTANTS } from '../../../../config/constants';
 import { addPrinter } from '../../../../store/actions/printer.actions';
-import { Printer } from '../../../../types/printer.types';
+import { AppState, Printer } from '../../../../types';
+import ReportIssueComponent from '../maintenance/components/report-issue.component';
 import AddPrinterComponent from './components/add-printer.component';
 import EditPrinterComponent from './components/edit-printer.component';
-import { CONSTANTS } from '../../../../config/constants';
-import ReportIssueComponent from '../maintenance/components/report-issue.component';
-import { departmentsMap } from '../../../../config/app-data';
 
 type Props = {
-  departmentId: string;
+  departmentId?: string;
 };
 
 const connector = connect(

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { AppState, PriceConfig } from '../../../../../types';
+import { Formik } from 'formik';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -13,14 +12,15 @@ import {
   FormSelect,
   Row,
 } from 'react-bootstrap';
+import { connect, ConnectedProps } from 'react-redux';
+import * as yup from 'yup';
 import {
   addPriceProfile,
   getPriceProfile,
   getPriceProfileList,
   setPriceProfile,
 } from '../../../../../store/actions';
-import { Formik } from 'formik';
-import * as yup from 'yup';
+import { AppState, PriceConfig } from '../../../../../types';
 
 const initialProfile: PriceConfig = {
   id: '',
@@ -67,6 +67,7 @@ const PriceProfile = (props: Props) => {
       await props.getPriceProfile();
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

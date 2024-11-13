@@ -1,15 +1,15 @@
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import { Dispatch } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { printers } from '../../../shared/test.data';
-import EditPrinterComponent from '../components/edit-printer.component';
-import { Printer } from '../../../../../types/printer.types';
-import { Dispatch } from 'redux';
-import * as printerActions from '../../../../../store/actions/printer.actions';
+import { printers } from '../../../../../components/dashboard/shared/test.data';
 import { CONSTANTS } from '../../../../../config/constants';
+import * as printerActions from '../../../../../store/actions/printer.actions';
 import { initialState } from '../../../../../store/reducers/printer.reducer';
+import { Printer } from '../../../../../types';
+import EditPrinterComponent from '../components/edit-printer.component';
 
 const mockStore = configureStore([thunk]);
 let store = mockStore({ printer: initialState });
@@ -29,25 +29,27 @@ describe('Edit printer tests', () => {
   });
 
   it('should render the component', () => {
-    const { getByTestId } = render(
+    render(
       <Provider store={store}>
         <EditPrinterComponent printer={printer}></EditPrinterComponent>
       </Provider>
     );
-    expect(getByTestId(`edit-printer-${printer.id}`)).toBeInTheDocument();
+    expect(
+      screen.getByTestId(`edit-printer-${printer.id}`)
+    ).toBeInTheDocument();
   });
 
   it('should call the edit printer action on form submit', async () => {
-    const { getByTestId } = render(
+    render(
       <Provider store={store}>
         <EditPrinterComponent printer={printer}></EditPrinterComponent>
       </Provider>
     );
 
-    const toggle = getByTestId('show-editor');
+    const toggle = screen.getByTestId('show-editor');
     fireEvent.click(toggle);
 
-    const button = getByTestId('submit-edit');
+    const button = screen.getByTestId('submit-edit');
     fireEvent.click(button);
 
     const expected = [{ type: CONSTANTS.UPDATE_PRINTER_FAILURE }];

@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import {
-  Navbar,
-  Container,
-  Nav,
   Button,
+  Container,
   Form,
   FormControl,
-  Stack,
+  Nav,
+  Navbar,
   NavbarBrand,
+  Stack,
 } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { ConnectedProps, connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { login } from '../../../store//actions';
 import { AppState } from '../../../types';
-import { login } from '../../../store/actions';
 
 interface State {
   email: string;

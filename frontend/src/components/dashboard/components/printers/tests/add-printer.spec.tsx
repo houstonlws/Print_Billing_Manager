@@ -1,14 +1,14 @@
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import { Dispatch } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { printers } from '../../../shared/test.data';
-import { Printer } from '../../../../../types/printer.types';
-import { Dispatch } from 'redux';
-import * as printerActions from '../../../../../store/actions/printer.actions';
 import { CONSTANTS } from '../../../../../config/constants';
+import * as printerActions from '../../../../../store/actions/printer.actions';
 import { initialState } from '../../../../../store/reducers/printer.reducer';
+import { Printer } from '../../../../../types';
+import { printers } from '../../../shared/test.data';
 import AddPrinterComponent from '../components/add-printer.component';
 
 const mockStore = configureStore([thunk]);
@@ -32,25 +32,25 @@ describe('Add printer tests', () => {
   });
 
   it('should render the component', () => {
-    const { getByTestId } = render(
+    render(
       <Provider store={store}>
         <AddPrinterComponent departmentId='1'></AddPrinterComponent>
       </Provider>
     );
-    expect(getByTestId(`addprinter`)).toBeInTheDocument();
+    expect(screen.getByTestId(`addprinter`)).toBeInTheDocument();
   });
 
   it('should call the edit printer action on form submit', async () => {
-    const { getByTestId } = render(
+    render(
       <Provider store={store}>
         <AddPrinterComponent departmentId='1'></AddPrinterComponent>
       </Provider>
     );
 
-    const toggle = getByTestId('toggle-add');
+    const toggle = screen.getByTestId('toggle-add');
     fireEvent.click(toggle);
 
-    const button = getByTestId('submit-add');
+    const button = screen.getByTestId('submit-add');
     fireEvent.click(button);
 
     const expected = [{ type: CONSTANTS.ADD_PRINTER_FAILURE }];

@@ -1,11 +1,11 @@
-import './App.css';
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
 import { ConnectedProps, connect } from 'react-redux';
+import { Route, Routes } from 'react-router-dom';
+import './App.css';
+import authComponent from './components/auth/auth.component';
+import DashboardComponent from './components/dashboard/dashboard.component';
 import { logout, refreshToken } from './store/actions/auth.action';
 import { AppState } from './types/app.types';
-import DashboardComponent from './components/dashboard/dashboard.component';
-import authComponent from './components/auth/auth.component';
 
 class App extends React.Component<AppProps, AppState> {
   async componentDidMount() {

@@ -26,7 +26,7 @@ export const getDepartmentInvoiceHistory =
   };
 
 export const getCurrentInvoice =
-  (depId: string) => async (dispatch: Dispatch) => {
+  (depId?: string) => async (dispatch: Dispatch) => {
     try {
       const result = await BillingService.getCurrentInvoice(depId);
       if (result) {

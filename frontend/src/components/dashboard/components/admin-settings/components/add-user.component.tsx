@@ -1,6 +1,5 @@
+import { Formik } from 'formik';
 import React, { useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { AppState, User } from '../../../../../types';
 import {
   Alert,
   Button,
@@ -10,9 +9,10 @@ import {
   Form,
   FormControl,
 } from 'react-bootstrap';
-import { getAllUsers, register } from '../../../../../store/actions';
-import { Formik } from 'formik';
+import { connect, ConnectedProps } from 'react-redux';
 import * as yup from 'yup';
+import { getAllUsers, register } from '../../../../../store/actions';
+import { AppState, User } from '../../../../../types';
 
 const mapStateToProps = (state: AppState) => ({
   admin: state.admin,
@@ -25,12 +25,6 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type ReduxProps = ConnectedProps<typeof connector>;
 
 const AddUser = (props: ReduxProps) => {
-  const [tempUser, setTempUser] = useState<User>({
-    id: '',
-    email: '',
-    type: '',
-    department_id: '',
-  });
   const [added, setAdded] = useState<boolean>(false);
   const [failed, setFailed] = useState<boolean>(false);
 

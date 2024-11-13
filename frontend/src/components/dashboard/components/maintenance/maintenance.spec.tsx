@@ -1,13 +1,17 @@
+import { Dispatch } from '@reduxjs/toolkit';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { printers, printersMap, requests } from '../../shared/test.data';
+import {
+  printers,
+  printersMap,
+  requests,
+} from '../../../../components/dashboard/shared/test.data';
 import { CONSTANTS } from '../../../../config/constants';
-import MaintenanceComponent from './maintenance.component';
-import { Dispatch } from '@reduxjs/toolkit';
 import * as printerActions from '../../../../store/actions/printer.actions';
+import MaintenanceComponent from './maintenance.component';
 
 const mockStore = configureStore([thunk]);
 let store = mockStore({});
@@ -33,11 +37,11 @@ describe('Maintenance tests', () => {
   });
 
   it('should render the component', () => {
-    const { getByTestId } = render(
+    render(
       <Provider store={store}>
         <MaintenanceComponent></MaintenanceComponent>
       </Provider>
     );
-    expect(getByTestId('maintenance-component')).toBeInTheDocument();
+    expect(screen.getByTestId('maintenance-component')).toBeInTheDocument();
   });
 });

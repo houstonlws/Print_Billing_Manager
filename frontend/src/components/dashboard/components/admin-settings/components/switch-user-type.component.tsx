@@ -1,9 +1,9 @@
-import React, { Component, useEffect, useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { AppState, TypeMap } from '../../../../../types';
+import React, { useEffect, useState } from 'react';
 import { Alert, Button, Card, CardBody, FormSelect } from 'react-bootstrap';
+import { connect, ConnectedProps } from 'react-redux';
 import { CONSTANTS } from '../../../../../config/constants';
 import { getAllUsers, updateUserType } from '../../../../../store/actions';
+import { AppState, TypeMap } from '../../../../../types';
 
 const mapStateToProps = (state: AppState) => ({
   auth: state.auth,
@@ -26,6 +26,7 @@ const SwitchUserType = (props: ReduxProps) => {
       await props.getAllUsers();
     };
     onMount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const updateUserType = (event: any) => {

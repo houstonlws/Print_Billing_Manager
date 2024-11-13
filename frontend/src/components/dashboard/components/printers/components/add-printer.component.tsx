@@ -1,5 +1,5 @@
+import { Formik } from 'formik';
 import React, { useState } from 'react';
-import { ConnectedProps, connect } from 'react-redux';
 import {
   Button,
   ButtonGroup,
@@ -9,20 +9,19 @@ import {
   Form,
   FormControl,
   FormGroup,
-  FormLabel,
   Modal,
 } from 'react-bootstrap';
-import { AppState, Printer } from '../../../../../types';
+import { ConnectedProps, connect } from 'react-redux';
+import * as yup from 'yup';
+import { CONSTANTS } from '../../../../../config/constants';
 import {
   addPrinter,
   getDepartmentPrinters,
 } from '../../../../../store/actions';
-import { CONSTANTS } from '../../../../../config/constants';
-import { Formik } from 'formik';
-import * as yup from 'yup';
+import { AppState, Printer } from '../../../../../types';
 
 type Props = {
-  departmentId: string;
+  departmentId?: string;
 };
 
 const mapStateToProps = (state: AppState) => ({
@@ -66,10 +65,6 @@ const AddPrinterComponent = (props: AddProps) => {
     department_id: yup.string(),
   });
 
-  const setDepartment = async (event: any) => {
-    await props.getDepartmentPrinters(event.target.value);
-  };
-
   const toggleAdding = () => {
     setAdding((prev) => !prev);
   };
@@ -105,7 +100,9 @@ const AddPrinterComponent = (props: AddProps) => {
           <Formik
             initialValues={{
               ...initialState,
-              department_id: isAdmin ? props.departmentId : user.department_id,
+              department_id: isAdmin
+                ? props.departmentId || ''
+                : user.department_id,
             }}
             onSubmit={addPrinter}
             validationSchema={schema}
